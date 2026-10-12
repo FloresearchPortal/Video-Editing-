@@ -1,0 +1,12 @@
+# Free, local editing stack (reelkit + the cut tools). Python 3.10+.
+# Also needed on PATH (not pip): ffmpeg + ffprobe. Linux servers: apt install libegl1 libgles2.
+faster-whisper>=1.1        # local word-level transcription (MIT)
+mediapipe>=0.10.20         # person segmentation + face detection (Apache-2.0)
+opencv-python-headless     # frame transforms
+pillow                     # caption typography
+numpy
+requests                   # tools/*.py helpers
+
+# Optional, only if you choose a paid/hosted service yourself (not used by default):
+#   google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2   # tools/yt_upload.py, yt_stats.py (free YouTube API quota, needs OAuth setup)
+#   playwright                                                                       # tools/capture_web.py
