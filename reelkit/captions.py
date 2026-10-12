@@ -230,8 +230,13 @@ def layout(ps: list[Phrase], ow: int, oh: int, st: dict, fonts: dict, anchors: l
             w.sprite = make_sprite(w.text, f, w.color, st["shadow"])
             if w.role == "hero" and st.get("hero_slant_deg"):
                 w.sprite = slant(w.sprite, st["hero_slant_deg"])
+            # a long keyword at hero size can be wider than the phone screen: fit the safe width
+            safe_w = ow * (1 - st["safe_zone"]["left"] - st["safe_zone"]["right"]) * 1.12  # sprites carry padding
+            if w.sprite.shape[1] > safe_w:
+                k = safe_w / w.sprite.shape[1]
+                w.sprite = cv2.resize(w.sprite, None, fx=k, fy=k, interpolation=cv2.INTER_AREA)
         lines, cur, cur_w = [], [], 0
-        maxw = ow * 0.82
+        maxw = ow * (1 - st["safe_zone"]["left"] - st["safe_zone"]["right"])
         for w in p.words:
             sw = w.sprite.shape[1]
             if w.role == "hero" or (cur and cur[-1].role == "hero") or cur_w + sw > maxw:
@@ -244,7 +249,8 @@ def layout(ps: list[Phrase], ow: int, oh: int, st: dict, fonts: dict, anchors: l
             lines.append(cur)
         # line heights overlap a little (tight, layered look)
         heights = [max(w.sprite.shape[0] for w in ln) for ln in lines]
-        widths = [sum(w.sprite.shape[1] for w in ln) * 0.86 for ln in lines]
+        # true extent: words overlap by 14 %, the last word doesn't
+        widths = [sum(w.sprite.shape[1] for w in ln[:-1]) * 0.86 + ln[-1].sprite.shape[1] for ln in lines]
         block_h = sum(h * 0.62 for h in heights)
         block_w = max(widths)
         anchor = anchors[pi]  # (cx, cy) of the block in output px
@@ -255,7 +261,8 @@ def layout(ps: list[Phrase], ow: int, oh: int, st: dict, fonts: dict, anchors: l
         for li, (ln, h, wdt) in enumerate(zip(lines, heights, widths)):
             stagger = rng.uniform(-0.08, 0.08) * ow if len(lines) > 1 else 0
             x = cx - wdt / 2 + stagger
-            x = min(max(x, ow * sz["left"]), ow * (1 - sz["right"]) - wdt)
+            inset = 0.18 * h  # sprites carry shadow padding around the ink
+            x = min(max(x, ow * sz["left"] - inset), ow * (1 - sz["right"]) + inset - wdt)
             for w in ln:
                 w.x = int(x)
                 w.y = int(y + (h - w.sprite.shape[0]) * 0.5)

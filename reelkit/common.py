@@ -47,7 +47,10 @@ def load_json(p: str | Path):
 
 def save_json(p: str | Path, data) -> None:
     Path(p).parent.mkdir(parents=True, exist_ok=True)
-    Path(p).write_text(json.dumps(data, indent=2), encoding="utf-8")
+    def plain(o):  # numpy scalars / arrays from measurements
+        return o.item() if hasattr(o, "item") and getattr(o, "ndim", 0) == 0 else (
+            o.tolist() if hasattr(o, "tolist") else str(o))
+    Path(p).write_text(json.dumps(data, indent=2, default=plain), encoding="utf-8")
 
 
 # ── easing ────────────────────────────────────────────────────────────────

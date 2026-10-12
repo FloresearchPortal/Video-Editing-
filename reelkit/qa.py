@@ -144,7 +144,7 @@ def check_mix(final: Path, words: list[dict], windows, issues: list[Issue], tl: 
             m["pause_db"] = round(db(pause), 1)
             gap_db = m["speech_db"] - m["pause_db"]
             m["voice_over_music_db"] = round(gap_db, 1)
-            if gap_db < 9:
+            if gap_db < 12:
                 issues.append(Issue("audio.music_too_loud", "FAIL", "music",
                                     f"music only {gap_db:.1f} dB under the voice (want 12–24 dB) — speech will "
                                     "be hard to follow on phone speakers", m, {"action": "music_volume", "factor": 0.7}))
@@ -296,6 +296,7 @@ def check_captions(layout_p: Path, words: list[dict], video: Path, issues: list[
     sz = lay["safe_zone"]
     outside, tiny, short, face_hits = [], [], [], []
     subj = Subject()
+    vdur = float(probe(video)["format"]["duration"])
     for p in lay["phrases"]:
         ws = p["words"]
         if p["end"] - ws[-1]["start"] < 0.35:
@@ -309,7 +310,7 @@ def check_captions(layout_p: Path, words: list[dict], video: Path, issues: list[
             if w["role"] != "light" and bh < oh * 0.035:
                 tiny.append(w["text"])
         # front text over the face, sampled at the middle of the phrase
-        tmid = (p["start"] + p["end"]) / 2
+        tmid = min((p["start"] + p["end"]) / 2, vdur - 0.2)  # last phrase may outlast the picture
         rd = FrameReader(video, tmid, 0.1, 30)
         f = rd.read()
         rd.close()
