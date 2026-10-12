@@ -58,6 +58,11 @@ def main() -> None:
                 from .brand import caption_style
                 merged.update(caption_style())
             merged.update({k: v for k, v in cap.items() if k not in ("enabled", "model", "language", "keyterms")})
+            # image clips (end cards, title cards) stay clean: no captions, no watermark
+            from .qa import clip_windows
+            tl_abs = {**tl, "clips": [{**c, "src": str(base / c["src"])} for c in tl["clips"]]}
+            merged["quiet"] = [[w["start"], w["end"]] for w in clip_windows(tl_abs, float(o.get("fps", 30)))
+                               if w["image"]]
             save_json(style, merged)
             run("captions", str(stage1), str(words), str(captioned), "--style", str(style))
         else:

@@ -56,7 +56,9 @@ DEFAULT_STYLE = {
     "hero_slant_deg": 0,         # brand italic: shear keyword sprites (e.g. 10 for FloStocks' slanted wordmark)
     "watermark": None,           # {"path": logo.png, "position": "top-right", "width": 0.11, "opacity": 0.85}
     "positions": ["head", "chest", "upper"],  # rotation of block placements (QA may drop "head")
+    "min_phrase": 0.0,           # merge phrases spoken faster than this (s) — set by the QA gate
     "keep_case": [],             # never lowercase these (brand names, tickers)
+    "quiet": [],                 # [[start, end]] windows with no captions/watermark (set by make_reel)
     "replace": {},               # transcript fixes, e.g. {"flow stocks": "FloStocks", "psx": "PSX"}
     "safe_zone": {"top": 0.10, "bottom": 0.22, "left": 0.06, "right": 0.14},  # Reels/TikTok UI overlap
 }
@@ -137,6 +139,16 @@ def phrases_from(words: list[dict], st: dict) -> list[Phrase]:
                and not re.search(r"[.?!,;:]$", p.words[-1].text)
                and q.words[0].start - p.words[-1].end < st["max_gap"]):
             q.words.insert(0, p.words.pop())
+    # too-short phrases (fast speech) merge into the next one so every block is readable
+    if st.get("min_phrase"):
+        merged = []
+        for p in ps:
+            if merged and (merged[-1].words[-1].end - merged[-1].words[0].start) < st["min_phrase"] \
+                    and len(merged[-1].words) + len(p.words) <= st["max_words"] + 2:
+                merged[-1].words += p.words
+            else:
+                merged.append(p)
+        ps = merged
     for p in ps:
         p.start = p.words[0].start
     for i, p in enumerate(ps):
@@ -312,9 +324,11 @@ def word_sprite_at(w: Word, t: float, p: Phrase, st: dict):
 POSITIONS = {"head": 0, "chest": 1, "upper": 2}
 
 
-def plan_anchors(ps, video, fps, ow, oh, subject: Subject | None, rng, positions=("head", "chest", "upper")):
+def plan_anchors(ps, video, fps, ow, oh, subject: Subject | None, rng, positions=("head", "chest", "upper"),
+                 safe=None):
     """Alternate phrase positions: around the top of the head (keyword tucked behind it) /
     chest, in front / upper third. Returns (anchors, person masks at each phrase start)."""
+    safe = safe or DEFAULT_STYLE["safe_zone"]
     anchors, masks = [], []
     for pi, p in enumerate(ps):
         loc = mask = None
@@ -334,10 +348,22 @@ def plan_anchors(ps, video, fps, ow, oh, subject: Subject | None, rng, positions
             mode = 1       # tight close-up: no headroom, never put type across the face
         if mode == 0:      # block straddles the crown of the head: keyword partly behind it
             anchors.append((hx + rng.uniform(-0.05, 0.05) * ow, hy - head * 0.9))
-        elif mode == 1:    # on the chest, in front
-            anchors.append((hx, min(hy + head * 2.6, oh * 0.66)))
-        else:              # above the head, upper third
-            anchors.append((ow / 2 + rng.uniform(-0.1, 0.1) * ow, max(oh * 0.2, hy - head * 2.2)))
+        else:
+            y = min(hy + head * 2.6, oh * 0.66) if mode == 1 else max(oh * 0.2, hy - head * 2.2)
+            x = hx if mode == 1 else ow / 2 + rng.uniform(-0.1, 0.1) * ow
+            # never on the face: if the block would overlap it, use the roomier free band
+            bh = oh * 0.17
+            f_top, f_bot = hy - head * 1.05, hy + head * 1.35
+            if y + bh / 2 > f_top and y - bh / 2 < f_bot:
+                above = (oh * safe["top"], f_top)
+                below = (f_bot, oh * (1 - safe["bottom"]))
+                band = max((above, below), key=lambda b: b[1] - b[0])
+                for b in (above, below) if mode == 2 else (below, above):
+                    if b[1] - b[0] >= bh:
+                        band = b
+                        break
+                y = (band[0] + band[1]) / 2
+            anchors.append((x, y))
     return anchors, masks
 
 
@@ -386,14 +412,26 @@ def main() -> None:
     fonts = {k: ImageFont.truetype(str(FONTS / v), int(st["size"]["light" if k == "light_italic" else k] * ow))
              for k, v in st["fonts"].items()}
     ps = phrases_from(apply_replacements(load_words(a.words), st["replace"]), st)
+    quiet = [tuple(q) for q in st.get("quiet", [])]   # [[start, end], …] e.g. end cards
+    kept = []
+    for p in ps:
+        if any(q0 - 0.05 <= p.start < q1 for q0, q1 in quiet):
+            continue
+        for q0, q1 in quiet:
+            if p.start < q0 < p.end:
+                p.end = q0
+        kept.append(p)
+    ps = kept
     assign_roles(ps, st, rng)
     subject = Subject() if st["behind_subject"] else None
-    anchors, masks = plan_anchors(ps, a.video, fps, ow, oh, subject, rng, st["positions"])
+    anchors, masks = plan_anchors(ps, a.video, fps, ow, oh, subject, rng, st["positions"],
+                                  st["safe_zone"])
     layout(ps, ow, oh, st, fonts, anchors, rng)
     limit_occlusion(ps, masks, st["max_cover"])
     del masks
     save_json(Path(a.out).with_suffix(".layout.json"), {
         "size": [ow, oh], "fps": fps, "safe_zone": st["safe_zone"], "watermark": bool(st.get("watermark")),
+        "quiet": quiet,
         "phrases": [{"start": p.start, "end": p.end, "words": [
             {"text": w.text, "start": w.start, "end": w.end, "role": w.role, "behind": w.behind,
              "color": list(w.color), "box": [w.x, w.y, int(w.sprite.shape[1]), int(w.sprite.shape[0])]}
@@ -424,7 +462,7 @@ def main() -> None:
                 else:
                     front = np.zeros((oh, ow, 4), np.float32) if front is None else front
                     compose(front, *r)
-        if wmark is not None:  # logo bug sits under the captions
+        if wmark is not None and not any(q0 <= t < q1 for q0, q1 in quiet):  # logo bug, under the captions
             base = np.zeros((oh, ow, 4), np.float32)
             compose(base, *wmark, 1.0)
             if front is not None:

@@ -299,7 +299,7 @@ def check_captions(layout_p: Path, words: list[dict], video: Path, issues: list[
     vdur = float(probe(video)["format"]["duration"])
     for p in lay["phrases"]:
         ws = p["words"]
-        if p["end"] - ws[-1]["start"] < 0.35:
+        if p["end"] - p["start"] < 0.6:          # whole phrase barely on screen
             short.append(round(p["start"], 2))
         for w in ws:
             x, y, bw, bh = w["box"]
@@ -342,10 +342,17 @@ def check_captions(layout_p: Path, words: list[dict], video: Path, issues: list[
     if tiny:
         issues.append(Issue("captions.too_small", "WARN", "captions", f"small words on a phone: {tiny[:5]}", m,
                             {"action": "caption_size", "factor": 1.1}))
-    if len(short) > max(2, 0.25 * len(lay["phrases"])):
+    if len(short) > max(1, 0.15 * len(lay["phrases"])):
         issues.append(Issue("captions.flashing", "WARN", "captions",
-                            f"{len(short)} phrases leave the screen <0.35 s after their last word", m,
+                            f"{len(short)} phrases are on screen < 0.6 s (too fast to read): {short[:6]}", m,
                             {"action": "caption_phrasing"}))
+    # nothing over end cards / title cards
+    cards = [w for w in clip_windows(tl, lay.get("fps", 30)) if w["image"]]
+    over = [round(p["start"], 2) for p in lay["phrases"] for w in cards if p["start"] < w["start"] + 0.05 < p["end"]
+            or w["start"] <= p["start"] < w["end"]]
+    if over:
+        issues.append(Issue("captions.over_card", "FAIL", "captions", f"captions run over the end/title card at {over}",
+                            m, {"action": "rerun", "stage": "captions"}))
     # hook: something on screen in the first second
     if lay["phrases"] and lay["phrases"][0]["start"] > 1.0:
         issues.append(Issue("captions.late_hook", "WARN", "assemble",

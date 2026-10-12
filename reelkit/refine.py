@@ -63,10 +63,20 @@ def apply_fix(issue: dict, tl: dict, base: Path, fps: float) -> tuple[str, str] 
         return "music", f"music bed {old:.2f} → {tl['music']['volume']:.2f}"
     if act == "grade_extra":
         extra = tl.setdefault("grade_extra", [])
-        if fx["filter"] in extra:
+        name = fx["filter"].split("=")[0] + "=" + fx["filter"].split("=")[1].split(":")[0]  # e.g. "hue=s"
+        prev = next((f for f in extra if f.startswith(name + "=")), None)
+        if prev is None:
+            extra.append(fx["filter"])
+            return "assemble", f"grade trim: {fx['filter']}"
+        # same correction again → it wasn't enough: escalate by the same step, within sane bounds
+        old_v, step = float(prev.split("=")[-1]), float(fx["filter"].split("=")[-1])
+        new_v = round(min(max(old_v * step, 0.6), 1.4), 3)
+        if new_v == old_v:
             return None
-        extra.append(fx["filter"])
-        return "assemble", f"grade trim: {fx['filter']}"
+        extra[extra.index(prev)] = f"{name}={new_v}"
+        if name == "hue=s" and not any(f.startswith("colorbalance") for f in extra):
+            extra.append("colorbalance=rm=-0.03:bm=0.02")   # pull warm midtones (skin) back toward neutral
+        return "assemble", f"grade trim escalated: {name}={new_v}"
     if act == "reframe":
         c = tl["clips"][fx["clip"]]
         notes = []
@@ -110,9 +120,11 @@ def apply_fix(issue: dict, tl: dict, base: Path, fps: float) -> tuple[str, str] 
             size[k] = round(min(size[k] * fx["factor"], 0.24), 4)
         return "captions", f"caption sizes ×{fx['factor']}"
     if act == "caption_phrasing":
-        cap["hold"] = round(float(cap.get("hold", 0.5)) + 0.25, 2)
-        cap["max_gap"] = round(float(cap.get("max_gap", 0.45)) + 0.1, 2)
-        return "captions", f"phrases held longer (hold {cap['hold']}s, max_gap {cap['max_gap']}s)"
+        mp = round(float(cap.get("min_phrase", 0.0)) + 0.4, 2)
+        if mp > 1.2:
+            return None
+        cap["min_phrase"] = mp
+        return "captions", f"merge phrases shorter than {mp}s into their neighbour (readable on a phone)"
     if act == "replace_terms":
         rep = cap.setdefault("replace", {})
         new = {k: v for k, v in fx["replace"].items() if rep.get(k) != v}
