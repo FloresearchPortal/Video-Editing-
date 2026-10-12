@@ -263,7 +263,7 @@ def layout(ps: list[Phrase], ow: int, oh: int, st: dict, fonts: dict, anchors: l
         heights = [max(w.sprite.shape[0] for w in ln) for ln in lines]
         # true extent: words overlap by 14 %, the last word doesn't
         widths = [sum(w.sprite.shape[1] for w in ln[:-1]) * 0.86 + ln[-1].sprite.shape[1] for ln in lines]
-        block_h = sum(h * 0.62 for h in heights)
+        block_h = sum(h * 0.62 for h in heights[:-1]) + heights[-1] * 0.82  # last line's full ink
         block_w = max(widths)
         anchor = anchors[pi]  # (cx, cy) of the block in output px
         sz = st["safe_zone"]
@@ -273,8 +273,9 @@ def layout(ps: list[Phrase], ow: int, oh: int, st: dict, fonts: dict, anchors: l
         for li, (ln, h, wdt) in enumerate(zip(lines, heights, widths)):
             stagger = rng.uniform(-0.08, 0.08) * ow if len(lines) > 1 else 0
             x = cx - wdt / 2 + stagger
-            inset = 0.18 * h  # sprites carry shadow padding around the ink
-            x = min(max(x, ow * sz["left"] - inset), ow * (1 - sz["right"]) + inset - wdt)
+            # sprites carry shadow padding around the ink: allow each edge word its OWN padding
+            in_l, in_r = 0.18 * ln[0].sprite.shape[0], 0.18 * ln[-1].sprite.shape[0]
+            x = min(max(x, ow * sz["left"] - in_l), ow * (1 - sz["right"]) + in_r - wdt)
             for w in ln:
                 w.x = int(x)
                 w.y = int(y + (h - w.sprite.shape[0]) * 0.5)
