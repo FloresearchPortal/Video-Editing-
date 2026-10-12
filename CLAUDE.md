@@ -13,17 +13,21 @@ suggest a paid plan unless the user explicitly asks for it.** Setup and costs: `
 | colour grade like the reference / make a LUT / DaVinci Resolve | **`/davinci-resolve-grade`** (`reelkit.grade_match`; Resolve free gets a .cube — Resolve automation needs paid Studio, don't use it) |
 | denoise / clean the voice | `/clean-audio` (RNNoise, free) |
 | add / build sound effects | `/suggest-sfx` + `python -m reelkit.sfx_gen` |
-| custom motion graphics, animated title cards, fake screencasts | `/make-tsx`, `/fake-screencast`, `/vidtsx-2d-generator`, `/remotion-*` (install: `scripts/install-remotion-skills.sh`) — Remotion is free only for individuals / ≤3-person companies |
+| motion graphics: animated titles, lower thirds, stat/stock-ticker cards, logo stings, end cards, graphic/shader transitions, kinetic type, charts, maths animation, SFX for graphics — FloStocks brand by default | **`/motion-editor`** (HyperFrames, Apache-2.0, free for everyone; workspace `motion/`; places graphics on reels via the timeline's `"overlays"`) — it routes to the vendored HyperFrames, iart.ai, Manim and gl-transitions skills (refresh: `scripts/install-motion-skills.sh`) |
+| existing Remotion shots, fake screencasts | `/make-tsx`, `/fake-screencast`, `/vidtsx-2d-generator`, `/remotion-*` (install: `scripts/install-remotion-skills.sh`) — Remotion is free only for individuals / ≤3-person companies |
 | channel brand (fonts, colours) for the Remotion shots | `/brand-setup` |
 
 ## Layout
 ```
 reelkit/        free editing pipeline: transcribe, assemble (tracking/zoom/transitions/grade),
-                captions (kinetic, behind-subject), music (ducking, loudnorm), sfx_gen, review, make_reel
+                captions (kinetic, behind-subject), overlay (motion graphics), music (ducking,
+                loudnorm), sfx_gen, review, make_reel
+motion/         HyperFrames workspace: templates/ (house + FloStocks overlays), brands/ (tokens,
+                OFL fonts), projects/ (per-video motion work); renders/ is gitignored
 assets/fonts/   Poppins (SIL OFL) — caption typography
 models/         MediaPipe models, auto-downloaded on first use (gitignored)
 tools/          cut pipeline tools (clean-cut, clean-audio, mixing, YouTube upload)
-remotion/       Remotion project for motion-graphics shots (optional, licence above)
+remotion/       Remotion project for the imported long-form pipeline (optional, licence above)
 media/library/  reusable assets (logos, sfx); add only free-licensed files and record the licence
 videos/         per-video projects (raw footage is gitignored)
 ```

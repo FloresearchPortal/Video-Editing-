@@ -1,0 +1,2 @@
+{"description": "Brand transition: the logo's slanted green/dark bars rise and cover the frame 0.34-0.44 s. Use {\"cut\": <cut time>}.", "duration": 0.8, "anchor": 0.4,
+ "sfx": {"src": "media/library/sfx/generated/whoosh.wav", "at": 0.0, "gain": 0.5}}

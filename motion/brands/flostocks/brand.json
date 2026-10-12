@@ -1,0 +1,45 @@
+{
+  "name": "FloStocks",
+  "tagline": "By Floret Capitals",
+  "site": "flostocks.com",
+  "source": "Extracted from https://www.flostocks.com (site CSS variables + logo pixels), 2026-10-12",
+  "colors": {
+    "green": "#38D100",
+    "green_logo": "#2AA300",
+    "green_deep": "#1F7A00",
+    "green_forest": "#0C5E06",
+    "lime": "#45E01F",
+    "ink": "#062600",
+    "night": "#0B0F14",
+    "wash": "#EAF9E4",
+    "paper": "#F7FBF8",
+    "gold": "#E6A817",
+    "gold_soft": "#F1DDA6",
+    "loss": "#E4002B",
+    "white": "#FFFFFF"
+  },
+  "usage": {
+    "accent": "green — keywords, gains, progress, CTAs",
+    "dark_surface": "night / ink — plates and end cards over footage",
+    "highlight": "gold — 'free', premium, attention (sparingly)",
+    "loss": "loss red — only for negative price moves, never decoration"
+  },
+  "fonts": {
+    "display": {"family": "Manrope", "file": "fonts/Manrope-Variable.ttf", "weights": "200-800", "use": "titles, names, CTAs (800 for headlines)"},
+    "body": {"family": "Inter", "file": "fonts/Inter-Variable.ttf", "weights": "100-900", "use": "labels, roles, small copy"},
+    "numbers": {"family": "IBM Plex Mono", "files": ["fonts/IBMPlexMono-Medium.ttf", "fonts/IBMPlexMono-SemiBold.ttf"], "use": "prices, tickers, percentages, counters"}
+  },
+  "logos": {
+    "full": "media/library/logos/flostocks-logo-full.png",
+    "full_on_dark": "media/library/logos/flostocks-logo-full-on-dark.png",
+    "wordmark": "media/library/logos/flostocks-wordmark.png",
+    "wordmark_on_dark": "media/library/logos/flostocks-wordmark-on-dark.png",
+    "mark": "media/library/logos/flostocks-icon.png",
+    "mark_on_dark": "media/library/logos/flostocks-icon-on-dark.png"
+  },
+  "motion": {
+    "motif": "the logo's three slanted bars: parallelograms leaning right (skewX ≈ -20deg), green / green / dark",
+    "energy": "confident and clean, finance-credible: fast ease-out entries (power3/expo), no bouncy overshoot on numbers",
+    "sfx": "click/tick for tickers, swoosh_short for straps, whoosh for wipes, sparkle on a landed number"
+  }
+}

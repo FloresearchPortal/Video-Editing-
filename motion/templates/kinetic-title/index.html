@@ -1,0 +1,56 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="portrait"
+  data-composition-variables='[
+    {"id":"lead","type":"string","label":"Lead-in (small)","default":"the one thing"},
+    {"id":"keyword","type":"string","label":"Keyword (big)","default":"nobody"},
+    {"id":"tail","type":"string","label":"Tail (medium)","default":"tells you about money"},
+    {"id":"accent","type":"color","label":"Keyword colour","default":"#F2D45C"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Poppins"; font-weight: 200; src: url("assets/fonts/Poppins-ExtraLight.ttf"); }
+      @font-face { font-family: "Poppins"; font-weight: 700; src: url("assets/fonts/Poppins-Bold.ttf"); }
+      @font-face { font-family: "Poppins"; font-weight: 800; font-style: italic; src: url("assets/fonts/Poppins-ExtraBoldItalic.ttf"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 100%; height: 100%; font-family: "Poppins", sans-serif; }
+      /* Hook title in the upper third, the caption house style scaled up: light lead, huge italic keyword, bold tail. */
+      #block { position: absolute; left: 80px; right: 140px; top: 330px; height: 470px; text-align: center;
+               text-shadow: 0 6px 28px rgba(0, 0, 0, 0.45); }
+      .line { position: absolute; left: 0; right: 0; display: block; color: #fff; white-space: nowrap; }
+      #lead { top: 0; height: 90px; font-weight: 200; font-size: 64px; line-height: 90px; }
+      #keyword { top: 86px; height: 230px; font-weight: 800; font-style: italic; font-size: 190px; line-height: 230px; color: var(--accent); letter-spacing: -0.02em; }
+      #tail { top: 320px; height: 110px; font-weight: 700; font-size: 70px; line-height: 110px; }
+      #sweep { position: absolute; left: 14%; right: 14%; top: 290px; height: 18px; border-radius: 9px; background: var(--accent); opacity: 0.9; transform-origin: 0% 50%; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.5" data-width="1080" data-height="1920">
+      <div id="block" class="clip" data-start="0" data-duration="3.5" data-track-index="0">
+        <span id="lead" class="line" data-var-text="lead">the one thing</span>
+        <div id="sweep"></div>
+        <span id="keyword" class="line" data-var-text="keyword" data-layout-allow-occlusion>nobody</span>
+        <span id="tail" class="line" data-var-text="tail">tells you about money</span>
+      </div>
+    </div>
+    <script>
+      // Lead fades up, keyword slams in (scale 1.35 -> 1, blur clears) with an underline sweep, tail rises; out together.
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#lead", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, 0)
+        .fromTo("#keyword", { scale: 1.35, opacity: 0, filter: "blur(14px)" },
+                            { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.32, ease: "power4.out" }, 0.22)
+        .fromTo("#sweep", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "power3.inOut" }, 0.42)
+        .fromTo("#tail", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, 0.55)
+        .to("#keyword", { scale: 1.04, duration: 2.1, ease: "none" }, 0.6)
+        .to(["#lead", "#keyword", "#tail", "#sweep"], { opacity: 0, y: -24, duration: 0.3, ease: "power2.in", stagger: 0.04 }, 3.05);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

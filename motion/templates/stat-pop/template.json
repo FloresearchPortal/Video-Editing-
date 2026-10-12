@@ -1,0 +1,2 @@
+{"description": "Number count-up card (prefix/value/suffix + label); lands at 1.2 s.", "duration": 3.5, "anchor": 0.0,
+ "sfx": {"src": "media/library/sfx/generated/pop.wav", "at": 0.05, "gain": 0.5}}

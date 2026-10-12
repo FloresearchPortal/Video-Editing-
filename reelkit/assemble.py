@@ -150,6 +150,37 @@ def light_leak(img, amount: float, phase: float):
     return np.clip(out, 0, 255).astype(np.uint8)
 
 
+def glitch(img, amount: float, seed: int):
+    """RGB split + displaced horizontal slices; deterministic for a given (amount, seed)."""
+    if amount <= 0.01:
+        return img
+    h, w = img.shape[:2]
+    rng = np.random.default_rng(seed)
+    d = int(amount * 0.04 * w)
+    out = img.copy()
+    out[:, :, 2] = np.roll(img[:, :, 2], d, axis=1)   # red right
+    out[:, :, 0] = np.roll(img[:, :, 0], -d, axis=1)  # blue left
+    for _ in range(int(3 + 9 * amount)):
+        y0 = int(rng.integers(0, h - 8))
+        bh = int(rng.integers(8, max(9, int(h * 0.08 * amount) + 9)))
+        out[y0:y0 + bh] = np.roll(out[y0:y0 + bh], int(rng.integers(-1, 2) * amount * 0.12 * w), axis=1)
+    return out
+
+
+def spin(img, amount: float, direction: int):
+    """Rotational blur + zoom, the classic spin transition."""
+    if amount <= 0.01:
+        return img
+    h, w = img.shape[:2]
+    acc = np.zeros_like(img, np.float32)
+    steps = 7
+    base = direction * 35 * amount
+    for i in range(steps):
+        m = cv2.getRotationMatrix2D((w / 2, h / 2), base * (0.7 + 0.3 * i / (steps - 1)), 1 + 0.35 * amount)
+        acc += cv2.warpAffine(img, m, (w, h), borderMode=cv2.BORDER_REFLECT).astype(np.float32)
+    return (acc / steps).astype(np.uint8)
+
+
 def apply_transition(img, kind: str, side: str, p: float, ow: int):
     """p: 0 at the far edge of the transition window -> 1 at the cut."""
     p = ease_in_out(p)
@@ -163,6 +194,10 @@ def apply_transition(img, kind: str, side: str, p: float, ow: int):
         return motion_blur_x(img, p, d * -0.35 * ow * p)
     if kind == "flash":
         return light_leak(img, p, 0.3 if side == "out" else 0.7)
+    if kind == "glitch":
+        return glitch(img, p, int(p * 1000) + (0 if side == "out" else 7))
+    if kind == "spin":
+        return spin(img, p, 1 if side == "out" else -1)
     if kind == "dip":
         return (img.astype(np.float32) * (1 - p)).astype(np.uint8)
     return img

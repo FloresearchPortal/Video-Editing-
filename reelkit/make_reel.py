@@ -1,9 +1,10 @@
-"""One command, whole edit: assemble -> transcribe the cut -> kinetic captions -> music bed.
+"""One command, whole edit: assemble -> transcribe the cut -> kinetic captions -> motion-graphics
+overlays -> music bed.
 
     python -m reelkit.make_reel timeline.json [--preview] [--from captions]
 
 Every stage writes into the timeline's `output` paths (default edit/), so a stage can be re-run
-alone after a tweak: --from transcribe|captions|music.
+alone after a tweak: --from transcribe|captions|overlays|music.
 """
 from __future__ import annotations
 
@@ -16,7 +17,7 @@ from pathlib import Path
 
 from .common import ROOT, load_json, save_json
 
-STAGES = ["assemble", "transcribe", "captions", "music"]
+STAGES = ["assemble", "transcribe", "captions", "overlays", "music"]
 
 
 def run(mod: str, *args: str) -> None:
@@ -39,6 +40,7 @@ def main() -> None:
     stage1 = base / o.get("stage1", "edit/stage1.mp4")
     words = base / o.get("words", "edit/stage1.words.json")
     captioned = base / o.get("captioned", "edit/stage2_captions.mp4")
+    overlaid = base / o.get("overlaid", "edit/stage3_overlays.mp4")
     final = base / o.get("final", "edit/final.mp4")
     todo = STAGES[STAGES.index(a.start):]
 
@@ -58,20 +60,32 @@ def main() -> None:
             run("captions", str(stage1), str(words), str(captioned), "--style", str(style))
         else:
             shutil.copy(stage1, captioned)
+    ovs = tl.get("overlays", [])
+    if "overlays" in todo:
+        if ovs:
+            spec = base / "edit" / "overlays.json"
+            save_json(spec, ovs)
+            run("overlay", str(captioned), str(spec), str(overlaid), "--base", str(base))
+        else:
+            shutil.copy(captioned, overlaid)
     if "music" in todo:
         m = tl.get("music")
         if m and m.get("src"):
-            args = [str(captioned), str(base / m["src"]), str(final),
+            args = [str(overlaid), str(base / m["src"]), str(final),
                     "--volume", str(m.get("volume", 0.22)), "--start", str(m.get("start", 0)),
                     "--lufs", str(m.get("lufs", -14))]
             if not m.get("duck", True):
                 args.append("--no-duck")
             sfx = [f"t={s['t']}:{base / s['src']}:{s.get('gain', 0.6)}" for s in tl.get("sfx", [])]
+            if ovs:  # SFX attached to overlays, timed from where each overlay landed
+                from .overlay import resolve, sfx_cues
+                sfx += [f"t={c['t']}:{c['src']}:{c['gain']}"
+                        for c in sfx_cues(resolve(ovs, base, base / "edit" / "overlays"))]
             if sfx:
                 args += ["--sfx", *sfx]
             run("music", *args)
         else:
-            shutil.copy(captioned, final)
+            shutil.copy(overlaid, final)
     print(f"\nfinal: {final}")
 
 

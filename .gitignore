@@ -66,3 +66,10 @@ media/library/sfx/generated/
 
 # Remotion agent skills — fetched by scripts/install-remotion-skills.sh (upstream has no licence file)
 .claude/skills/remotion-*/
+
+# motion graphics (HyperFrames): renders, overlay cache, snapshots are regenerable
+motion/renders/
+motion/**/renders/
+motion/**/snapshots/
+**/edit/overlays/
+.hyperframes/

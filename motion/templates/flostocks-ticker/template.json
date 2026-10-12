@@ -1,0 +1,2 @@
+{"description": "Stock/index card: symbol, name, price count-up in IBM Plex Mono, ▲ green / ▼ red change pill, sparkline draws on. vars: symbol, name, value, decimals, change, points.", "duration": 4.0, "anchor": 0.0,
+ "sfx": {"src": "media/library/sfx/generated/sparkle.wav", "at": 1.45, "gain": 0.4}}

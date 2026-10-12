@@ -6,14 +6,16 @@
 | ffmpeg + ffprobe | all decoding, encoding, filters, audio mix | macOS `brew install ffmpeg` · Ubuntu `sudo apt install ffmpeg` · Windows `winget install Gyan.FFmpeg` |
 | Python 3.10+ | reelkit + tools | python.org or your package manager |
 | libEGL (Linux servers only) | MediaPipe segmentation | `sudo apt install libegl1 libgles2` |
-| Node.js 18+ (optional) | only for the Remotion motion-graphics skills | nodejs.org |
+| Node.js 22+ | motion graphics (HyperFrames) and the Remotion skills | nodejs.org |
+| cairo + pango dev libs (optional) | Manim maths animation | Ubuntu `sudo apt-get update && sudo apt-get install libcairo2-dev libpango1.0-dev pkg-config` · macOS `brew install cairo pango pkg-config` |
 
 ## 2. Python environment
 ```bash
 python -m venv .venv                       # or: uv venv .venv
 .venv/bin/pip install -r requirements.txt  # Windows: .venv\Scripts\pip install -r requirements.txt
 .venv/bin/python -m reelkit.sfx_gen        # synthesise the free SFX pack once
-./scripts/install-remotion-skills.sh       # optional: Remotion motion-graphics skills
+./scripts/install-motion-skills.sh --tools  # motion graphics: HyperFrames CLI + Chrome, Manim, gl-transitions
+./scripts/install-remotion-skills.sh       # optional: Remotion skills (licence-limited, see §6)
 ```
 First runs download the Whisper model (~0.5 GB, Hugging Face cache) and two small MediaPipe
 models into `models/` — after that everything runs offline.
@@ -53,4 +55,5 @@ Log every track's source + licence in `<project>/edit/credits.txt`.
 | SFX | `reelkit.sfx_gen` (synthesised) | ElevenLabs SFX |
 | Colour grade matched to the reference | `reelkit.grade_match` → .cube LUT, used by reelkit and loadable in **DaVinci Resolve free** | Resolve Studio scripting / Resolve MCP servers (Studio only) |
 | Denoise | RNNoise via ffmpeg `arnndn` (`tools/clean_voice.py --method rnnoise`) | ElevenLabs Voice Isolator |
-| Motion graphics (optional) | Remotion — **free only for individuals, non-profits and companies of ≤3 people**; larger companies need a paid Remotion company licence | — |
+| Motion graphics | **HyperFrames** (Apache-2.0, free for everyone) via `/motion-editor`, Manim (MIT), gl-transitions (MIT); renders locally — never HeyGen cloud/TTS | HeyGen cloud render/TTS/avatars, After Effects |
+| Motion graphics (legacy, optional) | Remotion — **free only for individuals, non-profits and companies of ≤3 people**; larger companies need a paid Remotion company licence | — |

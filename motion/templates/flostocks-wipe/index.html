@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 100%; height: 100%; }
+      /* The logo's slanted bars as a transition: three bars rise bottom -> top, leaning like the mark.
+         The frame is fully covered 0.34-0.44 s; place it with {"cut": t} (anchor 0.4). */
+      .bar { position: absolute; top: 0; height: 100%; }
+      #w1 { left: -20%; width: 60%; background: #38D100; }
+      #w2 { left: 30%; width: 50%; background: #2AA300; }
+      #w3 { left: 70%; width: 60%; background: #0B0F14; }
+      #w0 { left: -40%; width: 180%; background: #0B0F14; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="0.8" data-width="1080" data-height="1920">
+      <div id="wipe" class="clip" data-start="0" data-duration="0.8" data-track-index="0" data-layout-allow-overflow>
+        <div id="w0" class="bar"></div>
+        <div id="w1" class="bar"></div>
+        <div id="w2" class="bar"></div>
+        <div id="w3" class="bar"></div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const bars = ["#w1", "#w2", "#w3"];
+      tl.set(bars, { skewX: -20 }, 0)
+        .fromTo(bars, { yPercent: 115 }, { yPercent: 0, duration: 0.32, ease: "power3.in", stagger: 0.03 }, 0)
+        .fromTo("#w0", { yPercent: 115 }, { yPercent: 0, duration: 0.3, ease: "power3.in" }, 0.06)
+        .to(["#w0", ...bars], { yPercent: -115, duration: 0.34, ease: "power3.out", stagger: 0.025 }, 0.44);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

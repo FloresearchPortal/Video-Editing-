@@ -1,0 +1,97 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="portrait"
+  data-composition-variables='[
+    {"id":"symbol","type":"string","label":"Ticker / index","default":"KSE-100"},
+    {"id":"name","type":"string","label":"Name","default":"PSX benchmark index"},
+    {"id":"value","type":"number","label":"Price / level","default":118452.36},
+    {"id":"decimals","type":"number","label":"Decimals","default":2,"min":0,"max":2},
+    {"id":"change","type":"number","label":"Change %","default":1.84},
+    {"id":"points","type":"string","label":"Sparkline (comma-separated)","default":"100,102,101,104,103,107,106,110,109,113"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Manrope"; font-weight: 200 800; src: url("assets/brand/fonts/Manrope-Variable.ttf"); }
+      @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/brand/fonts/Inter-Variable.ttf"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 600; src: url("assets/brand/fonts/IBMPlexMono-SemiBold.ttf"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #card { position: absolute; left: 90px; width: 840px; top: 280px; height: 560px; border-radius: 40px;
+              background: rgba(11, 15, 20, 0.86); border: 2px solid rgba(56, 209, 0, 0.28); overflow: hidden; }
+      #edge { position: absolute; left: 0; top: 0; width: 14px; height: 100%; background: #38D100; transform-origin: 50% 100%; }
+      #sym { position: absolute; left: 70px; top: 52px; height: 70px; font: 800 58px/70px "Manrope", sans-serif; color: #fff; letter-spacing: -0.01em; white-space: nowrap; }
+      #name { position: absolute; left: 72px; top: 124px; height: 44px; font: 500 32px/44px "Inter", sans-serif; color: rgba(234, 249, 228, 0.7); white-space: nowrap; }
+      #chg { position: absolute; right: 60px; top: 62px; height: 64px; padding: 0 22px; border-radius: 32px; font: 600 38px/64px "IBM Plex Mono", monospace; white-space: nowrap; }
+      #val { position: absolute; left: 66px; top: 186px; height: 130px; font: 600 112px/130px "IBM Plex Mono", monospace; color: #fff; letter-spacing: -0.04em; white-space: nowrap; }
+      #spark { position: absolute; left: 70px; top: 340px; width: 700px; height: 180px; overflow: visible; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+      <div id="card-clip" class="clip" data-start="0" data-duration="4" data-track-index="0">
+        <div id="card">
+          <div id="edge"></div>
+          <div id="sym" data-var-text="symbol">KSE-100</div>
+          <div id="name" data-var-text="name">PSX benchmark index</div>
+          <div id="chg">▲ 0.00%</div>
+          <div id="val">0</div>
+          <svg id="spark" viewBox="0 0 700 180" data-layout-allow-overflow>
+            <defs><linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="currentColor" stop-opacity="0.35" /><stop offset="1" stop-color="currentColor" stop-opacity="0" />
+            </linearGradient></defs>
+            <path id="area" fill="url(#fill)" d="" />
+            <path id="line" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" d="" />
+            <circle id="dot" r="12" fill="currentColor" cx="0" cy="0" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <script>
+      const v = window.__hyperframes.getVariables();
+      const up = v.change >= 0;
+      const col = up ? "#38D100" : "#E4002B";
+      const chg = document.getElementById("chg"), val = document.getElementById("val");
+      chg.style.color = col;
+      chg.style.background = up ? "rgba(56, 209, 0, 0.14)" : "rgba(228, 0, 43, 0.16)";
+      document.getElementById("spark").style.color = col;
+      const fmt = (x, d) => x.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+      // sparkline geometry from the comma-separated points
+      const pts = String(v.points).split(",").map(Number).filter((n) => !isNaN(n));
+      const lo = Math.min(...pts), hi = Math.max(...pts), span = hi - lo || 1;
+      const xy = pts.map((p, i) => [i * (700 / Math.max(1, pts.length - 1)), 170 - ((p - lo) / span) * 150]);
+      const d = xy.map(([x, y], i) => `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+      const line = document.getElementById("line"), area = document.getElementById("area"), dot = document.getElementById("dot");
+      line.setAttribute("d", d);
+      area.setAttribute("d", `${d} L700 180 L0 180 Z`);
+      const len = line.getTotalLength();
+      line.style.strokeDasharray = `${len}`;
+      const last = xy[xy.length - 1];
+      dot.setAttribute("cx", last[0]); dot.setAttribute("cy", last[1]);
+
+      const num = { x: 0, c: 0 };
+      const paint = () => {
+        val.textContent = fmt(num.x, v.decimals);
+        chg.textContent = `${up ? "▲" : "▼"} ${fmt(Math.abs(num.c), 2)}%`;
+      };
+      paint();
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#card", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 0)
+        .fromTo("#edge", { scaleY: 0 }, { scaleY: 1, duration: 0.5, ease: "expo.out" }, 0.1)
+        .fromTo(["#sym", "#name"], { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power3.out", stagger: 0.06 }, 0.15)
+        .fromTo(num, { x: v.value * 0.97, c: 0 }, { x: v.value, c: v.change, duration: 1.2, ease: "power3.out", onUpdate: paint }, 0.25)
+        .fromTo("#chg", { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "power3.out" }, 0.3)
+        .fromTo(line, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 1.2, ease: "power2.inOut" }, 0.35)
+        .fromTo(area, { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power1.out" }, 1.0)
+        .fromTo(dot, { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: 0.3, ease: "power3.out" }, 1.5)
+        .to("#card", { y: -40, opacity: 0, duration: 0.3, ease: "power2.in" }, 3.65);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

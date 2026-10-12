@@ -55,10 +55,14 @@ clip, zoom change or transition every **2–4 s**. Put a hook in the first 2 s.
   ],
   "captions": {"model": "small", "language": "en", "emphasis": ["deal", "offended"]},
   "music": {"src": "music/bed.mp3", "volume": 0.22, "duck": true},
-  "sfx": [{"t": 3.1, "src": "media/library/sfx/generated/whoosh.wav", "gain": 0.5}]
+  "sfx": [{"t": 3.1, "src": "media/library/sfx/generated/whoosh.wav", "gain": 0.5}],
+  "overlays": [{"template": "flostocks-lower-third", "vars": {"name": "Sam Lee"}, "t": 1.2, "sfx": true}]
 }
 ```
 Paths are relative to the timeline file (absolute paths also work).
+**Overlays** (motion graphics — titles, straps, stat/ticker cards, logo stings, graphic wipes) are
+designed and placed with **`/motion-editor`**; they render from `motion/templates/` on demand and
+composite after the captions, before the music stage.
 
 **Clip keys**: `src` (video or image), `in`/`out` seconds (video) or `dur` (image),
 `zoom` — number, `"push"` (slow 1.0→1.12), `"pull"`, `"punch"` (hard cut-in to 1.3× at the
@@ -67,7 +71,7 @@ midpoint), or keyframes `[[t, scale, "ease"|"linear"|"step"], …]` relative to 
 vertically in frame; `offset_x` — shift framing (fraction of frame width, ±);
 `volume`, `mute`.
 **Transitions** (into this clip): `cut` (default), `zoom_blur`, `whip`, `flash` (warm light
-leak), `dip` (to black). They straddle the cut without overlapping, so audio stays in sync.
+leak), `dip` (to black), `glitch` (RGB split + slice tear), `spin` (rotational blur). They straddle the cut without overlapping, so audio stays in sync.
 **Grades**: best = `"lut:grades/<camera>_look.cube+vignette"` — a LUT matched to the reference with
 `/davinci-resolve-grade` (`reelkit.grade_match`). Quick presets: `teal_orange`, `moody`, `clean`, `none`,
 or any raw ffmpeg `-vf` chain.

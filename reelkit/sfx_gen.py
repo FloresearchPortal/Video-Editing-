@@ -4,7 +4,9 @@
     python -m reelkit.sfx_gen --only whoosh impact
 
 Presets: whoosh (zoom/whip transitions), swoosh_short, impact (hard cut / keyword hit),
-riser (build into a punch-in), pop (word/graphic pop), tick (subtle UI tick), shimmer (light leak).
+riser (build into a punch-in), pop (word/graphic pop), tick (subtle UI tick), shimmer (light leak),
+glitch (glitch transition / data hit), click (UI click, cursor), bass_drop (title slam / reveal),
+sparkle (stat or logo landing).
 """
 from __future__ import annotations
 
@@ -35,6 +37,17 @@ PRESETS = {
     "shimmer": ("sine=f=1760:d=1.2",
                 "aeval='(sin(2*PI*1760*t)+0.6*sin(2*PI*2640*t)+0.4*sin(2*PI*3520*t))/2*sin(PI*t/1.2)',"
                 "aecho=0.8:0.7:60|120:0.4|0.3,volume=0.8"),
+    # bit-crushed noise gated into stutters, plus a falling square-ish tone
+    "glitch": ("anoisesrc=d=0.45:c=white:a=0.7",
+               "aeval='val(0)*gt(sin(2*PI*23*t),0.1)+0.5*sgn(sin(2*PI*(700-900*t)*t))*gt(sin(2*PI*11*t),0.4)',"
+               "acrusher=bits=6:samples=6,highpass=f=300,volume='exp(-3*t)':eval=frame,volume=0.9"),
+    "click": ("sine=f=3200:d=0.04",
+              "aeval='(sin(2*PI*3200*t)+0.5*sin(2*PI*5100*t))*exp(-160*t)',volume=1.6"),
+    "bass_drop": ("sine=f=40:d=1.4",
+                  "aeval='sin(2*PI*(120*t-30*t*t))*exp(-2.4*t)',lowpass=f=300,volume=1.5"),
+    "sparkle": ("sine=f=2000:d=0.9",
+                "aeval='(sin(2*PI*2093*t)*lt(t,0.3)+sin(2*PI*2637*t)*gte(t,0.08)+sin(2*PI*3136*t)*gte(t,0.16))"
+                "*exp(-5*t)/2',aecho=0.7:0.6:45|90:0.35|0.25,volume=2.8"),
 }
 
 

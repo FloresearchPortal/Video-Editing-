@@ -1,0 +1,62 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="portrait"
+  data-composition-variables='[
+    {"id":"value","type":"number","label":"Number","default":87},
+    {"id":"decimals","type":"number","label":"Decimals","default":0,"min":0,"max":2},
+    {"id":"prefix","type":"string","label":"Prefix","default":""},
+    {"id":"suffix","type":"string","label":"Suffix","default":"%"},
+    {"id":"label","type":"string","label":"Label","default":"of reels are watched on mute"},
+    {"id":"accent","type":"color","label":"Accent","default":"#6FD3E0"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Poppins"; font-weight: 600; src: url("assets/fonts/Poppins-SemiBold.ttf"); }
+      @font-face { font-family: "Poppins"; font-weight: 900; font-style: italic; src: url("assets/fonts/Poppins-BlackItalic.ttf"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 100%; height: 100%; font-family: "Poppins", sans-serif; }
+      #card { position: absolute; left: 110px; width: 800px; top: 300px; height: 470px; border-radius: 44px;
+              background: rgba(12, 14, 22, 0.66); border: 3px solid rgba(255, 255, 255, 0.10); }
+      #ring { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 44px; border: 4px solid var(--accent); opacity: 0; }
+      #num { position: absolute; left: 0; right: 0; top: 50px; height: 250px; text-align: center; font-weight: 900; font-style: italic;
+             font-size: 220px; line-height: 250px; color: var(--accent); letter-spacing: -0.03em; white-space: nowrap; }
+      #label { position: absolute; left: 50px; right: 50px; top: 310px; height: 110px; text-align: center; font-weight: 600;
+               font-size: 46px; line-height: 55px; color: #fff; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="3.5" data-width="1080" data-height="1920">
+      <div id="card-clip" class="clip" data-start="0" data-duration="3.5" data-track-index="0">
+        <div id="card">
+          <div id="ring" data-layout-allow-occlusion></div>
+          <div id="num">0%</div>
+          <div id="label" data-var-text="label">of reels are watched on mute</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Card pops (scale 0.85 -> 1, slight overshoot), the number counts up with an ease-out, ring pulses on landing.
+      const v = window.__hyperframes.getVariables();
+      const num = document.getElementById("num");
+      const fmt = (x) => `${v.prefix}${x.toLocaleString("en-US", { minimumFractionDigits: v.decimals, maximumFractionDigits: v.decimals })}${v.suffix}`;
+      const counter = { x: 0 };
+      num.textContent = fmt(0);
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo("#card", { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 0)
+        .fromTo("#label", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, 0.25)
+        .fromTo(counter, { x: 0 }, { x: v.value, duration: 1.1, ease: "power3.out",
+                                     onUpdate: () => { num.textContent = fmt(counter.x); } }, 0.15)
+        .fromTo("#ring", { opacity: 0.9, scale: 1 }, { opacity: 0, scale: 1.08, duration: 0.6, ease: "power2.out", immediateRender: false }, 1.2)
+        .fromTo("#num", { scale: 1 }, { scale: 1.06, duration: 0.12, yoyo: true, repeat: 1, ease: "power2.out" }, 1.2)
+        .to("#card", { scale: 0.92, opacity: 0, duration: 0.3, ease: "power2.in" }, 3.15);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

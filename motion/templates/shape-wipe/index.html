@@ -1,0 +1,45 @@
+<!doctype html>
+<html
+  lang="en"
+  data-resolution="portrait"
+  data-composition-variables='[
+    {"id":"c1","type":"color","label":"Panel 1","default":"#F07A5A"},
+    {"id":"c2","type":"color","label":"Panel 2","default":"#F2D45C"},
+    {"id":"c3","type":"color","label":"Panel 3 (covers the cut)","default":"#0E1018"}
+  ]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #root { position: relative; width: 100%; height: 100%; }
+      /* Three skewed panels sweep left -> right. The frame is fully covered from 0.36 s to 0.44 s:
+         place the overlay so the CUT lands at overlay time 0.40 s (t = cut - 0.40). */
+      .panel { position: absolute; top: -10%; height: 120%; width: 160%; left: -30%; }
+      #p1 { background: var(--c1); }
+      #p2 { background: var(--c2); }
+      #p3 { background: var(--c3); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="0.8" data-width="1080" data-height="1920">
+      <div id="wipe" class="clip" data-start="0" data-duration="0.8" data-track-index="0" data-layout-allow-overflow>
+        <div id="p1" class="panel"></div>
+        <div id="p2" class="panel"></div>
+        <div id="p3" class="panel"></div>
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const panels = ["#p1", "#p2", "#p3"];
+      // in: from off-left to covering; out: continue to off-right. Staggered so colour edges lead the cover.
+      tl.fromTo(panels, { xPercent: -110, skewX: -14 }, { xPercent: 0, duration: 0.34, ease: "power3.in", stagger: 0.02 }, 0)
+        .to(panels, { xPercent: 110, duration: 0.34, ease: "power3.out", stagger: -0.02 }, 0.44);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
