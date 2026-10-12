@@ -210,6 +210,8 @@ def main() -> None:
         ow, oh = ow // 2 // 2 * 2, oh // 2 // 2 * 2
     out = base / o.get("stage1", "edit/stage1.mp4")
     grade = resolve_grade(tl.get("grade", "teal_orange"), base)
+    if tl.get("grade_extra"):  # corrections appended by the QA gate (exposure / saturation trims)
+        grade = ",".join(filter(None, [grade, *tl["grade_extra"]]))
 
     clips = tl["clips"]
     for c in clips:

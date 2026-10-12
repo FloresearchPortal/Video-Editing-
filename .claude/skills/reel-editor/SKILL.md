@@ -104,11 +104,19 @@ zoom-blur/whip transitions (t = cut time − 0.25 s), an impact on hard punch-in
 Pixabay Music, Free Music Archive CC0/CC-BY, Incompetech CC-BY). Record the source and
 licence of every track in `edit/credits.txt`; add attribution to the post caption when CC-BY.
 
-### 6. Review before calling it done
+### 6. Brand + quality gate (mandatory before delivery)
+Set `"brand": true` (FloStocks caption style: Manrope slanted keywords in brand greens, Inter
+body, logo watermark) and end with the branded card
+(`{"src": "brand/endcard.png", "dur": 2.5, "zoom": "pull", "transition": {"type": "dip", "dur": 0.3}}`,
+generate with `python -m reelkit.brand endcard`). Then hand off to **`/quality-gate`**:
+`python -m reelkit.refine <project>/timeline.json` tests every stage, auto-fixes, re-renders and
+writes `edit/final_approved.mp4`. Only that file is deliverable.
+
+### 7. Review before calling it done
 `python -m reelkit.review edit/final.mp4 --every 0.5` → contact sheet PNG. Look at it:
 framing (head in frame, not cut off), captions readable and not on the face, transitions on
 the cuts, nothing black/frozen. Also listen for clicks at cuts and music level vs voice.
-Use `--preview` (half-res) while iterating; render full-res for delivery.
+Use `--preview` (half-res) while iterating; the quality gate renders full-res for delivery.
 
 ## House style (from the user's reference reel)
 9:16 1080×1920 @30, ~45–60 s. Outdoor talking head, cuts every 2–4 s across locations,

@@ -1,0 +1,53 @@
+{
+  "name": "FloStocks",
+  "owner": "Floret Capitals",
+  "source": "https://www.flostocks.com (site CSS :root tokens, logo and copy, gathered 2026-10-12)",
+  "website": "flostocks.com",
+  "tagline": "Pakistan's modern gateway to the stock market.",
+  "headline": "The fastest way to learn Pakistan's stock market.",
+  "ctas": ["Open your PSX account", "Explore the PSX Bootcamp", "Analyze stocks with the PSX Analyzer"],
+  "socials": {"instagram": "@floretcapitals", "facebook": "floretcapitals", "youtube": "@floretcapitals"},
+  "voice": "Clear, confident, educational and trustworthy: regulated brokerage, plain-language finance for Pakistani retail investors. No hype, no guaranteed-returns language.",
+  "colors": {
+    "green": "#38d100",
+    "green_deep": "#1f7a00",
+    "logo_green": "#2f9f00",
+    "lime": "#45e01f",
+    "mint": "#7edca8",
+    "ink": "#0a0e0a",
+    "black": "#000000",
+    "paper": "#ffffff",
+    "mist": "#f5f7fa",
+    "gray": "#59635c",
+    "rise": "#17971e",
+    "fall": "#e23b2e",
+    "amber": "#c4820e"
+  },
+  "fonts": {
+    "display": "Manrope (ExtraBold 800 / Bold 700)",
+    "body": "Inter (Bold 700 / Light 300 / ExtraLight 200)",
+    "numbers": "IBM Plex Mono (SemiBold) - prices, %, tickers",
+    "files": {
+      "display": "assets/fonts/Manrope-ExtraBold.ttf",
+      "display_bold": "assets/fonts/Manrope-Bold.ttf",
+      "body_bold": "assets/fonts/Inter-Bold.ttf",
+      "body_light": "assets/fonts/Inter-ExtraLight.ttf",
+      "body_light2": "assets/fonts/Inter-Light.ttf",
+      "mono": "assets/fonts/IBMPlexMono-SemiBold.ttf"
+    }
+  },
+  "logo": {
+    "full_on_light": "brand/logo/flostocks-logo-full.png",
+    "full_on_dark": "brand/logo/flostocks-logo-full-light.png",
+    "icon_on_light": "brand/logo/flostocks-icon.png",
+    "icon_on_dark": "brand/logo/flostocks-icon-light.png",
+    "style": "heavy italic wordmark: FLO in ink, STOCKS in green; slanted parallelogram mark (2 green bars + 1 ink bar)"
+  },
+  "video": {
+    "caption_accents": ["#38d100", "#7edca8"],
+    "caption_slant_deg": 10,
+    "watermark": {"logo": "icon_on_dark", "position": "top-right", "width": 0.11, "opacity": 0.85},
+    "endcard": {"background": "ink", "seconds": 2.5},
+    "disclaimer": "Investments in securities are subject to market risks. Please read all relevant documents carefully before investing."
+  }
+}

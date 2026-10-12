@@ -23,7 +23,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 from .common import (FONTS, FrameReader, FrameWriter, Subject, ease_out, has_audio, load_json,
-                     need, probe)
+                     need, probe, save_json)
 
 STOP = set("""a an the and or but so if of to in on at by for with from as is are was were be been am
 i you he she it we they me him her us them my your his its our their this that these those there here
@@ -53,6 +53,12 @@ DEFAULT_STYLE = {
     "lowercase": True,
     "emphasis": [],              # force these words to be the hero keyword
     "seed": 7,
+    "hero_slant_deg": 0,         # brand italic: shear keyword sprites (e.g. 10 for FloStocks' slanted wordmark)
+    "watermark": None,           # {"path": logo.png, "position": "top-right", "width": 0.11, "opacity": 0.85}
+    "positions": ["head", "chest", "upper"],  # rotation of block placements (QA may drop "head")
+    "keep_case": [],             # never lowercase these (brand names, tickers)
+    "replace": {},               # transcript fixes, e.g. {"flow stocks": "FloStocks", "psx": "PSX"}
+    "safe_zone": {"top": 0.10, "bottom": 0.22, "left": 0.06, "right": 0.14},  # Reels/TikTok UI overlap
 }
 
 
@@ -90,6 +96,29 @@ def load_words(p) -> list[dict]:
     return out
 
 
+def apply_replacements(words: list[dict], rep: dict) -> list[dict]:
+    """Fix mis-heard terms (brand names, tickers). Keys may span several words; matching ignores
+    case and punctuation, the replacement keeps the last word's trailing punctuation."""
+    if not rep:
+        return words
+    norm = lambda t: re.sub(r"[^\w']", "", t.lower())
+    rules = sorted(((k.lower().split(), v) for k, v in rep.items()), key=lambda r: -len(r[0]))
+    out, i = [], 0
+    while i < len(words):
+        for keys, val in rules:
+            n = len(keys)
+            if [norm(w["text"]) for w in words[i:i + n]] == [norm(k) for k in keys]:
+                tail = re.search(r"[.,!?;:]+$", words[i + n - 1]["text"])
+                out.append({"text": val + (tail.group(0) if tail else ""), "start": words[i]["start"],
+                            "end": words[i + n - 1]["end"]})
+                i += n
+                break
+        else:
+            out.append(words[i])
+            i += 1
+    return out
+
+
 def phrases_from(words: list[dict], st: dict) -> list[Phrase]:
     ps, cur = [], Phrase()
     for i, w in enumerate(words):
@@ -124,6 +153,7 @@ def clean(t: str, lower: bool) -> str:
 
 def assign_roles(ps: list[Phrase], st: dict, rng: random.Random) -> None:
     forced = {w.lower() for w in st["emphasis"]}
+    keep = {re.sub(r"\W", "", v) for v in st["replace"].values()} | set(st.get("keep_case", []))
     accents = [tuple(c) for c in st["colors"]["accents"]]
     for pi, p in enumerate(ps):
         def score(w):
@@ -144,7 +174,35 @@ def assign_roles(ps: list[Phrase], st: dict, rng: random.Random) -> None:
                 w.role = "light"
             else:
                 w.role = "bold"
-            w.text = clean(w.text, st["lowercase"])
+            w.text = clean(w.text, st["lowercase"] and re.sub(r"\W", "", w.text) not in keep)
+
+
+def slant(spr: np.ndarray, deg: float) -> np.ndarray:
+    """Shear a sprite to the right (synthetic italic matching a slanted brand wordmark)."""
+    h, w = spr.shape[:2]
+    k = np.tan(np.radians(deg))
+    pad = int(np.ceil(k * h))
+    return cv2.warpAffine(spr, np.float32([[1, -k, pad], [0, 1, 0]]), (w + pad, h), flags=cv2.INTER_LINEAR,
+                          borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0, 0))
+
+
+def load_watermark(wm: dict | None, ow: int, oh: int):
+    """Premultiplied BGRA logo sprite + (x, y), or None."""
+    if not wm:
+        return None
+    from PIL import Image
+    logo = Image.open(wm["path"]).convert("RGBA")
+    tw = int(ow * wm.get("width", 0.11))
+    logo = logo.resize((tw, max(1, int(logo.height * tw / logo.width))), Image.LANCZOS)
+    a = np.asarray(logo).astype(np.float32) / 255.0
+    a[..., :3] *= a[..., 3:4]
+    spr = a[..., [2, 1, 0, 3]] * float(wm.get("opacity", 0.85))
+    m = int(ow * 0.045)
+    top = int(oh * 0.06)
+    pos = wm.get("position", "top-right")
+    x = ow - tw - m if "right" in pos else m
+    y = top if "top" in pos else oh - spr.shape[0] - int(oh * 0.24)
+    return spr, x, y
 
 
 def make_sprite(text: str, font: ImageFont.FreeTypeFont, color, shadow: float) -> np.ndarray:
@@ -170,6 +228,8 @@ def layout(ps: list[Phrase], ow: int, oh: int, st: dict, fonts: dict, anchors: l
         for w in p.words:
             f = fonts["light_italic" if (w.role == "light" and rng.random() < 0.35) else w.role]
             w.sprite = make_sprite(w.text, f, w.color, st["shadow"])
+            if w.role == "hero" and st.get("hero_slant_deg"):
+                w.sprite = slant(w.sprite, st["hero_slant_deg"])
         lines, cur, cur_w = [], [], 0
         maxw = ow * 0.82
         for w in p.words:
@@ -188,13 +248,14 @@ def layout(ps: list[Phrase], ow: int, oh: int, st: dict, fonts: dict, anchors: l
         block_h = sum(h * 0.62 for h in heights)
         block_w = max(widths)
         anchor = anchors[pi]  # (cx, cy) of the block in output px
-        cx = min(max(anchor[0], block_w / 2 + ow * 0.06), ow - block_w / 2 - ow * 0.06)
+        sz = st["safe_zone"]
+        cx = min(max(anchor[0], block_w / 2 + ow * sz["left"]), ow - block_w / 2 - ow * sz["right"])
         y = anchor[1] - block_h / 2
-        y = min(max(y, oh * 0.06), oh * 0.86 - block_h)
+        y = min(max(y, oh * sz["top"]), oh * (1 - sz["bottom"]) - block_h)
         for li, (ln, h, wdt) in enumerate(zip(lines, heights, widths)):
             stagger = rng.uniform(-0.08, 0.08) * ow if len(lines) > 1 else 0
             x = cx - wdt / 2 + stagger
-            x = min(max(x, ow * 0.04), ow * 0.96 - wdt)
+            x = min(max(x, ow * sz["left"]), ow * (1 - sz["right"]) - wdt)
             for w in ln:
                 w.x = int(x)
                 w.y = int(y + (h - w.sprite.shape[0]) * 0.5)
@@ -241,7 +302,10 @@ def word_sprite_at(w: Word, t: float, p: Phrase, st: dict):
     return spr, x, y, alpha
 
 
-def plan_anchors(ps, video, fps, ow, oh, subject: Subject | None, rng):
+POSITIONS = {"head": 0, "chest": 1, "upper": 2}
+
+
+def plan_anchors(ps, video, fps, ow, oh, subject: Subject | None, rng, positions=("head", "chest", "upper")):
     """Alternate phrase positions: around the top of the head (keyword tucked behind it) /
     chest, in front / upper third. Returns (anchors, person masks at each phrase start)."""
     anchors, masks = [], []
@@ -254,7 +318,7 @@ def plan_anchors(ps, video, fps, ow, oh, subject: Subject | None, rng):
             loc = subject.locate(frame)
             mask = subject.mask(frame)
         masks.append(mask)
-        mode = pi % 3
+        mode = POSITIONS[positions[pi % len(positions)]]
         if loc is None:
             anchors.append((ow / 2, oh * (0.28 if mode != 1 else 0.62)))
             continue
@@ -314,19 +378,26 @@ def main() -> None:
 
     fonts = {k: ImageFont.truetype(str(FONTS / v), int(st["size"]["light" if k == "light_italic" else k] * ow))
              for k, v in st["fonts"].items()}
-    ps = phrases_from(load_words(a.words), st)
+    ps = phrases_from(apply_replacements(load_words(a.words), st["replace"]), st)
     assign_roles(ps, st, rng)
     subject = Subject() if st["behind_subject"] else None
-    anchors, masks = plan_anchors(ps, a.video, fps, ow, oh, subject, rng)
+    anchors, masks = plan_anchors(ps, a.video, fps, ow, oh, subject, rng, st["positions"])
     layout(ps, ow, oh, st, fonts, anchors, rng)
     limit_occlusion(ps, masks, st["max_cover"])
     del masks
+    save_json(Path(a.out).with_suffix(".layout.json"), {
+        "size": [ow, oh], "fps": fps, "safe_zone": st["safe_zone"], "watermark": bool(st.get("watermark")),
+        "phrases": [{"start": p.start, "end": p.end, "words": [
+            {"text": w.text, "start": w.start, "end": w.end, "role": w.role, "behind": w.behind,
+             "color": list(w.color), "box": [w.x, w.y, int(w.sprite.shape[1]), int(w.sprite.shape[0])]}
+            for w in p.words]} for p in ps]})
     print(f"{len(ps)} phrases, {sum(len(p.words) for p in ps)} words, {ow}x{oh}@{fps:g}")
 
     tmp = Path(tempfile.mkdtemp(prefix="reelkit_cap_"))
     silent = tmp / "v.mp4"
     wr = FrameWriter(silent, ow, oh, fps, crf=17)
     n = max(1, round(dur * fps))
+    wmark = load_watermark(st.get("watermark"), ow, oh)
     pi = 0
     for i in range(n):
         t = i / fps
@@ -346,6 +417,12 @@ def main() -> None:
                 else:
                     front = np.zeros((oh, ow, 4), np.float32) if front is None else front
                     compose(front, *r)
+        if wmark is not None:  # logo bug sits under the captions
+            base = np.zeros((oh, ow, 4), np.float32)
+            compose(base, *wmark, 1.0)
+            if front is not None:
+                base = base * (1 - front[..., 3:4]) + front
+            front = base
         if back is None and front is None:
             wr.write(frame)
             continue

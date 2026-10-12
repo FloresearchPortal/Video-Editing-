@@ -53,8 +53,12 @@ def main() -> None:
         cap = tl.get("captions", {})
         if cap.get("enabled", True):
             style = base / "edit" / "caption_style.json"
-            save_json(style, {k: v for k, v in cap.items()
-                              if k not in ("enabled", "model", "language", "keyterms")})
+            merged = {}
+            if tl.get("brand"):
+                from .brand import caption_style
+                merged.update(caption_style())
+            merged.update({k: v for k, v in cap.items() if k not in ("enabled", "model", "language", "keyterms")})
+            save_json(style, merged)
             run("captions", str(stage1), str(words), str(captioned), "--style", str(style))
         else:
             shutil.copy(stage1, captioned)
