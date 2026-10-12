@@ -231,7 +231,7 @@ def layout(ps: list[Phrase], ow: int, oh: int, st: dict, fonts: dict, anchors: l
             if w.role == "hero" and st.get("hero_slant_deg"):
                 w.sprite = slant(w.sprite, st["hero_slant_deg"])
             # a long keyword at hero size can be wider than the phone screen: fit the safe width
-            safe_w = ow * (1 - st["safe_zone"]["left"] - st["safe_zone"]["right"]) * 1.12  # sprites carry padding
+            safe_w = ow * (1 - st["safe_zone"]["left"] - st["safe_zone"]["right"]) * 1.04  # sprites carry padding
             if w.sprite.shape[1] > safe_w:
                 k = safe_w / w.sprite.shape[1]
                 w.sprite = cv2.resize(w.sprite, None, fx=k, fy=k, interpolation=cv2.INTER_AREA)
