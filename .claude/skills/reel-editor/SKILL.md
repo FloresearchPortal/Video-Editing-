@@ -68,7 +68,9 @@ vertically in frame; `offset_x` — shift framing (fraction of frame width, ±);
 `volume`, `mute`.
 **Transitions** (into this clip): `cut` (default), `zoom_blur`, `whip`, `flash` (warm light
 leak), `dip` (to black). They straddle the cut without overlapping, so audio stays in sync.
-**Grades**: `teal_orange` (house look), `moody`, `clean`, `none`, or any raw ffmpeg `-vf` chain.
+**Grades**: best = `"lut:grades/<camera>_look.cube+vignette"` — a LUT matched to the reference with
+`/davinci-resolve-grade` (`reelkit.grade_match`). Quick presets: `teal_orange`, `moody`, `clean`, `none`,
+or any raw ffmpeg `-vf` chain.
 
 ### 3. Camera tracking + zooms (what `assemble` does)
 For each clip the speaker is located every 3 frames (person mask + face), the path is smoothed
@@ -111,7 +113,7 @@ Use `--preview` (half-res) while iterating; render full-res for delivery.
 ## House style (from the user's reference reel)
 9:16 1080×1920 @30, ~45–60 s. Outdoor talking head, cuts every 2–4 s across locations,
 wide ↔ medium ↔ close via punch-ins, subject always centred, zoom-blur/whip and light-leak
-transitions, teal sky / warm skin grade with vignette, stacked kinetic captions with accent
+transitions, teal sky / warm skin grade with vignette (matched LUT: `/davinci-resolve-grade`), stacked kinetic captions with accent
 keywords partly behind the head, outro: headshot + name card, then logo card.
 
 ## Gotchas

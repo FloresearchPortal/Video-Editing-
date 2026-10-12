@@ -28,7 +28,13 @@ mkdir -p myreel/raw && cp ~/footage/*.mp4 myreel/raw/
 .venv/bin/python -m reelkit.make_reel myreel/timeline.json             # full 1080x1920
 ```
 
-## 4. Free music sources (check each track's licence page before use)
+## 4. DaVinci Resolve (free) — optional
+Download the free edition from blackmagicdesign.com/products/davinciresolve (not Studio).
+Resolve free can't be scripted (Python scripting is Studio-only since 21.1), so grades are handed
+over as LUTs: `python -m reelkit.grade_match resolve grades/<camera>_look.cube`, then Project
+Settings → Color Management → Lookup Tables → Update Lists. Node recipe: `.claude/skills/davinci-resolve-grade/SKILL.md`.
+
+## 5. Free music sources (check each track's licence page before use)
 | Source | Licence | Attribution |
 |---|---|---|
 | Pixabay Music — pixabay.com/music | Pixabay Content License (free, commercial OK) | not required |
@@ -38,12 +44,13 @@ mkdir -p myreel/raw && cp ~/footage/*.mp4 myreel/raw/
 Avoid commercial chart music: Instagram/TikTok/YouTube will mute or claim it.
 Log every track's source + licence in `<project>/edit/credits.txt`.
 
-## 5. Costs at a glance
+## 6. Costs at a glance
 | Feature | Free path used here | Paid alternatives (NOT used by default) |
 |---|---|---|
 | Transcription | faster-whisper (local) | ElevenLabs Scribe, AssemblyAI |
 | Captions, zooms, tracking, transitions, grade | reelkit (ffmpeg + MediaPipe + OpenCV) | — |
 | Music | royalty-free libraries above | ElevenLabs Music |
 | SFX | `reelkit.sfx_gen` (synthesised) | ElevenLabs SFX |
+| Colour grade matched to the reference | `reelkit.grade_match` → .cube LUT, used by reelkit and loadable in **DaVinci Resolve free** | Resolve Studio scripting / Resolve MCP servers (Studio only) |
 | Denoise | RNNoise via ffmpeg `arnndn` (`tools/clean_voice.py --method rnnoise`) | ElevenLabs Voice Isolator |
 | Motion graphics (optional) | Remotion — **free only for individuals, non-profits and companies of ≤3 people**; larger companies need a paid Remotion company licence | — |

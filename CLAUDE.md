@@ -10,6 +10,7 @@ suggest a paid plan unless the user explicitly asks for it.** Setup and costs: `
 | edit a video / make a reel / "like the reference" — timeline, captions, zoom-ins, camera tracking, transitions, music | **`/reel-editor`** (default, 100% free: `reelkit/`) |
 | cut long raw talking-head footage, remove fillers, cut-editor UI | `/clean-cut` (local Whisper, free) |
 | conversational multi-take editing, colour grade, burned subtitles | `/video-use` (use its *free mode* note) |
+| colour grade like the reference / make a LUT / DaVinci Resolve | **`/davinci-resolve-grade`** (`reelkit.grade_match`; Resolve free gets a .cube — Resolve automation needs paid Studio, don't use it) |
 | denoise / clean the voice | `/clean-audio` (RNNoise, free) |
 | add / build sound effects | `/suggest-sfx` + `python -m reelkit.sfx_gen` |
 | custom motion graphics, animated title cards, fake screencasts | `/make-tsx`, `/fake-screencast`, `/vidtsx-2d-generator`, `/remotion-*` (install: `scripts/install-remotion-skills.sh`) — Remotion is free only for individuals / ≤3-person companies |

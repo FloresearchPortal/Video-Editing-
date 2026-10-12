@@ -29,6 +29,22 @@ GRADES = {
     "none": None,
 }
 
+def resolve_grade(spec: str | None, base: Path) -> str | None:
+    """Preset name, "lut:path.cube[+vignette]" (e.g. a reelkit.grade_match LUT), or a raw -vf chain."""
+    if not spec or spec == "none":
+        return None
+    if spec.startswith("lut:"):
+        path, *extras = spec[4:].split("+")
+        lut = (base / path).resolve()
+        if not lut.exists():
+            raise SystemExit(f"grade LUT not found: {lut} (bake one with python -m reelkit.grade_match lut …)")
+        chain = [f"lut3d=file='{lut}':interp=tetrahedral"]
+        if "vignette" in extras:
+            chain.append("vignette=angle=PI/5")
+        return ",".join(chain)
+    return GRADES.get(spec, spec)
+
+
 def zoom_kfs(clip: dict, dur: float) -> list:
     z = clip.get("zoom", "none")
     if isinstance(z, (int, float)):
@@ -193,7 +209,7 @@ def main() -> None:
     if a.preview:
         ow, oh = ow // 2 // 2 * 2, oh // 2 // 2 * 2
     out = base / o.get("stage1", "edit/stage1.mp4")
-    grade = GRADES.get(tl.get("grade", "teal_orange"), tl.get("grade"))
+    grade = resolve_grade(tl.get("grade", "teal_orange"), base)
 
     clips = tl["clips"]
     for c in clips:
