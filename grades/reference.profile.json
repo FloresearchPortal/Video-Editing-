@@ -164,6 +164,9 @@
   ],
   "chroma_median": 7.228754043579102,
   "chroma_mean": 12.650949478149414,
+  "skin_L": 72.83935546875,
+  "skin_hue": 59.078495025634766,
+  "skin_C": 14.485955238342285,
   "pixels": 474043,
   "sources": [
     "/tmp/claude-0/-home-user-Video-Editing-/1f893f65-ea81-52a4-945f-0994d6b47151/scratchpad/grade/ref.mp4"

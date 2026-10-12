@@ -35,11 +35,21 @@ Run from the repo root with `.venv/bin/python`.
    ```
    python -m reelkit.grade_match lut grades/reference.profile.json raw/a.mp4 raw/b.mp4 -o grades/<camera>_look.cube [--strength 0.8]
    ```
-   Defaults are built for footage whose content differs from the reference: the grade's tint is
-   read from near-neutral pixels only (so the reference's blue sky isn't mistaken for a teal
-   grade), skin resists the tint (`--skin-protect 0.8`), and each clip keeps its own exposure
-   (exposure is node 1's job). Add `--match-exposure` only when the footage is the same kind of
-   scene as the reference and should also copy its brightness.
+   The default (`--tone natural`) is the professional, natural-skin grade and works on any scene.
+   It runs in colourist order:
+   1. **White balance**: removes the camera's cast, read from near-neutral pixels and from skin.
+      If skin sits off the skin-tone line (pink/magenta or orange), the camera WB is off.
+   2. **Skin onto the skin-tone line**: Lab hue ≈ 54°, healthy chroma 16–24, never orange
+      (`--skin-line 0.85`).
+   3. **Look**: the reference's tint and per-hue saturation. Skin resists it (`--skin-protect 0.8`)
+      and warm hues (skin, blonde hair, wood) never get a saturation boost.
+   4. **Tone**: the reference's contrast character (clean black point, midtone punch, safe
+      whites) as a smooth S-curve around the shot's OWN midtone, so exposure is kept. The lit
+      side of faces is capped at L≈72 (`--skin-max-l`) by shifting, not squashing, the face's
+      range, so faces keep their modelling.
+   `--tone match --match-exposure` copies the reference's full tonal distribution and its skin.
+   Use it only for the same kind of scene (e.g. matching B-cam to A-cam, or more shots from
+   the reference shoot). On other content it pushes faces toward the reference sky's brightness.
    Log footage (S-Log/V-Log/C-Log/Apple Log): convert to Rec.709 first (the camera maker's free
    conversion LUT, or Resolve's Color Space Transform) and bake from the converted clips.
 
@@ -47,7 +57,9 @@ Run from the repo root with `.venv/bin/python`.
    ```
    python -m reelkit.grade_match compare grades/<camera>_look.cube raw/a.mp4 <reference.mp4> --t 3 --ref-t 6 -o grades/compare.png
    ```
-   Check skin stays natural (not teal), skies/greens match, no banding or clipped whites.
+   Check skin with numbers, not just eyes. The lit side of the face should be L 65–74, RGB with
+   R > G > B (peach, not pink, not orange). Also check that skies and greens match, and that
+   there is no banding and no clipped whites.
    Too strong → re-bake with `--strength 0.7–0.85`. Mixed lighting → bake per-scene LUTs.
 
 4. **Use it.**
@@ -83,5 +95,7 @@ and ground, punchy blue sky (per-hue saturation), soft vignette. Numbers in
 ## Accuracy record
 Test: the reference reel was flattened two different ways (low-contrast warm/green; log-like
 lifted blacks + 45% saturation + green tint), then matched back with a LUT baked from the
-flattened copy (`--match-exposure`). Average ΔE vs the true reference: 11.3 → **3.2** and 13.8 → **3.8**; luminance
-error < 1.3 L; overall saturation matched to within 1%; skin and sky colours within ~1–2 units.
+flattened copy (`--tone match --match-exposure`). Average ΔE vs the true reference: 11.3 → **3.6** and 13.8 → **4.5**; sky within ~1–2 units.
+Natural mode on a real different-content frame (overcast, magenta-cast portrait): face
+L 78.6 → 71.7 with its contrast preserved (sd 7.7), skin from pink (RGB 214/188/199) to natural
+peach (201/169/159), and the black point from hazy L 25 to a clean ~5.
