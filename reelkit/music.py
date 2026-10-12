@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+from pathlib import Path
 
 from .common import duration, has_audio, need
 
@@ -34,11 +35,12 @@ def main() -> None:
              f"volume={a.volume},afade=t=in:d={a.fade_in},afade=t=out:st={fo_st:.3f}:d={a.fade_out}[m]")
     parts = [music]
     if has_audio(a.video):
-        parts.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,asplit=2[v][sc]")
+        parts.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,asplit=3[v][sc][vstem]")
         if a.no_duck:
-            parts.append("[m]anull[md]")
+            parts.append("[m]anull[md0]")
         else:
-            parts.append("[m][sc]sidechaincompress=threshold=0.03:ratio=8:attack=20:release=350:makeup=1[md]")
+            parts.append("[m][sc]sidechaincompress=threshold=0.03:ratio=8:attack=20:release=350:makeup=1[md0]")
+        parts.append("[md0]asplit=2[md][mstem]")   # stems let the QA gate measure voice vs music exactly
         mix = ["[v]", "[md]"]
     else:
         mix = ["[m]"]
@@ -57,6 +59,11 @@ def main() -> None:
     cmd = ["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", ";".join(parts),
            "-map", "0:v", "-map", "[out]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
            "-t", f"{dur:.3f}", a.out]
+    if has_audio(a.video):
+        stems = Path(a.out).parent / "stems"
+        stems.mkdir(parents=True, exist_ok=True)
+        cmd += ["-map", "[vstem]", "-t", f"{dur:.3f}", str(stems / "voice.wav"),
+                "-map", "[mstem]", "-t", f"{dur:.3f}", str(stems / "music.wav")]
     subprocess.run(cmd, check=True)
     print(f"wrote {a.out}")
 

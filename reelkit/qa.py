@@ -136,9 +136,27 @@ def check_mix(final: Path, words: list[dict], windows, issues: list[Issue], tl: 
     m = {}
     if speech.any():
         m["speech_db"] = round(db(x[speech]), 1)
-    # pauses: gaps ≥ 0.35 s between words (not lead-in, not tail/end card)
+    # exact balance from the mix stems (written by reelkit.music): integrated voice vs ducked music
+    stems = final.parent / "stems"
+    if tl.get("music", {}).get("src") and (stems / "voice.wav").exists() and (stems / "music.wav").exists():
+        def lufs(p):
+            e = ffmpeg_stderr(["-i", str(p), "-af", "ebur128", "-f", "null", "-"])
+            return float(re.search(r"I:\s+(-?[\d.]+) LUFS", e[e.rfind("Summary:"):]).group(1))
+        gap_db = lufs(stems / "voice.wav") - lufs(stems / "music.wav")
+        m["voice_over_music_db"] = round(gap_db, 1)
+        m["balance_source"] = "stems"
+        to_target = round(10 ** ((gap_db - 20.0) / 20), 3)   # gain that lands the bed 20 LU under the voice
+        if gap_db < 13:
+            issues.append(Issue("audio.music_too_loud", "FAIL", "music",
+                                f"music only {gap_db:.1f} LU under the voice (want 15–25) — speech gets "
+                                "buried on phone speakers", m, {"action": "music_volume", "factor": to_target}))
+        elif gap_db > 27:
+            issues.append(Issue("audio.music_inaudible", "WARN", "music",
+                                f"music {gap_db:.1f} LU under the voice (want 15–25) — barely audible", m,
+                                {"action": "music_volume", "factor": to_target}))
+    # pauses: gaps ≥ 0.35 s between words (not lead-in, not tail/end card) — fallback without stems
     gaps = [(a["end"], b["start"]) for a, b in zip(words, words[1:]) if b["start"] - a["end"] >= 0.35]
-    if gaps and tl.get("music", {}).get("src") and "speech_db" in m:
+    if gaps and tl.get("music", {}).get("src") and "speech_db" in m and "balance_source" not in m:
         pause = np.concatenate([x[int((g0 + 0.08) * sr):int((g1 - 0.08) * sr)] for g0, g1 in gaps])
         if len(pause) > sr * 0.3:
             m["pause_db"] = round(db(pause), 1)

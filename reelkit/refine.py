@@ -59,7 +59,7 @@ def apply_fix(issue: dict, tl: dict, base: Path, fps: float) -> tuple[str, str] 
         return "deliver", "re-master: H.264/AAC 48k, two-pass loudnorm to -14 LUFS / -1 dBTP"
     if act == "music_volume" and tl.get("music"):
         old = float(tl["music"].get("volume", 0.22))
-        tl["music"]["volume"] = round(min(max(old * fx["factor"], 0.04), 0.6), 3)
+        tl["music"]["volume"] = round(min(max(old * fx["factor"], 0.02), 2.5), 3)
         return "music", f"music bed {old:.2f} → {tl['music']['volume']:.2f}"
     if act == "grade_extra":
         extra = tl.setdefault("grade_extra", [])

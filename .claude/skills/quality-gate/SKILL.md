@@ -32,13 +32,13 @@ QA only (no changes): `python -m reelkit.qa <project>/timeline.json`.
 |---|---|---|
 | Delivery | 1080×1920, 30 fps, H.264 yuv420p, AAC 48 kHz, A/V lengths match, ≤ 90 s | full-res render, re-master |
 | Loudness | −14 ±1 LUFS integrated, true peak ≤ −1 dBTP | two-pass loudnorm |
-| Voice vs music | voice 12–24 dB over the bed in pauses (FAIL < 9 dB, WARN > 30 dB) | music volume ×0.7 / ×1.3 |
+| Voice vs music | measured on the mix stems (`edit/stems/voice.wav`, `music.wav`): music 15–25 LU under the voice (FAIL < 13, WARN > 27) | music volume set to land 20 LU under, in one step |
 | Dead air | silence > 0.7 s inside speech, > 0.45 s lead-in | split the clip → jump cut with a punch-in |
 | Clicks | sample jumps at cut points | (report) |
 | Black / frozen frames | black > 0.12 s not from a short dip; freezes > 0.8 s | dip → zoom-blur transition |
 | Framing | head x 0.3–0.7, head y 0.18–0.5, speaker found | per-clip `offset_x`, `head_y`, wider zoom |
-| Skin / grade | lit-side face L ≤ 80 (natural 65–76), not orange (hue/chroma), not pink; < 3 % clipped | grade trims (`grade_extra`: gamma, saturation) |
-| Captions | inside the Reels/TikTok UI safe zone; not covering the face; keyword height ≥ 3.5 % of frame; phrases readable (≥ 0.35 s after last word); first caption < 1 s | safe margins, drop "head" placements, size ×1.1, longer holds |
+| Skin / grade | lit-side face L ≤ 80 (natural 65–76), not orange (hue/chroma), not pink; < 3 % clipped | grade trims (`grade_extra`: gamma, saturation), escalating if the same issue repeats |
+| Captions | inside the Reels/TikTok UI safe zone; not covering the face; nothing over end/title cards; keyword height ≥ 3.5 % of frame; no phrase on screen < 0.6 s; first caption < 1 s | safe margins, drop "head" placements, size ×1.1, merge too-short phrases |
 | Transcript | low-confidence words listed for review | — |
 | Brand (`"brand": true`) | end card present; watermark; brand terms spelled right (FloStocks, Floret Capitals, PSX); no "guaranteed returns / risk-free" claims | add end card, caption term replacements; compliance = human |
 | Pacing | no shot > 7 s without a cut/zoom change | (report — add a punch-in) |
@@ -46,6 +46,9 @@ QA only (no changes): `python -m reelkit.qa <project>/timeline.json`.
 ## How to work with it
 - Before running, make sure the project timeline is complete (`/reel-editor`) and the grade LUT is
   baked if the user wants the reference look (`/davinci-resolve-grade`).
+- Captions come from Whisper: proofread `edit/stage1.words.json` against what was said (QA only
+  flags low-confidence words; a confident mishearing like "your ego" → "you're eagle" passes).
+  Fix with `"captions": {"replace": {"you're eagle": "your ego"}}` and re-run.
 - After it finishes, READ `edit/qa/summary.md` and the last contact sheet
   (`python -m reelkit.review edit/final_approved.mp4 --every 0.5`) and look at it yourself: the
   numbers catch technical faults, your eyes catch taste (awkward cut, wrong keyword emphasised).
@@ -59,3 +62,9 @@ QA only (no changes): `python -m reelkit.qa <project>/timeline.json`.
 Brand kit: `brand/brand.json` (colours, fonts, logos, tagline, CTAs, socials, disclaimer) — see
 `brand/README.md`. `"brand": true` in a timeline turns on the brand caption style + logo watermark
 and the brand checks above. End card: `python -m reelkit.brand endcard`.
+
+## Verified test (planted defects)
+Raw take with a 1.5 s dead-air pause, music bed set wrong, `"brand": true` without an end card:
+the gate removed both silent gaps (jump cuts + punch-ins), set the music level, appended the
+branded end card, kept captions off the face, the card and the app UI, and corrected over-warm
+skin (hue 60° → 52°, chroma 29 → 25) in 3 iterations → `final_approved.mp4`, −14 LUFS / −1.4 dBTP.
