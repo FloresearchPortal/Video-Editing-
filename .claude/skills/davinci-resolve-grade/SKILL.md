@@ -35,6 +35,11 @@ Run from the repo root with `.venv/bin/python`.
    ```
    python -m reelkit.grade_match lut grades/reference.profile.json raw/a.mp4 raw/b.mp4 -o grades/<camera>_look.cube [--strength 0.8]
    ```
+   Defaults are built for footage whose content differs from the reference: the grade's tint is
+   read from near-neutral pixels only (so the reference's blue sky isn't mistaken for a teal
+   grade), skin resists the tint (`--skin-protect 0.8`), and each clip keeps its own exposure
+   (exposure is node 1's job). Add `--match-exposure` only when the footage is the same kind of
+   scene as the reference and should also copy its brightness.
    Log footage (S-Log/V-Log/C-Log/Apple Log): convert to Rec.709 first (the camera maker's free
    conversion LUT, or Resolve's Color Space Transform) and bake from the converted clips.
 
@@ -70,12 +75,13 @@ Export from Resolve free: Deliver → H.264, 1080×1920 for Reels — then run t
 music stages on that export if they weren't done in Resolve.
 
 ## The user's reference look (measured)
-Teal-cyan mids and highlights, cool shadows, deep black point (crushed but not clipped), warm
-skin and ground held by per-hue saturation, punchy blue sky, soft vignette. Numbers in
+Measured on neutral pixels: blue-tinted shadows, slightly teal mids, near-neutral highlights;
+high contrast with a deep black point (crushed but not clipped) and a soft shoulder; warm skin
+and ground, punchy blue sky (per-hue saturation), soft vignette. Numbers in
 `grades/reference.profile.json`.
 
 ## Accuracy record
 Test: the reference reel was flattened two different ways (low-contrast warm/green; log-like
 lifted blacks + 45% saturation + green tint), then matched back with a LUT baked from the
-flattened copy. Average ΔE vs the true reference: 11.3 → **3.1** and 13.8 → **3.7**; luminance
+flattened copy (`--match-exposure`). Average ΔE vs the true reference: 11.3 → **3.2** and 13.8 → **3.8**; luminance
 error < 1.3 L; overall saturation matched to within 1%; skin and sky colours within ~1–2 units.

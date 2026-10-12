@@ -105,7 +105,13 @@ def profile_of(rgb: np.ndarray) -> dict:
         ma, mb = (w * a).sum() / ws, (w * b).sum() / ws
         sa = np.sqrt((w * (a - ma) ** 2).sum() / ws)
         sb = np.sqrt((w * (b - mb) ** 2).sum() / ws)
-        zones[z] = {"a": float(ma), "b": float(mb), "sa": float(sa), "sb": float(sb), "weight": float(ws / len(L))}
+        # the grade's tint is read from near-neutral pixels (whites, greys, concrete) — the scene's
+        # content colour (sky, foliage, skin) must not masquerade as a colour cast
+        wn = w * np.exp(-(np.hypot(a, b) / 10.0) ** 2)
+        wns = wn.sum() + 1e-6
+        zones[z] = {"a": float(ma), "b": float(mb), "sa": float(sa), "sb": float(sb), "weight": float(ws / len(L)),
+                    "na": float((wn * a).sum() / wns), "nb": float((wn * b).sum() / wns),
+                    "neutral_mass": float(wns / len(L))}
     C = np.hypot(a - np.median(a), b - np.median(b))
     hw = hue_weights(a, b)
     sat = (hw * np.hypot(a, b)[:, None]).sum(0) / (hw.sum(0) + 1e-6)
@@ -117,8 +123,33 @@ def profile_of(rgb: np.ndarray) -> dict:
 
 
 # ── transform ─────────────────────────────────────────────────────────────
+def skin_weight(L: np.ndarray, a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """0..1 membership of the skin-tone region (Lab hue ~20-80 deg, moderate chroma, mid-bright)."""
+    h = (np.degrees(np.arctan2(b, a)) + 360) % 360
+    C = np.hypot(a, b)
+    wh = np.clip(1 - np.abs(h - 50) / 35, 0, 1)
+    wc = np.clip((C - 5) / 6, 0, 1) * np.clip((55 - C) / 10, 0, 1)
+    wl = np.clip((L - 20) / 10, 0, 1) * np.clip((95 - L) / 8, 0, 1)
+    return wh * wc * wl
+
+
+def casts(prof: dict) -> np.ndarray:
+    """Per-zone grade tint (a, b): neutral-pixel cast, falling back toward half the all-pixel mean
+    when a zone has almost no neutral pixels."""
+    out = []
+    for z in ZONES:
+        d = prof["zones"][z]
+        if "na" not in d:  # profile from an older version
+            out.append([d["a"] * 0.5, d["b"] * 0.5])
+            continue
+        trust = np.clip(d["neutral_mass"] / 0.03, 0, 1)
+        out.append([trust * d["na"] + (1 - trust) * 0.5 * d["a"], trust * d["nb"] + (1 - trust) * 0.5 * d["b"]])
+    return np.array(out)
+
+
 def build_transform(src: dict, ref: dict, strength: float = 1.0, contrast_limit: float = 1.6,
-                    calibrate: np.ndarray | None = None):
+                    calibrate: np.ndarray | None = None, match_exposure: bool = False,
+                    skin_protect: float = 0.8):
     qs, qr = np.array(src["L_quantiles"]), np.array(ref["L_quantiles"])
     qs = np.maximum.accumulate(qs + np.arange(101) * 1e-4)  # strictly increasing
     # extend to the full range so the curve is defined everywhere
@@ -133,7 +164,14 @@ def build_transform(src: dict, ref: dict, strength: float = 1.0, contrast_limit:
     limited = np.concatenate([[0.0], np.cumsum(slope[1:] * np.diff(fine))])
     # re-anchor: the slope limit must not drift the whole curve brighter/darker
     w = np.interp(fine, xs[1:-1], np.gradient(np.arange(101.0)), left=0, right=0) + 1e-3
-    curve = np.clip(limited + np.average(curve - limited, weights=w), 0, 100)
+    curve = limited + np.average(curve - limited, weights=w)
+    if not match_exposure:
+        # keep the clip's own exposure (that's the per-clip balance node's job); match contrast/shape
+        med = qs[50]
+        curve = curve - (np.interp(med, fine, curve) - med)
+    # soft shoulder so hair / skies / white shirts roll off instead of clipping
+    curve = np.where(curve > 88, 88 + 12 * np.tanh((curve - 88) / 12), curve)
+    curve = np.clip(curve, 0, 100)
 
     zs = np.array([[src["zones"][z][k] for k in ("a", "b", "sa", "sb")] for z in ZONES])
     zr = np.array([[ref["zones"][z][k] for k in ("a", "b", "sa", "sb")] for z in ZONES])
@@ -146,20 +184,24 @@ def build_transform(src: dict, ref: dict, strength: float = 1.0, contrast_limit:
     # the per-zone axis scaling already moves overall saturation — hue gains only redistribute it
     hue_gain = hue_gain / max(np.average(hue_gain, weights=ms + 1e-6), 1e-3)
 
+    cast_s, cast_r = casts(src), casts(ref)
     sat_fix = 1.0
 
     def apply(rgb: np.ndarray) -> np.ndarray:
         lab = to_lab(np.clip(rgb, 0, 1))
         L, a, b = lab.T
         zw = zone_weights(L)
-        mu_s, mu_r = zw @ zs[:, :2], zw @ zr[:, :2]
+        mu_s = zw @ zs[:, :2]
         k = zw @ scale
-        a2 = mu_r[:, 0] + (a - mu_s[:, 0]) * k[:, 0]
-        b2 = mu_r[:, 1] + (b - mu_s[:, 1]) * k[:, 1]
+        shift = zw @ (cast_r - cast_s)
+        protect = 1 - skin_protect * skin_weight(L, a, b)   # skin keeps its warmth
+        a2 = mu_s[:, 0] + (a - mu_s[:, 0]) * k[:, 0] + shift[:, 0] * protect
+        b2 = mu_s[:, 1] + (b - mu_s[:, 1]) * k[:, 1] + shift[:, 1] * protect
         g = hue_weights(a, b) @ hue_gain
         neutral = np.clip(np.hypot(a, b) / 12, 0, 1)  # leave greys' hue alone
-        a2 = mu_r[:, 0] + (a2 - mu_r[:, 0]) * (1 + (g - 1) * neutral)
-        b2 = mu_r[:, 1] + (b2 - mu_r[:, 1]) * (1 + (g - 1) * neutral)
+        c0 = mu_s + shift
+        a2 = c0[:, 0] + (a2 - c0[:, 0]) * (1 + (g - 1) * neutral)
+        b2 = c0[:, 1] + (b2 - c0[:, 1]) * (1 + (g - 1) * neutral)
         a2, b2 = a2 * sat_fix, b2 * sat_fix
         L2 = np.interp(L, fine, curve)
         out = np.stack([L + (L2 - L) * strength, a + (a2 - a) * strength, b + (b2 - b) * strength], 1)
@@ -190,8 +232,7 @@ def write_cube(path: Path, fn, size: int = GRID, title: str = "reelkit match") -
 def describe(ref: dict) -> list[str]:
     """Plain-language + Resolve-wheel hints for the look (for manual tweaking in Resolve)."""
     out = []
-    for z, wheel in zip(ZONES, ("Lift", "Gamma", "Gain")):
-        a, b = ref["zones"][z]["a"], ref["zones"][z]["b"]
+    for (z, wheel), (a, b) in zip(zip(ZONES, ("Lift", "Gamma", "Gain")), casts(ref)):
         hue = (np.degrees(np.arctan2(b, a)) + 360) % 360
         name = ("magenta" if hue < 30 or hue >= 330 else "red/orange" if hue < 75 else "yellow" if hue < 110
                 else "green" if hue < 165 else "teal/cyan" if hue < 230 else "blue" if hue < 280 else "purple")
@@ -216,7 +257,8 @@ def cmd_lut(a):
     ref = load_json(a.profile)
     px = sample_pixels(a.sources, None, a.samples)
     src = profile_of(px)
-    fn = build_transform(src, ref, a.strength, calibrate=px[:: max(1, len(px) // 200000)])
+    fn = build_transform(src, ref, a.strength, calibrate=px[:: max(1, len(px) // 200000)],
+                         match_exposure=a.match_exposure, skin_protect=a.skin_protect)
     write_cube(Path(a.out), fn, a.size, title=Path(a.out).stem)
     save_json(Path(a.out).with_suffix(".source.json"), src)
     print(a.out)
@@ -284,6 +326,9 @@ def main() -> None:
     p.add_argument("profile")
     p.add_argument("sources", nargs="+", help="representative clips/stills from YOUR camera")
     p.add_argument("--strength", type=float, default=1.0, help="0..1 blend toward the reference")
+    p.add_argument("--match-exposure", action="store_true",
+                   help="also copy the reference's overall brightness (default: keep each clip's exposure)")
+    p.add_argument("--skin-protect", type=float, default=0.8, help="0..1 how much skin resists the tint")
     p.add_argument("--size", type=int, default=GRID)
     p.add_argument("--samples", type=int, default=60)
     p.add_argument("-o", "--out", default="grades/match.cube")
