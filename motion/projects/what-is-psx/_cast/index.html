@@ -1,0 +1,30 @@
+<!doctype html><html lang="en" data-resolution="portrait"><head><meta charset="UTF-8"/>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>@font-face{font-family:"Manrope";font-weight:200 800;src:url("assets/brand/fonts/Manrope-Variable.ttf");}
+*{margin:0;padding:0}html,body{width:1080px;height:1920px;background:#F3F8EF;overflow:hidden}#root{position:relative;width:100%;height:100%;font-family:Manrope}
+h1{position:absolute;left:0;right:0;top:60px;text-align:center;font-size:50px;font-weight:800;color:#0B0F14}
+.slot{position:absolute;width:330px;height:420px}.slot .who{position:absolute;inset:0 0 70px 0}.slot svg{width:100%;height:100%}
+.lab{position:absolute;left:0;right:0;bottom:0;text-align:center;font-weight:800;font-size:28px;color:#0B0F14}.lab span{display:block;font-weight:600;font-size:20px;color:#1F7A00}
+.ex{position:absolute;width:200px;height:250px}.ex .who{position:absolute;inset:0 0 40px 0;overflow:hidden}.ex svg{width:260px;height:260px;margin-left:-30px;margin-top:-10px}
+.ex .lab{font-size:20px}</style></head>
+<body><div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+<div id="c" class="clip" data-start="0" data-duration="5" data-track-index="0" style="position:absolute;inset:0"><h1>Cast — Notionists × FloStocks</h1></div></div>
+<script src="avatars.js"></script><script src="cast.js"></script><script>
+const roles=[["ahmed","Ahmed","chai dhaaba owner","hand"],["aap","Aap","viewer / investor","handPhone"],["guide","Guide","\"Main samjhata hoon\"","okLongArm"],
+["sana","Sana","shareholder","hand"],["bilal","Bilal","shareholder","point"],["ayesha","Ayesha","shareholder","none"],["usman","Usman","crowd","none"],["zara","Zara","crowd","waveLongArm"]];
+const c=document.getElementById("c");const el={};
+roles.forEach(([k,n,s,g],i)=>{const cols=i<6?3:4;const x=i<6?(i%3)*350+15:((i-6)%4)*0+0;const y=i<6?150+Math.floor(i/3)*450:0;
+ if(i>=6)return;const d=document.createElement("div");d.className="slot";d.style.left=x+"px";d.style.top=y+"px";
+ d.innerHTML=`<div class="who"></div><div class="lab">${n}<span>${s}</span></div>`;c.appendChild(d);el[k]=CAST.mount(d.querySelector(".who"),k,{gesture:g});});
+// Usman + Zara small, plus Ahmed's expression strip
+const ex=["smile","grin","happy","wow","worried","shocked","think"];
+[["usman","Usman"],["zara","Zara"]].forEach(([k,n],i)=>{const d=document.createElement("div");d.className="ex";d.style.left=(i*205+40)+"px";d.style.top="1080px";d.innerHTML=`<div class="who"></div><div class="lab">${n}</div>`;c.appendChild(d);el[k]=CAST.mount(d.querySelector(".who"),k,{gesture:k==="zara"?"waveLongArm":"none"});});
+ex.forEach((e,i)=>{const d=document.createElement("div");d.className="ex";d.style.left=(i%5*205+40)+"px";d.style.top=(1340+Math.floor(i/5)*270)+"px";if(i>=5)d.style.top=(1080)+"px",d.style.left=((i-5)*205+450)+"px";
+ d.innerHTML=`<div class="who"></div><div class="lab">Ahmed · ${e}</div>`;c.appendChild(d);CAST.mount(d.querySelector(".who"),"ahmed",{expr:e});});
+const tl=gsap.timeline({paused:true});
+Object.entries(el).forEach(([k,e],i)=>{CAST.blinks(tl,e,0,5,"smile",i+1);CAST.bob(tl,e.parentElement,0.1*i,5,5);});
+CAST.talk(tl,el.ahmed,[0.4,0.6,0.8,1.0,1.2,1.4]);CAST.gesture(tl,el.ahmed,"point",1.6);CAST.expr(tl,el.ahmed,"grin",1.6);
+CAST.gesture(tl,el.aap,"waveLongArm",1.0);CAST.expr(tl,el.aap,"happy",1.0);CAST.gesture(tl,el.aap,"handPhone",2.6);CAST.expr(tl,el.aap,"wow",2.6);
+CAST.talk(tl,el.guide,[0.3,0.5,0.7,0.9,1.1,1.3,1.5]);CAST.gesture(tl,el.guide,"pointLongArm",2.0);
+CAST.expr(tl,el.bilal,"worried",1.5);CAST.expr(tl,el.bilal,"grin",3.0);CAST.expr(tl,el.sana,"think",1.2);CAST.expr(tl,el.sana,"happy",2.8);
+window.__timelines["main"]=tl;</script></body></html>

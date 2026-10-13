@@ -2,15 +2,18 @@
   "name": "motion",
   "private": true,
   "type": "module",
-  "description": "HyperFrames (Apache-2.0) workspace for motion graphics \u2014 see .claude/skills/motion-editor/SKILL.md",
+  "description": "HyperFrames (Apache-2.0) workspace for motion graphics — see .claude/skills/motion-editor/SKILL.md",
   "scripts": {
     "check": "hyperframes check",
     "preview": "hyperframes preview",
     "render": "hyperframes render"
   },
   "devDependencies": {
-    "hyperframes": "0.8.149",
+    "@dicebear/avataaars": "^9.4.2",
+    "@dicebear/core": "^9.4.2",
+    "@dicebear/notionists": "^9.4.2",
     "gl-transitions": "1.43.0",
+    "hyperframes": "0.8.149",
     "playwright-core": "1.56.1"
   }
 }

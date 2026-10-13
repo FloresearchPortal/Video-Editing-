@@ -77,3 +77,4 @@ motion/**/snapshots/
 # per-video raw inputs (voiceovers, reference images) stay local
 videos/*/raw/
 motion/**/snaps/
+motion/**/renders.log
