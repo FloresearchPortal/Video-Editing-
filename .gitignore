@@ -78,3 +78,7 @@ motion/**/snapshots/
 videos/*/raw/
 motion/**/snaps/
 motion/**/renders.log
+
+# review frames / contact sheets from QA
+videos/*/edit/*.png
+videos/*/edit/*.log
