@@ -41,7 +41,7 @@
   // camera rig: a slow, continuous handheld-dolly drift (never a dead frame); cam inside it takes the push-ins
   const rig = el(stage, { left: 0, top: 0, width: 1080, height: 1920 });
   for (let t = 0, k = 0; t < 114; t += 4, k++)
-    tl.to(rig, { x: k % 2 ? -10 : 10, y: k % 3 === 0 ? -8 : 8, rotation: k % 2 ? -0.35 : 0.35, duration: 4, ease: "sine.inOut" }, t);
+    tl.to(rig, { x: k % 2 ? -4 : 4, y: k % 3 === 0 ? -3 : 3, duration: 4, ease: "sine.inOut" }, t);
   const cam = el(rig, { left: 0, top: 0, width: 1080, height: 1920 }, "", "cam");   // scenes live in the camera
   const fx = el(stage, { left: 0, top: 0, width: 1080, height: 1920, zIndex: 60, pointerEvents: "none" }, "", "fx");
   el(stage, { left: 0, top: 0, width: 1080, height: 1920, zIndex: 70, pointerEvents: "none",
@@ -51,7 +51,7 @@
 
   // camera moves
   // push-ins ease in AND out (no snap zooms); the slow drift on the rig keeps moving underneath
-  const punch = (t, s = 1.12, d = 0.35, x = 0, y = 0) => tl.to(cam, { scale: 1 + (s - 1) * 0.8, x: x * 0.8, y: y * 0.8, duration: Math.max(0.55, d * 1.6), ease: "power3.inOut" }, t - 0.12);
+  const punch = (t, s = 1.12, d = 0.35, x = 0, y = 0) => tl.to(cam, { scale: 1 + Math.min(0.05, (s - 1) * 0.4), x: x * 0.25, y: y * 0.25, duration: Math.max(0.7, d * 1.8), ease: "power2.inOut" }, t - 0.15);
   const camReset = (t, d = 0.4) => tl.to(cam, { scale: 1, x: 0, y: 0, rotation: 0, duration: Math.max(0.5, d * 1.4), ease: "power3.inOut" }, t);
   // a short damped jolt — only for market shocks; kept small so the frame never looks broken
   function shake(t, amp = 18, n = 6, target = cam) {
@@ -69,7 +69,7 @@
     const s = el(cam, { left: 0, top: 0, width: 1080, height: 1920 }, "", "scene");
     if (t0 > 0) tl.set(s, { autoAlpha: 0 }, 0).set(s, { autoAlpha: 1 }, t0);
     tl.set(s, { autoAlpha: 0 }, t1);
-    if (o.push !== false) tl.fromTo(s, { scale: 1 }, { scale: o.push || 1.06, duration: t1 - t0, ease: "none", immediateRender: false }, t0);
+    if (o.push !== false) tl.fromTo(s, { scale: 1 }, { scale: 1 + Math.min(0.025, ((o.push || 1.06) - 1) * 0.5), duration: t1 - t0, ease: "none", immediateRender: false }, t0);
     return s;
   }
 
@@ -92,13 +92,14 @@
     });
     return box;
   }
+  // calm, contained entrances: letters settle into their own footprint (no oversize slams, no bounce)
   const charsIn = {
-    slam: (b, t, st = 0.022) => tl.fromTo(b.chars, { scale: 2.6, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.36, ease: "expo.out", stagger: st }, t),
-    flip: (b, t, st = 0.03) => tl.fromTo(b.chars, { rotationX: -95, y: 50, opacity: 0, transformPerspective: 700, transformOrigin: "50% 100%" }, { rotationX: 0, y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)", stagger: st }, t),
-    rise: (b, t, st = 0.025) => tl.fromTo(b.chars, { yPercent: 120, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.42, ease: "expo.out", stagger: st }, t),
-    drop: (b, t, st = 0.03) => tl.fromTo(b.chars, { yPercent: -160, rotation: -14, opacity: 0 }, { yPercent: 0, rotation: 0, opacity: 1, duration: 0.55, ease: "bounce.out", stagger: st }, t),
-    stretch: (b, t) => tl.fromTo(b, { scaleX: 2.6, scaleY: 0.25, opacity: 0, filter: "blur(10px)" }, { scaleX: 1, scaleY: 1, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, t),
-    words: (b, t, st = 0.09) => tl.fromTo(b.words, { scale: 0.3, opacity: 0, y: 40 }, { scale: 1, opacity: 1, y: 0, duration: 0.42, ease: "back.out(2.2)", stagger: st }, t),
+    slam: (b, t, st = 0.022) => tl.fromTo(b.chars, { scale: 1.35, opacity: 0, filter: "blur(6px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "power3.out", stagger: st }, t),
+    flip: (b, t, st = 0.03) => tl.fromTo(b.chars, { rotationX: -70, y: 24, opacity: 0, transformPerspective: 700, transformOrigin: "50% 100%" }, { rotationX: 0, y: 0, opacity: 1, duration: 0.45, ease: "power3.out", stagger: st }, t),
+    rise: (b, t, st = 0.025) => tl.fromTo(b.chars, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.42, ease: "power3.out", stagger: st }, t),
+    drop: (b, t, st = 0.03) => tl.fromTo(b.chars, { yPercent: -40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.42, ease: "power3.out", stagger: st }, t),
+    stretch: (b, t) => tl.fromTo(b, { scaleX: 1.25, scaleY: 0.8, opacity: 0, filter: "blur(6px)" }, { scaleX: 1, scaleY: 1, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "power3.out" }, t),
+    words: (b, t, st = 0.09) => tl.fromTo(b.words, { scale: 0.85, opacity: 0, y: 24 }, { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: "power3.out", stagger: st }, t),
   };
   // scramble: characters cycle through glyphs then lock left→right
   function scramble(b, t, d = 0.6, set = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%▲▼") {
@@ -111,10 +112,10 @@
     tl.fromTo(b, { opacity: 0 }, { opacity: 1, duration: 0.05 }, t);
   }
   const charsOut = {
-    blast: (b, t) => b.chars.forEach((c, i) => tl.to(c, { x: (rnd() - 0.5) * 900, y: (rnd() - 0.5) * 900, rotation: (rnd() - 0.5) * 360, scale: 0.4, opacity: 0, duration: 0.45, ease: "power3.in" }, t + i * 0.006)),
-    zoom: (b, t) => tl.to(b, { scale: 4, opacity: 0, filter: "blur(16px)", duration: 0.35, ease: "power3.in" }, t),
-    drop: (b, t) => tl.to(b.chars, { yPercent: 160, opacity: 0, duration: 0.3, ease: "power2.in", stagger: 0.01 }, t),
-    up: (b, t) => tl.to(b, { y: -220, opacity: 0, duration: 0.3, ease: "power3.in" }, t),
+    blast: (b, t) => tl.to(b.chars, { y: -30, opacity: 0, duration: 0.28, ease: "power2.in", stagger: 0.008 }, t),
+    zoom: (b, t) => tl.to(b, { scale: 1.25, opacity: 0, duration: 0.3, ease: "power2.in" }, t),
+    drop: (b, t) => tl.to(b.chars, { yPercent: 40, opacity: 0, duration: 0.28, ease: "power2.in", stagger: 0.01 }, t),
+    up: (b, t) => tl.to(b, { y: -60, opacity: 0, duration: 0.28, ease: "power2.in" }, t),
   };
   // skewed brand bar that wipes in behind a box
   function bar(parent, x, y, w, h, color = C.g, t, d = 0.35) {
@@ -143,8 +144,8 @@
   function roll(box, t, d = 1.0) {
     tl.set(box, { autoAlpha: 1 }, t);
     box.cols.forEach((col, i) => {
-      const target = 20 + Number(col.dataset.d);       // land in the third cycle
-      tl.fromTo(col.firstChild, { yPercent: 0 }, { yPercent: -(target / 30) * 100, duration: d + i * 0.06, ease: "power3.out", immediateRender: true }, t);
+      const target = Number(col.dataset.d);            // one calm pass straight to the digit
+      tl.fromTo(col.firstChild, { yPercent: 0 }, { yPercent: -(target / 30) * 100, duration: Math.max(1.1, d * 1.4) + i * 0.08, ease: "power2.out", immediateRender: true }, t);
     });
   }
 
@@ -186,7 +187,7 @@
   // arms pivot where they enter the frame. Acting = anticipation → action → follow-through → settle.
   const NECK = "860 1130", HIPS = "860 1760";
   const ARM_O = { hand: "1290 1760", handPhone: "1300 1760", point: "1290 1760", ok: "1270 1760",
-                  pointLongArm: "1520 1760", okLongArm: "1520 1760", waveLongArm: "1520 1760", waveOkLongArms: "872 1760" };
+                  pointLongArm: "1520 1760", okLongArm: "1520 1760", waveLongArm: "1520 1760", waveOkLongArms: "872 1760", shrug: "872 1760", cup: "1290 1760" };
   // pose(w, t, {h:[rot, x, y], b:[scaleY, scaleX], a:[rot, scaleY], g:gesture}, dur, ease) — the head rides
   // on the shoulders, so a shrug (b scaleY > 1) lifts the head by the same amount
   function pose(w, t, p, d = 0.25, ease = "power2.out") {
@@ -228,14 +229,13 @@
       pose(w, t + 0.95, { h: [-2, 0, 0], b: [1.02, 1], a: [0, 1], g }, 0.5, "sine.inOut");
       pulse(w, t, o.ring || C.red, 1.2);
       const h = head(w);
-      const ex = el(w, { left: h.x + s * 0.24, top: h.y - s * 0.38, width: 34, height: 70 }, `<svg viewBox="0 0 34 70"><rect x="8" y="0" width="18" height="44" rx="9" fill="${C.red}"/><circle cx="17" cy="60" r="9" fill="${C.red}"/></svg>`);
-      tl.fromTo(ex, { scale: 0, y: 20 }, { scale: 1, y: 0, rotation: 10, duration: 0.3, ease: "power2.out" }, t).to(ex, { scale: 0, opacity: 0, duration: 0.2 }, t + 1.0);
+      // (no "!" mark — it collided with neighbouring graphics; the face + recoil carry the shock)
     },
     // WORRY: hand to chest, shoulders hunch in, head drops and shakes slowly, weight sways
-    worry(w, t, d = 1.6) {
-      const g = "hand", s = w.size;
+    worry(w, t, d = 1.6, o = {}) {
+      const g = o.gesture || "hand", s = w.size;
       CAST.expr(tl, w.av, "worried", t);
-      armIn(w, t, g);
+      if (g === "none") CAST.gesture(tl, w.av, "none", t); else armIn(w, t, g);
       pose(w, t, { h: [7, 6, 34], b: [0.93, 1.03], g }, 0.55, "power2.out");
       tl.to(w.av, { y: s * 0.05, rotation: -3, scale: 0.97, transformOrigin: "50% 100%", duration: 0.6, ease: "power2.out" }, t);
       tl.to(w.av, { x: 0, duration: 0.2 }, t + d);
@@ -258,12 +258,21 @@
     love(w, t, o = {}) {
       const g = o.gesture || "okLongArm", s = w.size;
       CAST.expr(tl, w.av, "delight", t);
-      armIn(w, t, g);
+      if (o.keep) tl.to(w.av.rig.arm, { rotation: -7, y: -40, svgOrigin: ARM_O[g], duration: 0.35, ease: "power2.out" }, t);
+      else armIn(w, t, g);
       pose(w, t, { h: [-8, -6, -12], b: [1.05, 1], g }, 0.2);
       tl.to(w.av, { rotation: -4, duration: 0.35, ease: "sine.inOut" }, t)
         .to(w.av, { rotation: 0, duration: 0.5, ease: "sine.inOut" }, t + 0.8);
       rest(w, t + 0.9, 0.4, g);
       pulse(w, t, C.g, 1.22); pulse(w, t + 0.34, C.g, 1.3);
+    },
+    // HELPLESS ("paisay bilkul nahi"): both open palms up, shoulders raised, head tilted, worried face — one move, held
+    helpless(w, t, d = 1.6) {
+      const g = "shrug";
+      CAST.expr(tl, w.av, "worried", t);
+      armIn(w, t, g);
+      pose(w, t, { h: [-7, -6, 16], b: [1.07, 0.98], g }, 0.4, "power2.out");
+      pose(w, t + d, { h: [-3, 0, 8], b: [1.03, 1], g }, 0.6, "sine.inOut");
     },
     // BUY: leans in and pumps the pointing arm, head nodding along — urgency
     buy(w, t, d = 1.4) {
@@ -321,7 +330,7 @@
   }
   function candles(parent, o) {
     const n = o.n || 18, W = o.w, H = o.h, cw = W / n;
-    let v = 0.5; const data = [];
+    let v = o.start ?? 0.5; const data = [];
     for (let i = 0; i < n; i++) { const dir = o.trend(i / (n - 1), rnd); const open = v; v = Math.min(0.95, Math.max(0.05, v + dir)); data.push([open, v, Math.max(open, v) + rnd() * 0.06, Math.min(open, v) - rnd() * 0.06]); }
     const svg = data.map(([op, cl, hi, lo], i) => {
       const up = cl >= op, x = i * cw + cw * 0.18, w = cw * 0.64, c = up ? C.g2 : C.red;
@@ -333,6 +342,7 @@
     box.c = box.querySelectorAll(".cdl");
     // candles print left → right like a live session
     box.grow = (t, st = 0.05) => tl.fromTo(box.c, { scaleY: 0, opacity: 0, transformOrigin: "50% 50%" }, { scaleY: 1, opacity: 1, duration: 0.22, ease: "power3.out", stagger: st, immediateRender: false }, t);
+    box.growRange = (t, i0, i1, st = 0.1) => tl.fromTo([...box.c].slice(i0, i1), { scaleY: 0, opacity: 0, transformOrigin: "50% 50%" }, { scaleY: 1, opacity: 1, duration: 0.3, ease: "power2.out", stagger: st, immediateRender: false }, t);
     gsap.set(box.c, { opacity: 0 });
     return box;
   }
@@ -412,13 +422,13 @@
   }
   // whip → SMOOTH PAN: the outgoing scene slides away as the next slides in, like scrolling a chart
   function whip(outS, inS, t, dir = -1) {
-    tl.to(outS, { x: dir * 1080, duration: 0.5, ease: "power3.inOut" }, t - 0.3);
-    if (inS) tl.fromTo(inS, { x: -dir * 1080 }, { x: 0, duration: 0.5, ease: "power3.inOut", immediateRender: false }, t - 0.3 + 0.02);
+    tl.to(outS, { x: dir * 120, opacity: 0, duration: 0.3, ease: "power2.in" }, t - 0.3);
+    if (inS) tl.fromTo(inS, { x: -dir * 120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, t);
   }
   // zoomThrough → smooth dolly through (no blur smear)
   function zoomThrough(outS, inS, t, ox = "50%", oy = "45%") {
-    tl.to(outS, { scale: 1.8, opacity: 0, duration: 0.4, ease: "power2.in", transformOrigin: `${ox} ${oy}` }, t - 0.4)
-      .fromTo(inS, { scale: 0.88, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "power3.out", immediateRender: false }, t);
+    tl.to(outS, { scale: 1.06, opacity: 0, duration: 0.35, ease: "power2.in", transformOrigin: `${ox} ${oy}` }, t - 0.35)
+      .fromTo(inS, { scale: 0.96, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "power2.out", immediateRender: false }, t);
   }
   // glitch → TERMINAL SCAN: a green scan line sweeps the screen with a soft trail (a quote refresh)
   function glitch(t, d = 0.35) {

@@ -5,7 +5,10 @@
 (function () {
   const D = window.AVDATA;
   const EXPRS = ["neutral", "smile", "happy", "grin", "talk", "wow", "worried", "shocked", "think", "blink", "delight"];
-  const GESTS = ["none", "hand", "handPhone", "point", "pointLongArm", "ok", "okLongArm", "waveLongArm", "waveOkLongArms"];
+  const GESTS = ["none", "hand", "handPhone", "point", "pointLongArm", "ok", "okLongArm", "waveLongArm", "waveOkLongArms", "shrug", "cup"];
+  // extra poses built from the Notionists arms: both open palms up (helpless shrug), and a hand holding a chai cup
+  const CUP = '<g class="cup"><path d="M1192,1232 h196 l-20,170 q-3,20 -24,20 h-108 q-21,0 -24,-20 Z" fill="#fff" stroke="#0B0F14" stroke-width="14" stroke-linejoin="round"/><path d="M1199,1290 h182 l-5,42 h-172 Z" fill="#38D100"/><path d="M1388,1262 q58,0 54,52 q-4,46 -64,50" fill="none" stroke="#0B0F14" stroke-width="14" stroke-linecap="round"/><path d="M1250,1200 q-16,-30 0,-60 q16,-30 0,-60 M1320,1200 q-16,-30 0,-60 q16,-30 0,-60" fill="none" stroke="#C9D3CD" stroke-width="12" stroke-linecap="round"/></g>';
+  const extraGesture = (d, g) => g === "shrug" ? d.gesture.waveLongArm + `<g transform="matrix(-1 0 0 1 1744 0)">${d.gesture.waveLongArm}</g>` : g === "cup" ? d.gesture.hand + CUP : null;
 
   let mounted = 0;
   function mount(el, name, o = {}) {
@@ -14,7 +17,7 @@
     const part = (g, i) => {
       const k = d.exprIdx.indexOf(i);
       if (k >= 0) return EXPRS.map((e) => `<g data-x="${e}" opacity="${e === ex ? 1 : 0}">${d.expr[e][k]}</g>`).join("");
-      if (i === d.gestIdx) return GESTS.map((g2) => `<g data-g="${g2}" opacity="${g2 === ge ? 1 : 0}">${g2 === "none" ? "" : d.gesture[g2]}</g>`).join("");
+      if (i === d.gestIdx) return GESTS.map((g2) => `<g data-g="${g2}" opacity="${g2 === ge ? 1 : 0}">${g2 === "none" ? "" : extraGesture(d, g2) ?? d.gesture[g2]}</g>`).join("");
       return g;
     };
     // rig: base (head+neck skin) under the clothes, then the rest of the head, then the arm/gesture layer —
