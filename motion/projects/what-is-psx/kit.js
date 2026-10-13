@@ -78,6 +78,7 @@
   const WIPE = 0.6;
   function linkScenes() {
     const S = SCENES.slice().sort((a, b) => a.t0 - b.t0);
+    window.__sceneCuts = S.slice(1).map((x) => x.t0);     // read by tools/flostocks/overlap_audit.cjs
     S.forEach((cur, i) => {
       const prev = S[i - 1], T = cur.t0;
       if (i === 0) { if (T > 0) tl.set(cur.s, { autoAlpha: 0 }, 0).set(cur.s, { autoAlpha: 1 }, T); }

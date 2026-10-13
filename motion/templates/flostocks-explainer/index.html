@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Manrope"; font-weight: 200 800; src: url("assets/brand/fonts/Manrope-Variable.ttf"); }
+      @font-face { font-family: "Inter"; font-weight: 100 900; src: url("assets/brand/fonts/Inter-Variable.ttf"); }
+      @font-face { font-family: "IBM Plex Mono"; font-weight: 600; src: url("assets/brand/fonts/IBMPlexMono-SemiBold.ttf"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #F3F8EF; }
+      #root { position: relative; width: 100%; height: 100%; }
+      #frame { position: absolute; inset: 0; overflow: hidden; background: #F7F8F7; }
+      #stage { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; }
+      .abs { position: absolute; }
+      .icon svg, .who svg { width: 100%; height: 100%; display: block; overflow: visible; }
+      .kin .kw { display: inline-block; white-space: nowrap; }
+      .kin .kc { display: inline-block; }
+      .roller .rc { display: inline-block; height: 1.2em; overflow: hidden; vertical-align: top; }
+      .roller .rs { display: block; line-height: 1.2em; }
+      .mono { font-family: "IBM Plex Mono", monospace; font-weight: 600; }
+      .chip { background: #fff; border: 4px solid #38D100; border-radius: 999px; font: 800 42px/1 Manrope; color: #0B0F14; box-shadow: 0 10px 24px rgba(20,40,20,.12); padding: 16px 28px; white-space: nowrap; }
+      .tag { border-radius: 14px; padding: 6px 16px; font: 800 36px Manrope; border: 4px solid #0B0F14; white-space: nowrap; }
+      #caps { position: absolute; left: 60px; width: 960px; top: 1412px; height: 120px; z-index: 80; }
+      .cap { position: absolute; left: 0; right: 0; top: 0; text-align: center; font: 700 46px/1.25 Manrope; color: #0B0F14; }
+      .cap span { background: #fff; box-shadow: 0 8px 20px rgba(20,40,20,.12); box-decoration-break: clone; -webkit-box-decoration-break: clone; padding: 6px 18px; border-radius: 14px; }
+      .cap b { color: #1E9600; font-weight: 800; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__DUR__" data-width="1080" data-height="1920">
+      <div id="frame" class="clip" data-start="0" data-duration="__DUR__" data-track-index="0" data-layout-allow-overflow data-layout-allow-occlusion>
+        <div id="stage"></div>
+      </div>
+    </div>
+    <script src="avatars.js"></script>
+    <script src="cast.js"></script>
+    <script src="kit.js"></script>
+    <script src="icons.js"></script>
+    <script src="app.js"></script>
+    <script src="market.js"></script>
+    <script src="scenes.js"></script>
+    <script>
+      window.__timelines["main"] = K.tl;
+    </script>
+  </body>
+</html>

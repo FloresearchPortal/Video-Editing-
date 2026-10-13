@@ -1,0 +1,89 @@
+{
+ "date": "2026-10-13 (intraday snapshot, ~12:41 PM PKT, market open - not a close)",
+ "source": "https://dps.psx.com.pk/indices and https://dps.psx.com.pk/company/<SYMBOL>",
+ "kse100": {
+  "level": 165298.5,
+  "change_pct": 0.11,
+  "change_points": 174.09
+ },
+ "stocks": [
+  {
+   "symbol": "OGDC",
+   "price": 298.15,
+   "change_pct": -0.75
+  },
+  {
+   "symbol": "HBL",
+   "price": 288.0,
+   "change_pct": -0.78
+  },
+  {
+   "symbol": "LUCK",
+   "price": 399.5,
+   "change_pct": 0.1
+  },
+  {
+   "symbol": "PSO",
+   "price": 359.4,
+   "change_pct": 0.06
+  },
+  {
+   "symbol": "MCB",
+   "price": 375.51,
+   "change_pct": 0.11
+  },
+  {
+   "symbol": "UBL",
+   "price": 410.0,
+   "change_pct": -0.22
+  },
+  {
+   "symbol": "FFC",
+   "price": 536.0,
+   "change_pct": 0.74
+  },
+  {
+   "symbol": "HUBC",
+   "price": 194.0,
+   "change_pct": 0.25
+  },
+  {
+   "symbol": "SYS",
+   "price": 114.76,
+   "change_pct": 0.68
+  },
+  {
+   "symbol": "MEBL",
+   "price": 544.8,
+   "change_pct": 0.64
+  },
+  {
+   "symbol": "PPL",
+   "price": 216.9,
+   "change_pct": -0.06
+  },
+  {
+   "symbol": "MARI",
+   "price": 633.99,
+   "change_pct": -0.08
+  },
+  {
+   "symbol": "EFERT",
+   "price": 191.79,
+   "change_pct": 0.35
+  },
+  {
+   "symbol": "BAHL",
+   "price": 149.0,
+   "change_pct": 0.77
+  },
+  {
+   "symbol": "TRG",
+   "price": 54.31,
+   "change_pct": 0.5
+  }
+ ],
+ "omitted": {
+  "ENGRO": "PSX page showed stale quote dated Jan 3, 2025"
+ }
+}
