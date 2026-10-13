@@ -197,7 +197,6 @@
       pose(w, t, { h: [3, 0, 18], b: [0.95, 1.03], g }, 0.1, "power2.in");
       armIn(w, t + 0.1, g);
       pose(w, t + 0.1, { h: [-7, 0, -14], b: [1.06, 0.98], g }, 0.2);
-      wag(w, t + 0.42, g, 6, 4, 0.16); nods(w, t + 0.42, 5, 4, 0.16, -2);
       rest(w, t + 1.08, 0.45, g);
       pulse(w, t + 0.1, o.color || C.g);
     },
@@ -210,7 +209,6 @@
       tl.to(w.av, { x: -s * 0.05, rotation: -7, scale: 1.06, transformOrigin: "50% 100%", duration: 0.09, ease: "power3.out" }, t)
         .to(w.av, { x: -s * 0.035, rotation: -5, scale: 1.03, duration: 0.5, ease: "sine.out" }, t + 0.09)
         .to(w.av, { x: 0, rotation: 0, scale: 1, duration: 0.5, ease: "power2.out" }, t + 0.95);
-      for (let k = 0; k < 6; k++) tl.to(w.av.rig.head, { x: -18 + (k % 2 ? -5 : 5), svgOrigin: NECK, duration: 0.05 }, t + 0.12 + k * 0.05);
       pose(w, t + 0.95, { h: [-2, 0, 0], b: [1.02, 1], a: [0, 1], g }, 0.5, "sine.inOut");
       pulse(w, t, o.ring || C.red, 1.2);
       const h = head(w);
@@ -224,8 +222,6 @@
       armIn(w, t, g);
       pose(w, t, { h: [7, 6, 34], b: [0.93, 1.03], g }, 0.55, "power2.out");
       tl.to(w.av, { y: s * 0.05, rotation: -3, scale: 0.97, transformOrigin: "50% 100%", duration: 0.6, ease: "power2.out" }, t);
-      for (let k = 0; k < 4; k++) tl.to(w.av.rig.head, { rotation: k % 2 ? 9 : 2, x: k % 2 ? 10 : 0, svgOrigin: NECK, duration: 0.28, ease: "sine.inOut" }, t + 0.55 + k * 0.28);
-      for (let k = 0; k < 3; k++) tl.to(w.av, { x: k % 2 ? 5 : -5, duration: Math.max(0.2, (d - 0.6) / 3), ease: "sine.inOut" }, t + 0.6 + k * Math.max(0.2, (d - 0.6) / 3));
       tl.to(w.av, { x: 0, duration: 0.2 }, t + d);
     },
     // THINK: finger to chin, head tilts and turns up, weight shifts onto one side, finger taps; head straightens on the idea
@@ -235,7 +231,6 @@
       armIn(w, t, g);
       pose(w, t, { h: [10, 14, -8], b: [1.01, 1], g }, 0.5, "sine.inOut");
       tl.to(w.av, { rotation: 4, x: s * 0.02, transformOrigin: "50% 100%", duration: 0.55, ease: "sine.inOut" }, t);
-      for (let k = 0; k < 3; k++) tl.to(w.av.rig.arm, { rotation: -5, svgOrigin: ARM_O[g], duration: 0.12, yoyo: true, repeat: 1, ease: "sine.inOut" }, t + 0.55 + k * 0.32);
       pose(w, t + d * 0.75, { h: [-3, 0, -10], b: [1.04, 1], g }, 0.25, "power2.out");
       tl.to(w.av, { rotation: 0, x: 0, duration: 0.3, ease: "power2.out" }, t + d * 0.75);
       const h = head(w);
@@ -252,7 +247,6 @@
       pose(w, t, { h: [-8, -6, -12], b: [1.05, 1], g }, 0.2);
       tl.to(w.av, { rotation: -4, duration: 0.35, ease: "sine.inOut" }, t)
         .to(w.av, { rotation: 0, duration: 0.5, ease: "sine.inOut" }, t + 0.8);
-      for (let k = 0; k < 4; k++) pose(w, t + 0.2 + k * 0.15, { h: [k % 2 ? -8 : 4, 0, -12], b: [k % 2 ? 1.06 : 0.99, k % 2 ? 0.99 : 1.02], a: [k % 2 ? -5 : 5, 1], g }, 0.15, "sine.inOut");
       rest(w, t + 0.9, 0.4, g);
       pulse(w, t, C.g, 1.22); pulse(w, t + 0.34, C.g, 1.3);
     },
@@ -263,9 +257,6 @@
       armIn(w, t, g);
       tl.to(w.av, { rotation: 5, x: s * 0.03, transformOrigin: "50% 100%", duration: 0.2, ease: "power2.out" }, t);
       pose(w, t, { h: [4, 8, 6], b: [1.03, 1], g }, 0.2);
-      const n = Math.max(2, Math.round((d - 0.3) / 0.22));
-      for (let k = 0; k < n; k++) { tl.to(w.av.rig.arm, { rotation: -6, svgOrigin: ARM_O[g], duration: 0.1, yoyo: true, repeat: 1, ease: "power2.out" }, t + 0.25 + k * 0.22);
-        tl.to(w.av.rig.head, { rotation: 8, svgOrigin: NECK, duration: 0.1, yoyo: true, repeat: 1, ease: "sine.inOut" }, t + 0.25 + k * 0.22); }
       tl.to(w.av, { rotation: 0, x: 0, duration: 0.35, ease: "power2.out" }, t + d);
       rest(w, t + d, 0.35, g);
     },
@@ -276,7 +267,6 @@
       armIn(w, t, g);
       pose(w, t, { h: [-5, 0, -22], b: [1.07, 1.03], g }, 0.3, "power2.out");
       tl.to(w.av, { scale: 1.04, transformOrigin: "50% 100%", duration: 0.3, ease: "power2.out" }, t);
-      nods(w, t + 0.45, 7, 4, 0.16, -5);
       pose(w, t + 1.2, { h: [-2, 0, -8], b: [1.03, 1.01], g }, 0.4, "sine.inOut");
       tl.to(w.av, { scale: 1, duration: 0.4, ease: "sine.inOut" }, t + 1.2);
       pulse(w, t, o.color || C.g, 1.25);
