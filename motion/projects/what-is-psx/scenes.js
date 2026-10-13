@@ -88,7 +88,7 @@
   front.setAttribute("data-layout-allow-occlusion", "");
   tl.fromTo(stall, { y: 1300, rotation: 6 }, { y: 0, rotation: 0, duration: 0.6, ease: "expo.out" }, 8.5);
   tl.fromTo(front.querySelector(".awning"), { y: -300 }, { y: 0, duration: 0.6, ease: "bounce.out" }, 8.75);
-  tl.fromTo(ahmed, { y: 260 }, { y: 0, duration: 0.45, ease: "back.out(1.8)" }, 9.45);
+  tl.fromTo(ahmed, { y: 260 }, { y: 0, duration: 0.45, ease: "power3.out" }, 9.45);
   life(ahmed, 9.4, 14.6, "smile", 4);
   react.joy(ahmed, 9.55, { gesture: "waveLongArm" }); Gs(tl, ahmed.av, "hand", 10.9); X(tl, ahmed.av, "smile", 10.9);
   front.querySelectorAll(".steam").forEach((p, i) => tl.fromTo(p, { y: 0, opacity: 1 }, { y: -26, opacity: 0, duration: 0.8, repeat: 6, ease: "none" }, 8.8 + i * 0.25));
@@ -417,7 +417,7 @@
   tl.to([alert, crashC, pcard, doob, agar, ahm16], { opacity: 0, y: -200, duration: 0.3, ease: "power3.in", stagger: 0.02 }, 76.75);
   const sellers = ["bilal", "sana", "usman", "ayesha"].map((n, i) => {
     const w = who(s16, n, 20 + i * 262, 330, 300, { expr: "worried", gesture: "point" });
-    tl.fromTo(w, { y: -900 }, { y: 0, duration: 0.4, ease: "back.out(1.6)" }, 76.95 + i * 0.07);
+    tl.fromTo(w, { y: -900 }, { y: 0, duration: 0.4, ease: "power3.out" }, 76.95 + i * 0.07);
     const tg = el(w, { left: 130, top: 16, background: C.red, color: "#fff" }, "SELL", "tag");
     tl.fromTo(tg, { scale: 0 }, { scale: 1, rotation: -8, duration: 0.3, ease: "back.out(3)" }, 77.25 + i * 0.07);
     react.worry(w, 77.3 + i * 0.1, 1.8);
@@ -470,7 +470,6 @@
     if (kind === "worry") react.worry(w, t, 2.2);
     if (kind === "think") { react.think(w, t, 1.6); X(tl, w.av, "happy", t + 0.6); }
     if (kind === "joy") react.proud(w, t, { face: "grin", color: C.gt });
-    tl.to(w, { scale: 1.15, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out" }, t);
   });
 
   // ═══ S19 93.8–99.1: PSX = regulated marketplace ═══════════════════════════
