@@ -294,6 +294,7 @@
   const s11 = scene(50.75, 54.95, { push: 1.04 });
   whip(s10, s11, 50.75); camReset(50.75, 0.2);
   const gb = kin(s11, "GHAR BAITHE *BAITHE*", { y: 225, size: 72 }); charsIn.rise(gb, 51.86);
+  tl.to(gb, { opacity: 0, y: -60, duration: 0.3, ease: "power2.in" }, 52.6);   // clear before the camera punch-in crops it
   const A11 = K.app(s11, 400, 320, 0.76);
   tl.set([A11.card], { opacity: 1 }, 0).set(A11.empty, { opacity: 0 }, 0);
   A11.value.textContent = "500.00"; A11.cValue.textContent = "500";
