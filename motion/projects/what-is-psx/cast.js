@@ -11,18 +11,24 @@
   function mount(el, name, o = {}) {
     const d = D[name];
     const ex = o.expr || "smile", ge = o.gesture || "none";
-    const parts = d.groups.map((g, i) => {
+    const part = (g, i) => {
       const k = d.exprIdx.indexOf(i);
       if (k >= 0) return EXPRS.map((e) => `<g data-x="${e}" opacity="${e === ex ? 1 : 0}">${d.expr[e][k]}</g>`).join("");
       if (i === d.gestIdx) return GESTS.map((g2) => `<g data-g="${g2}" opacity="${g2 === ge ? 1 : 0}">${g2 === "none" ? "" : d.gesture[g2]}</g>`).join("");
       return g;
-    });
+    };
+    // rig: base (head+neck skin) under the clothes, then the rest of the head, then the arm/gesture layer —
+    // each in its own group so head, shoulders and arms can act separately
+    const headRest = d.groups.map((g, i) => (i === 0 || i === 1 || i === d.gestIdx ? "" : part(g, i))).join("");
+    const parts = [`<g class="rg-hd0">${part(d.groups[0], 0)}</g>`, `<g class="rg-bd">${part(d.groups[1], 1)}</g>`,
+                   `<g class="rg-hd">${headRest}</g>`, `<g class="rg-arm">${part(d.groups[d.gestIdx], d.gestIdx)}</g>`];
     // unique SVG ids per instance: shared ids (viewboxMask) would all resolve to the first copy,
     // and when that copy's scene is hidden every other character's mask goes blank
     const n = ++mounted;
     el.innerHTML = (d.head + parts.join("") + "</g></svg>")
       .replace(/id="([^"]+)"/g, `id="$1_m${n}"`).replace(/url\(#([^)]+)\)/g, `url(#$1_m${n})`).replace(/href="#([^"]+)"/g, `href="#$1_m${n}"`);
     el.classList.add("cast");
+    el.rig = { head: [el.querySelector(".rg-hd0"), el.querySelector(".rg-hd")], body: el.querySelector(".rg-bd"), arm: el.querySelector(".rg-arm") };
     return el;
   }
   const sw = (tl, el, attr, val, at) =>

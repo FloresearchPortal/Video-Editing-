@@ -355,7 +355,7 @@
     tl.fromTo(w, { x: i % 3 === 0 ? -700 : i % 3 === 2 ? 700 : 0, y: i % 3 === 1 ? 900 : 0, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 61.4 + i * 0.07);
     const tg = el(w, { left: 190, top: 20, background: C.g, color: C.ink }, "BUY", "tag");
     tl.fromTo(tg, { scale: 0, rotation: -20 }, { scale: 1, rotation: 8, duration: 0.3, ease: "back.out(3)" }, 61.75 + i * 0.07);
-    for (let k = 0; k < 3; k++) tl.to(w, { y: -16, duration: 0.12, yoyo: true, repeat: 1 }, 62.2 + k * 0.3 + i * 0.05);
+    react.buy(w, 61.9 + i * 0.06, 1.25);
     return w;
   });
   tl.to(buyers, { scale: 0.8, y: -120, duration: 0.35, ease: "power3.inOut" }, 63.3);
@@ -469,7 +469,7 @@
     charsIn.slam(L, t, 0.03);
     if (kind === "worry") react.worry(w, t, 2.2);
     if (kind === "think") { react.think(w, t, 1.6); X(tl, w.av, "happy", t + 0.6); }
-    if (kind === "joy") react.joy(w, t, { face: "grin", color: C.gt });
+    if (kind === "joy") react.proud(w, t, { face: "grin", color: C.gt });
     tl.to(w, { scale: 1.15, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out" }, t);
   });
 

@@ -136,7 +136,7 @@
   const STK = "drop-shadow(0 16px 20px rgba(20,40,20,.18))";
   function who(parent, name, x, y, size, o = {}) {
     const box = el(parent, { left: x, top: y, width: size, height: size }, "", "who");
-    const inner = el(box, { left: 0, top: 0, width: size, height: size, filter: STK });
+    const inner = el(box, { left: 0, top: 0, width: size, height: size, filter: STK, transformOrigin: "50% 100%" });
     CAST.mount(inner, name, o);
     box.av = inner; box.size = size;
     return box;
@@ -165,55 +165,137 @@
     const sp = el(w, { left: x, top: y, width: sz, height: sz }, `<svg viewBox="0 0 100 100"><path d="M50,0 C54,36 64,46 100,50 C64,54 54,64 50,100 C46,64 36,54 0,50 C36,46 46,36 50,0Z" fill="${C.g}"/></svg>`);
     tl.fromTo(sp, { scale: 0, rotation: -45, opacity: 1 }, { scale: 1, rotation: 0, duration: 0.3, ease: "back.out(3)" }, t).to(sp, { scale: 0, opacity: 0, duration: 0.25 }, t + 0.8);
   }
+  // ── body rig (cast.js splits every character into head / shoulders / arm) ──
+  // svgOrigin is in Notionists viewBox units (1744²): neck ≈ (860,1130), shoulders anchored at the bottom edge,
+  // arms pivot where they enter the frame. Acting = anticipation → action → follow-through → settle.
+  const NECK = "860 1130", HIPS = "860 1760";
+  const ARM_O = { hand: "1290 1760", handPhone: "1300 1760", point: "1290 1760", ok: "1270 1760",
+                  pointLongArm: "1520 1760", okLongArm: "1520 1760", waveLongArm: "1520 1760", waveOkLongArms: "872 1760" };
+  // pose(w, t, {h:[rot, x, y], b:[scaleY, scaleX], a:[rot, scaleY], g:gesture}, dur, ease) — the head rides
+  // on the shoulders, so a shrug (b scaleY > 1) lifts the head by the same amount
+  function pose(w, t, p, d = 0.25, ease = "power2.out") {
+    const r = w.av.rig; if (!r) return;
+    const [hr = 0, hx = 0, hy = 0] = p.h || [], [sy = 1, sx = 1] = p.b || [], [ar = 0, as = 1] = p.a || [];
+    tl.to(r.head, { rotation: hr, x: hx, y: hy - (sy - 1) * 680, svgOrigin: NECK, duration: d, ease }, t);
+    tl.to(r.body, { scaleY: sy, scaleX: sx, svgOrigin: HIPS, duration: d, ease }, t);
+    tl.to(r.arm, { rotation: ar, scaleY: as, svgOrigin: ARM_O[p.g] || ARM_O.waveLongArm, duration: d, ease }, t);
+  }
+  const rest = (w, t, d = 0.45, g) => pose(w, t, { g }, d, "back.out(1.6)");
+  // an arm flies in: hidden gesture swaps at t, arm grows from its root (no pop-in)
+  function armIn(w, t, g, rot = 0) {
+    CAST.gesture(tl, w.av, g, t);
+    tl.fromTo(w.av.rig.arm, { scaleY: 0.55, rotation: rot - 10, svgOrigin: ARM_O[g] }, { scaleY: 1, rotation: rot, svgOrigin: ARM_O[g], duration: 0.28, ease: "back.out(2.2)", immediateRender: false }, t);
+  }
+  const wag = (w, t, g, amp, n, dt) => { for (let k = 0; k < n; k++) tl.to(w.av.rig.arm, { rotation: k % 2 ? -amp : amp, svgOrigin: ARM_O[g], duration: dt, ease: "sine.inOut" }, t + k * dt); };
+  const nods = (w, t, amp, n, dt, base = 0) => { for (let k = 0; k < n; k++) tl.to(w.av.rig.head, { rotation: base + (k % 2 ? -amp * 0.4 : amp), svgOrigin: NECK, duration: dt, ease: "sine.inOut" }, t + k * dt); };
+
   const react = {
+    // JOY: crouch, then both arms shoot up, chest lifts, head thrown back, hop; arms pump, head bobs
     joy(w, t, o = {}) {
+      const g = o.gesture || "waveOkLongArms", s = w.size;
       CAST.expr(tl, w.av, o.face || "grin", t);
-      if (o.gesture) CAST.gesture(tl, w.av, o.gesture, t);
-      tl.to(w.av, { y: -w.size * 0.1, scaleY: 1.04, scaleX: 0.97, duration: 0.17, ease: "power2.out" }, t)
-        .to(w.av, { y: 0, scaleY: 0.95, scaleX: 1.04, duration: 0.14, ease: "power2.in" }, t + 0.17)
-        .to(w.av, { scaleY: 1, scaleX: 1, duration: 0.3, ease: "back.out(3)" }, t + 0.31);
-      pulse(w, t, o.color || C.g);
-      const h = head(w);
-      sparkle(w, h.x + w.size * 0.24, h.y - w.size * 0.3, t + 0.05); sparkle(w, h.x - w.size * 0.36, h.y - w.size * 0.12, t + 0.15, 34);
+      pose(w, t, { h: [3, 0, 18], b: [0.95, 1.03], g }, 0.1, "power2.in");
+      tl.to(w.av, { y: s * 0.02, scaleY: 0.96, scaleX: 1.03, duration: 0.1, ease: "power2.in" }, t);
+      armIn(w, t + 0.1, g);
+      pose(w, t + 0.1, { h: [-7, 0, -14], b: [1.06, 0.98], g }, 0.2);
+      tl.to(w.av, { y: -s * 0.11, scaleY: 1.05, scaleX: 0.97, duration: 0.18, ease: "power2.out" }, t + 0.1)
+        .to(w.av, { y: 0, scaleY: 0.95, scaleX: 1.04, duration: 0.14, ease: "power2.in" }, t + 0.28)
+        .to(w.av, { scaleY: 1, scaleX: 1, duration: 0.3, ease: "back.out(3)" }, t + 0.42);
+      wag(w, t + 0.42, g, 6, 4, 0.16); nods(w, t + 0.42, 5, 4, 0.16, -2);
+      rest(w, t + 1.08, 0.45, g);
+      pulse(w, t + 0.1, o.color || C.g);
     },
+    // SHOCK: hand flies up palm-out, whole body recoils back, shoulders jump, head jerks back; frozen tremble; slow recover
     shock(w, t, o = {}) {
+      const g = o.gesture || "waveLongArm", s = w.size;
       CAST.expr(tl, w.av, o.face || "shocked", t);
-      tl.to(w.av, { y: w.size * 0.03, scale: 1.08, duration: 0.07, ease: "power2.out" }, t).to(w.av, { y: 0, scale: 1, duration: 0.4, ease: "back.out(3)" }, t + 0.07);
-      shake(t + 0.05, 9, 5, w.av);
+      armIn(w, t, g, -4);
+      pose(w, t, { h: [-9, -18, -26], b: [1.07, 0.96], a: [-4, 1], g }, 0.09, "power3.out");
+      tl.to(w.av, { x: -s * 0.05, rotation: -7, scale: 1.06, transformOrigin: "50% 100%", duration: 0.09, ease: "power3.out" }, t)
+        .to(w.av, { x: -s * 0.035, rotation: -5, scale: 1.03, duration: 0.5, ease: "sine.out" }, t + 0.09)
+        .to(w.av, { x: 0, rotation: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, t + 0.95);
+      for (let k = 0; k < 6; k++) tl.to(w.av.rig.head, { x: -18 + (k % 2 ? -5 : 5), svgOrigin: NECK, duration: 0.05 }, t + 0.12 + k * 0.05);
+      pose(w, t + 0.95, { h: [-2, 0, 0], b: [1.02, 1], a: [0, 1], g }, 0.5, "sine.inOut");
       pulse(w, t, o.ring || C.red, 1.2);
       const h = head(w);
-      const ex = el(w, { left: h.x + w.size * 0.24, top: h.y - w.size * 0.38, width: 34, height: 70 }, `<svg viewBox="0 0 34 70"><rect x="8" y="0" width="18" height="44" rx="9" fill="${C.red}"/><circle cx="17" cy="60" r="9" fill="${C.red}"/></svg>`);
+      const ex = el(w, { left: h.x + s * 0.24, top: h.y - s * 0.38, width: 34, height: 70 }, `<svg viewBox="0 0 34 70"><rect x="8" y="0" width="18" height="44" rx="9" fill="${C.red}"/><circle cx="17" cy="60" r="9" fill="${C.red}"/></svg>`);
       tl.fromTo(ex, { scale: 0, y: 20 }, { scale: 1, y: 0, rotation: 10, duration: 0.3, ease: "back.out(3)" }, t).to(ex, { scale: 0, opacity: 0, duration: 0.2 }, t + 1.0);
     },
+    // WORRY: hand to chest, shoulders hunch in, head drops and shakes slowly, weight sways
     worry(w, t, d = 1.6) {
+      const g = "hand", s = w.size;
       CAST.expr(tl, w.av, "worried", t);
-      tl.to(w.av, { y: w.size * 0.06, rotation: -6, scale: 0.97, duration: 0.6, ease: "power2.out" }, t);
-      for (let k = 0; k < 4; k++) tl.to(w.av, { x: k % 2 ? -3 : 3, duration: 0.07 }, t + 0.6 + k * 0.08);
-      tl.to(w.av, { x: 0, duration: 0.1 }, t + 0.95);
+      armIn(w, t, g);
+      pose(w, t, { h: [7, 6, 34], b: [0.93, 1.03], g }, 0.55, "power2.out");
+      tl.to(w.av, { y: s * 0.05, rotation: -3, scale: 0.97, transformOrigin: "50% 100%", duration: 0.6, ease: "power2.out" }, t);
+      for (let k = 0; k < 4; k++) tl.to(w.av.rig.head, { rotation: k % 2 ? 9 : 2, x: k % 2 ? 10 : 0, svgOrigin: NECK, duration: 0.28, ease: "sine.inOut" }, t + 0.55 + k * 0.28);
+      for (let k = 0; k < 3; k++) tl.to(w.av, { x: k % 2 ? 5 : -5, duration: Math.max(0.2, (d - 0.6) / 3), ease: "sine.inOut" }, t + 0.6 + k * Math.max(0.2, (d - 0.6) / 3));
+      tl.to(w.av, { x: 0, duration: 0.2 }, t + d);
     },
+    // THINK: finger to chin, head tilts and turns up, weight shifts onto one side, finger taps; head straightens on the idea
     think(w, t, d = 1.4) {
+      const g = "hand", s = w.size;
       CAST.expr(tl, w.av, "think", t);
-      CAST.gesture(tl, w.av, "hand", t);
-      tl.to(w.av, { rotation: 6, duration: 0.45, ease: "sine.inOut" }, t);
+      armIn(w, t, g);
+      pose(w, t, { h: [10, 14, -8], b: [1.01, 1], g }, 0.5, "sine.inOut");
+      tl.to(w.av, { rotation: 4, x: s * 0.02, transformOrigin: "50% 100%", duration: 0.55, ease: "sine.inOut" }, t);
+      for (let k = 0; k < 3; k++) tl.to(w.av.rig.arm, { rotation: -5, svgOrigin: ARM_O[g], duration: 0.12, yoyo: true, repeat: 1, ease: "sine.inOut" }, t + 0.55 + k * 0.32);
+      pose(w, t + d * 0.75, { h: [-3, 0, -10], b: [1.04, 1], g }, 0.25, "back.out(2)");
+      tl.to(w.av, { rotation: 0, x: 0, duration: 0.3, ease: "back.out(2)" }, t + d * 0.75);
       const h = head(w);
-      const dots = el(w, { left: h.x + w.size * 0.2, top: h.y - w.size * 0.34, width: 96, height: 44, borderRadius: 22, background: "#fff", border: "3px solid #E3E9E5", boxShadow: "0 8px 18px rgba(20,40,20,.12)" },
+      const dots = el(w, { left: h.x + s * 0.2, top: h.y - s * 0.34, width: 96, height: 44, borderRadius: 22, background: "#fff", border: "3px solid #E3E9E5", boxShadow: "0 8px 18px rgba(20,40,20,.12)" },
         `<div style="display:flex;gap:9px;justify-content:center;align-items:center;height:100%">${[0, 1, 2].map(() => '<i style="width:12px;height:12px;border-radius:6px;background:#6B7570;display:block"></i>').join("")}</div>`);
       tl.fromTo(dots, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, t).to(dots, { scale: 0, opacity: 0, duration: 0.2 }, t + d);
       dots.querySelectorAll("i").forEach((d2, i) => tl.to(d2, { y: -6, duration: 0.2, yoyo: true, repeat: 3, ease: "sine.inOut" }, t + 0.3 + i * 0.1));
     },
-    love(w, t) {   // delighted: bright eyes, raised brows, big grin, two hops and a lean
+    // LOVE ("kamaal!"): OK-sign shoots up, head tilts happily, shoulder shimmy with two little hops
+    love(w, t, o = {}) {
+      const g = o.gesture || "okLongArm", s = w.size;
       CAST.expr(tl, w.av, "delight", t);
-      tl.to(w.av, { y: -w.size * 0.09, rotation: -5, duration: 0.17, ease: "power2.out" }, t)
+      armIn(w, t, g);
+      pose(w, t, { h: [-8, -6, -12], b: [1.05, 1], g }, 0.2);
+      tl.to(w.av, { y: -s * 0.09, rotation: -5, transformOrigin: "50% 100%", duration: 0.17, ease: "power2.out" }, t)
         .to(w.av, { y: 0, rotation: 0, duration: 0.17, ease: "power2.in" }, t + 0.17)
-        .to(w.av, { y: -w.size * 0.07, rotation: 5, duration: 0.16, ease: "power2.out" }, t + 0.34)
+        .to(w.av, { y: -s * 0.07, rotation: 5, duration: 0.16, ease: "power2.out" }, t + 0.34)
         .to(w.av, { y: 0, rotation: 0, duration: 0.3, ease: "back.out(2.5)" }, t + 0.5);
+      for (let k = 0; k < 4; k++) pose(w, t + 0.2 + k * 0.15, { h: [k % 2 ? -8 : 4, 0, -12], b: [k % 2 ? 1.06 : 0.99, k % 2 ? 0.99 : 1.02], a: [k % 2 ? -5 : 5, 1], g }, 0.15, "sine.inOut");
+      rest(w, t + 0.9, 0.4, g);
       pulse(w, t, C.g, 1.22); pulse(w, t + 0.34, C.g, 1.3);
-      const h = head(w);
-      sparkle(w, h.x + w.size * 0.24, h.y - w.size * 0.32, t + 0.05); sparkle(w, h.x - w.size * 0.38, h.y - w.size * 0.2, t + 0.2, 36); sparkle(w, h.x + w.size * 0.34, h.y + w.size * 0.02, t + 0.35, 30);
+    },
+    // BUY: leans in and pumps the pointing arm, head nodding along — urgency
+    buy(w, t, d = 1.4) {
+      const g = "pointLongArm", s = w.size;
+      CAST.expr(tl, w.av, "grin", t);
+      armIn(w, t, g);
+      tl.to(w.av, { rotation: 5, x: s * 0.03, transformOrigin: "50% 100%", duration: 0.2, ease: "power2.out" }, t);
+      pose(w, t, { h: [4, 8, 6], b: [1.03, 1], g }, 0.2);
+      const n = Math.max(2, Math.round((d - 0.3) / 0.22));
+      for (let k = 0; k < n; k++) { tl.to(w.av.rig.arm, { scaleY: 0.86, rotation: -6, svgOrigin: ARM_O[g], duration: 0.1, yoyo: true, repeat: 1, ease: "power2.out" }, t + 0.25 + k * 0.22);
+        tl.to(w.av.rig.head, { rotation: 8, svgOrigin: NECK, duration: 0.1, yoyo: true, repeat: 1, ease: "sine.inOut" }, t + 0.25 + k * 0.22); }
+      tl.to(w.av, { rotation: 0, x: 0, duration: 0.35, ease: "back.out(2)" }, t + d);
+      rest(w, t + d, 0.35, g);
+    },
+    // PROUD (bharosa): OK at the chest, chest puffs out, chin up, two firm nods
+    proud(w, t, o = {}) {
+      const g = "ok", s = w.size;
+      CAST.expr(tl, w.av, o.face || "happy", t);
+      armIn(w, t, g);
+      pose(w, t, { h: [-5, 0, -22], b: [1.07, 1.03], g }, 0.3, "back.out(2)");
+      tl.to(w.av, { scale: 1.04, transformOrigin: "50% 100%", duration: 0.3, ease: "back.out(2)" }, t);
+      nods(w, t + 0.45, 7, 4, 0.16, -5);
+      pose(w, t + 1.2, { h: [-2, 0, -8], b: [1.03, 1.01], g }, 0.4, "sine.inOut");
+      tl.to(w.av, { scale: 1, duration: 0.4, ease: "sine.inOut" }, t + 1.2);
+      pulse(w, t, o.color || C.g, 1.25);
     },
   };
   const talk = (w, times, rest = "smile") => { CAST.talk(tl, w.av, times, rest); times.forEach((tt, i) => i % 2 || tl.to(w.av, { y: -6, duration: 0.1, yoyo: true, repeat: 1 }, tt)); };
-  const life = (w, t0, t1, face = "smile", s = 1) => { CAST.blinks(tl, w.av, t0, t1, face, s); };
+  // idle: slow breathing on the inner <svg> (separate element from the acted parts, so no tween fights)
+  const life = (w, t0, t1, face = "smile", s = 1) => {
+    const sv = w.av.querySelector("svg"); if (!sv) return;
+    const ph = (s * 0.37) % 1.6;
+    for (let t = t0 + ph; t < t1 - 1.6; t += 3.2)
+      tl.to(sv, { scaleY: 1.014, scaleX: 0.996, transformOrigin: "50% 100%", duration: 1.6, ease: "sine.inOut" }, t).to(sv, { scaleY: 1, scaleX: 1, duration: 1.6, ease: "sine.inOut" }, t + 1.6);
+  };
   const enter = (w, t, from = "bottom") => {
     const v = { bottom: { y: 500 }, left: { x: -900 }, right: { x: 900 }, pop: { scale: 0.2 } }[from];
     tl.fromTo(w, { ...v, opacity: 0 }, { x: 0, y: 0, scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.5)" }, t);
@@ -299,6 +381,6 @@
     tl.set([r, g], { opacity: 0 }, t + d).set(cam, { x: 0 }, t + d);
   }
 
-  window.K = { C, tl, stage, cam, fx, el, scene, kin, charsIn, charsOut, scramble, bar, roller, roll, who, sym, react, talk, life, enter,
+  window.K = { C, tl, stage, cam, fx, el, scene, kin, charsIn, charsOut, scramble, bar, roller, roll, who, sym, react, pose, talk, life, enter,
                tape, candles, line, gauge, wipe, slices, whip, zoomThrough, glitch, flash, shake, punch, camReset, rnd, pick };
 })();
