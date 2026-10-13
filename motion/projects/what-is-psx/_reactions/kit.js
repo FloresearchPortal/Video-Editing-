@@ -160,40 +160,56 @@
     r.style.zIndex = -1;
     tl.fromTo(r, { scale: 0.8, opacity: 0.7 }, { scale: scaleTo, opacity: 0, duration: 0.7, ease: "power2.out" }, t);
   }
+  // expressive but restrained: clear faces + readable body acting + one small brand-coloured accent
+  function sparkle(w, x, y, t, sz = 46) {
+    const sp = el(w, { left: x, top: y, width: sz, height: sz }, `<svg viewBox="0 0 100 100"><path d="M50,0 C54,36 64,46 100,50 C64,54 54,64 50,100 C46,64 36,54 0,50 C36,46 46,36 50,0Z" fill="${C.g}"/></svg>`);
+    tl.fromTo(sp, { scale: 0, rotation: -45, opacity: 1 }, { scale: 1, rotation: 0, duration: 0.3, ease: "back.out(3)" }, t).to(sp, { scale: 0, opacity: 0, duration: 0.25 }, t + 0.8);
+  }
   const react = {
     joy(w, t, o = {}) {
       CAST.expr(tl, w.av, o.face || "grin", t);
       if (o.gesture) CAST.gesture(tl, w.av, o.gesture, t);
-      tl.to(w.av, { y: -w.size * 0.06, duration: 0.18, ease: "power2.out" }, t).to(w.av, { y: 0, duration: 0.4, ease: "back.out(2)" }, t + 0.18);
+      tl.to(w.av, { y: -w.size * 0.1, scaleY: 1.04, scaleX: 0.97, duration: 0.17, ease: "power2.out" }, t)
+        .to(w.av, { y: 0, scaleY: 0.95, scaleX: 1.04, duration: 0.14, ease: "power2.in" }, t + 0.17)
+        .to(w.av, { scaleY: 1, scaleX: 1, duration: 0.3, ease: "back.out(3)" }, t + 0.31);
       pulse(w, t, o.color || C.g);
+      const h = head(w);
+      sparkle(w, h.x + w.size * 0.24, h.y - w.size * 0.3, t + 0.05); sparkle(w, h.x - w.size * 0.36, h.y - w.size * 0.12, t + 0.15, 34);
     },
     shock(w, t, o = {}) {
       CAST.expr(tl, w.av, o.face || "shocked", t);
-      tl.fromTo(w.av, { scale: 1 }, { scale: 1.06, duration: 0.08, ease: "power2.out" }, t).to(w.av, { scale: 1, duration: 0.35, ease: "power2.out" }, t + 0.08);
-      shake(t + 0.05, 6, 4, w.av);
-      pulse(w, t, o.ring || C.red, 1.18);
+      tl.to(w.av, { y: w.size * 0.03, scale: 1.08, duration: 0.07, ease: "power2.out" }, t).to(w.av, { y: 0, scale: 1, duration: 0.4, ease: "back.out(3)" }, t + 0.07);
+      shake(t + 0.05, 9, 5, w.av);
+      pulse(w, t, o.ring || C.red, 1.2);
+      const h = head(w);
+      const ex = el(w, { left: h.x + w.size * 0.24, top: h.y - w.size * 0.38, width: 34, height: 70 }, `<svg viewBox="0 0 34 70"><rect x="8" y="0" width="18" height="44" rx="9" fill="${C.red}"/><circle cx="17" cy="60" r="9" fill="${C.red}"/></svg>`);
+      tl.fromTo(ex, { scale: 0, y: 20 }, { scale: 1, y: 0, rotation: 10, duration: 0.3, ease: "back.out(3)" }, t).to(ex, { scale: 0, opacity: 0, duration: 0.2 }, t + 1.0);
     },
     worry(w, t, d = 1.6) {
       CAST.expr(tl, w.av, "worried", t);
-      tl.to(w.av, { y: w.size * 0.03, rotation: -3, duration: 0.7, ease: "sine.inOut" }, t);
+      tl.to(w.av, { y: w.size * 0.06, rotation: -6, scale: 0.97, duration: 0.6, ease: "power2.out" }, t);
+      for (let k = 0; k < 4; k++) tl.to(w.av, { x: k % 2 ? -3 : 3, duration: 0.07 }, t + 0.6 + k * 0.08);
+      tl.to(w.av, { x: 0, duration: 0.1 }, t + 0.95);
     },
     think(w, t, d = 1.4) {
       CAST.expr(tl, w.av, "think", t);
-      tl.to(w.av, { rotation: 4, duration: 0.5, ease: "sine.inOut" }, t);
+      CAST.gesture(tl, w.av, "hand", t);
+      tl.to(w.av, { rotation: 6, duration: 0.45, ease: "sine.inOut" }, t);
       const h = head(w);
       const dots = el(w, { left: h.x + w.size * 0.2, top: h.y - w.size * 0.34, width: 96, height: 44, borderRadius: 22, background: "#fff", border: "3px solid #E3E9E5", boxShadow: "0 8px 18px rgba(20,40,20,.12)" },
         `<div style="display:flex;gap:9px;justify-content:center;align-items:center;height:100%">${[0, 1, 2].map(() => '<i style="width:12px;height:12px;border-radius:6px;background:#6B7570;display:block"></i>').join("")}</div>`);
       tl.fromTo(dots, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, t).to(dots, { scale: 0, opacity: 0, duration: 0.2 }, t + d);
       dots.querySelectorAll("i").forEach((d2, i) => tl.to(d2, { y: -6, duration: 0.2, yoyo: true, repeat: 3, ease: "sine.inOut" }, t + 0.3 + i * 0.1));
     },
-    love(w, t) {   // delighted: big open grin + happy eyes + raised brows, two hops and a lean
+    love(w, t) {   // delighted: bright eyes, raised brows, big grin, two hops and a lean
       CAST.expr(tl, w.av, "delight", t);
-      tl.to(w.av, { y: -w.size * 0.08, rotation: -4, duration: 0.17, ease: "power2.out" }, t)
+      tl.to(w.av, { y: -w.size * 0.09, rotation: -5, duration: 0.17, ease: "power2.out" }, t)
         .to(w.av, { y: 0, rotation: 0, duration: 0.17, ease: "power2.in" }, t + 0.17)
-        .to(w.av, { y: -w.size * 0.06, rotation: 4, duration: 0.16, ease: "power2.out" }, t + 0.34)
+        .to(w.av, { y: -w.size * 0.07, rotation: 5, duration: 0.16, ease: "power2.out" }, t + 0.34)
         .to(w.av, { y: 0, rotation: 0, duration: 0.3, ease: "back.out(2.5)" }, t + 0.5);
-      tl.fromTo(w.av, { scale: 1 }, { scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, t);
       pulse(w, t, C.g, 1.22); pulse(w, t + 0.34, C.g, 1.3);
+      const h = head(w);
+      sparkle(w, h.x + w.size * 0.24, h.y - w.size * 0.32, t + 0.05); sparkle(w, h.x - w.size * 0.38, h.y - w.size * 0.2, t + 0.2, 36); sparkle(w, h.x + w.size * 0.34, h.y + w.size * 0.02, t + 0.35, 30);
     },
   };
   const talk = (w, times, rest = "smile") => { CAST.talk(tl, w.av, times, rest); times.forEach((tt, i) => i % 2 || tl.to(w.av, { y: -6, duration: 0.1, yoyo: true, repeat: 1 }, tt)); };
