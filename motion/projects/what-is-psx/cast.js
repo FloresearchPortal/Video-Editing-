@@ -4,7 +4,7 @@
 // tl.set), CAST.blinks / CAST.talk / CAST.bob add life.
 (function () {
   const D = window.AVDATA;
-  const EXPRS = ["neutral", "smile", "happy", "grin", "talk", "wow", "worried", "shocked", "think", "blink"];
+  const EXPRS = ["neutral", "smile", "happy", "grin", "talk", "wow", "worried", "shocked", "think", "blink", "delight"];
   const GESTS = ["none", "hand", "handPhone", "point", "pointLongArm", "ok", "okLongArm", "waveLongArm", "waveOkLongArms"];
 
   let mounted = 0;

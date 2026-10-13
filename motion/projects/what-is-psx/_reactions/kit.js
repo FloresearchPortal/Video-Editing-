@@ -186,10 +186,14 @@
       tl.fromTo(dots, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, t).to(dots, { scale: 0, opacity: 0, duration: 0.2 }, t + d);
       dots.querySelectorAll("i").forEach((d2, i) => tl.to(d2, { y: -6, duration: 0.2, yoyo: true, repeat: 3, ease: "sine.inOut" }, t + 0.3 + i * 0.1));
     },
-    love(w, t) {
-      CAST.expr(tl, w.av, "happy", t);
-      tl.to(w.av, { y: -w.size * 0.03, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, t);
-      pulse(w, t, C.g, 1.15);
+    love(w, t) {   // delighted: big open grin + happy eyes + raised brows, two hops and a lean
+      CAST.expr(tl, w.av, "delight", t);
+      tl.to(w.av, { y: -w.size * 0.08, rotation: -4, duration: 0.17, ease: "power2.out" }, t)
+        .to(w.av, { y: 0, rotation: 0, duration: 0.17, ease: "power2.in" }, t + 0.17)
+        .to(w.av, { y: -w.size * 0.06, rotation: 4, duration: 0.16, ease: "power2.out" }, t + 0.34)
+        .to(w.av, { y: 0, rotation: 0, duration: 0.3, ease: "back.out(2.5)" }, t + 0.5);
+      tl.fromTo(w.av, { scale: 1 }, { scale: 1.06, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, t);
+      pulse(w, t, C.g, 1.22); pulse(w, t + 0.34, C.g, 1.3);
     },
   };
   const talk = (w, times, rest = "smile") => { CAST.talk(tl, w.av, times, rest); times.forEach((tt, i) => i % 2 || tl.to(w.av, { y: -6, duration: 0.1, yoyo: true, repeat: 1 }, tt)); };

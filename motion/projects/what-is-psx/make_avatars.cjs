@@ -10,7 +10,7 @@ const v = (n) => 'variant' + String(n).padStart(2, '0');
 
 const EXPR = {             // eyes, brows, lips
   neutral: [3, 4, 4], smile: [3, 4, 22], happy: [1, 4, 3], grin: [1, 4, 25], talk: [3, 4, 8],
-  wow: [5, 12, 15], worried: [3, 13, 24], shocked: [5, 13, 11], think: [3, 2, 20], blink: [2, 4, 22],
+  wow: [5, 12, 15], worried: [3, 13, 24], shocked: [5, 13, 11], think: [3, 2, 20], blink: [2, 4, 22], delight: [4, 12, 25],
 };
 const GEST = ['hand', 'handPhone', 'point', 'pointLongArm', 'ok', 'okLongArm', 'waveLongArm', 'waveOkLongArms'];
 
