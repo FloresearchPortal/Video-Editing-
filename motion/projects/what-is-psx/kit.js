@@ -65,12 +65,34 @@
   }
 
   // scene layer: visible on [t0, t1); slow camera push inside the scene keeps every hold alive
+  const SCENES = [];
   function scene(t0, t1, o = {}) {
     const s = el(cam, { left: 0, top: 0, width: 1080, height: 1920 }, "", "scene");
-    if (t0 > 0) tl.set(s, { autoAlpha: 0 }, 0).set(s, { autoAlpha: 1 }, t0);
-    tl.set(s, { autoAlpha: 0 }, t1);
+    SCENES.push({ s, t0, t1 });
     if (o.push !== false) tl.fromTo(s, { scale: 1 }, { scale: 1 + Math.min(0.025, ((o.push || 1.06) - 1) * 0.5), duration: t1 - t0, ease: "none", immediateRender: false }, t0);
     return s;
+  }
+
+  // every scene change is the same smooth wipe: the incoming scene sweeps in left→right behind a thin green
+  // edge while the outgoing one is uncovered in step — the frame always changes, nothing overlaps, no camera move
+  const WIPE = 0.6;
+  function linkScenes() {
+    const S = SCENES.slice().sort((a, b) => a.t0 - b.t0);
+    S.forEach((cur, i) => {
+      const prev = S[i - 1], T = cur.t0;
+      if (i === 0) { if (T > 0) tl.set(cur.s, { autoAlpha: 0 }, 0).set(cur.s, { autoAlpha: 1 }, T); }
+      else {
+        const a = T - WIPE / 2, b = T + WIPE / 2;
+        tl.set(cur.s, { autoAlpha: 0 }, 0).set(cur.s, { autoAlpha: 1 }, a);
+        tl.fromTo(cur.s, { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: WIPE, ease: "power2.inOut", immediateRender: false }, a)
+          .set(cur.s, { clipPath: "none" }, b);
+        tl.fromTo(prev.s, { clipPath: "inset(0% 0% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 100%)", duration: WIPE, ease: "power2.inOut", immediateRender: false }, a)
+          .set(prev.s, { autoAlpha: 0 }, b);
+        const edge = el(fx, { left: -6, top: 0, width: 6, height: 1920, background: C.g2, boxShadow: `0 0 24px ${C.g}`, opacity: 0 });
+        tl.set(edge, { opacity: 1 }, a).fromTo(edge, { x: 0 }, { x: 1086, duration: WIPE, ease: "power2.inOut", immediateRender: false }, a).set(edge, { opacity: 0 }, b);
+      }
+      if (i === S.length - 1) tl.set(cur.s, { autoAlpha: 0 }, cur.t1 + 0.01);
+    });
   }
 
   // ── kinetic type ──────────────────────────────────────────────────────────
@@ -129,24 +151,12 @@
   // fmt string like "Rs 1,00,000": digits roll from `from` value string of same shape
   function roller(parent, o) {
     const box = el(parent, { left: o.x, top: o.y, width: o.w || 1080, height: o.size * 1.2, textAlign: "center",
-      font: `600 ${o.size}px/1.2 'IBM Plex Mono'`, color: o.color || C.text, whiteSpace: "nowrap" }, "", "roller");
-    box.cols = [];
-    [...o.text].forEach((ch) => {
-      if (/\d/.test(ch)) {
-        const col = document.createElement("span"); col.className = "rc";
-        col.innerHTML = `<span class="rs">${Array.from({ length: 30 }, (_, i) => i % 10).join("<br>")}</span>`;
-        col.dataset.d = ch; box.appendChild(col); box.cols.push(col);
-      } else { const s = document.createElement("span"); s.textContent = ch; box.appendChild(s); }
-    });
-    tl.set(box, { autoAlpha: 0 }, 0);           // hidden until it rolls
+      font: `600 ${o.size}px/1.2 'IBM Plex Mono'`, color: o.color || C.text, whiteSpace: "nowrap" }, o.text, "roller");
+    tl.set(box, { autoAlpha: 0 }, 0);           // hidden until revealed
     return box;
   }
-  function roll(box, t, d = 1.0) {
-    tl.set(box, { autoAlpha: 1 }, t);
-    box.cols.forEach((col, i) => {
-      const target = Number(col.dataset.d);            // one calm pass straight to the digit
-      tl.fromTo(col.firstChild, { yPercent: 0 }, { yPercent: -(target / 30) * 100, duration: Math.max(1.1, d * 1.4) + i * 0.08, ease: "power2.out", immediateRender: true }, t);
-    });
+  function roll(box, t) {
+    tl.set(box, { autoAlpha: 1 }, t).fromTo(box, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, t);
   }
 
   // ── characters as acted stickers ──────────────────────────────────────────
@@ -241,14 +251,15 @@
       tl.to(w.av, { x: 0, duration: 0.2 }, t + d);
     },
     // THINK: finger to chin, head tilts, weight shifts onto one side — one smooth move, held (static thought chip)
-    think(w, t, d = 1.4) {
-      const g = "hand", s = w.size;
+    think(w, t, d = 1.4, o = {}) {
+      const g = o.gesture || "hand", s = w.size;
       CAST.expr(tl, w.av, "think", t);
-      armIn(w, t, g);
+      if (g === "none") CAST.gesture(tl, w.av, "none", t); else armIn(w, t, g);
       pose(w, t, { h: [10, 14, -8], b: [1.01, 1], g }, 0.5, "sine.inOut");
       tl.to(w.av, { rotation: 4, x: s * 0.02, transformOrigin: "50% 100%", duration: 0.55, ease: "sine.inOut" }, t);
       pose(w, t + d, {}, 0.5, "sine.inOut");                                  // one tilt in, hold, one ease back
       tl.to(w.av, { rotation: 0, x: 0, duration: 0.5, ease: "sine.inOut" }, t + d);
+      if (o.dots === false) return;
       const h = head(w);
       const dots = el(w, { left: h.x + s * 0.2, top: h.y - s * 0.34, width: 96, height: 44, borderRadius: 22, background: "#fff", border: "3px solid #E3E9E5", boxShadow: "0 8px 18px rgba(20,40,20,.12)" },
         `<div style="display:flex;gap:9px;justify-content:center;align-items:center;height:100%">${[0, 1, 2].map(() => '<i style="width:12px;height:12px;border-radius:6px;background:#6B7570;display:block"></i>').join("")}</div>`);
@@ -286,9 +297,9 @@
     },
     // PROUD (bharosa): OK at the chest, chest puffs out, chin up, two firm nods
     proud(w, t, o = {}) {
-      const g = "ok", s = w.size;
+      const g = o.gesture || "ok", s = w.size;
       CAST.expr(tl, w.av, o.face || "happy", t);
-      armIn(w, t, g);
+      if (g === "none") CAST.gesture(tl, w.av, "none", t); else armIn(w, t, g);
       pose(w, t, { h: [-5, 0, -22], b: [1.07, 1.03], g }, 0.3, "power2.out");
       tl.to(w.av, { scale: 1.04, transformOrigin: "50% 100%", duration: 0.3, ease: "power2.out" }, t);
       pose(w, t + 1.2, { h: [-2, 0, -8], b: [1.03, 1.01], g }, 0.4, "sine.inOut");
@@ -399,37 +410,11 @@
   }
 
   // ── transitions: one finance vocabulary (bar-chart rise, chart-cursor sweep, smooth pan, terminal scan) ──
-  // wipe → BAR-CHART RISE: columns of different heights grow up like a volume histogram, then clear upward
-  function wipe(cut, colors) {
-    const n = 9, H = [0.62, 0.8, 0.7, 0.92, 1, 0.86, 0.95, 0.74, 0.88];
-    const cols = Array.from({ length: n }, (_, i) => el(fx, { left: i * 120, top: 0, width: 122, height: 1920,
-      background: i % 3 === 1 ? C.g3 : i % 3 === 2 ? C.g2 : C.g }));
-    cols.forEach((c, i) => gsap.set(c, { scaleY: 0, transformOrigin: "50% 100%" }));
-    tl.to(cols, { scaleY: (i) => 1.02 + H[i] * 0, duration: 0.3, ease: "power3.in", stagger: { each: 0.025, from: "start" } }, cut - 0.36)
-      .set(cols, { transformOrigin: "50% 0%" }, cut + 0.01)
-      .to(cols, { scaleY: 0, duration: 0.34, ease: "power3.out", stagger: { each: 0.025, from: "start" } }, cut + 0.02);
-  }
-  // slices → CHART-CURSOR SWEEP: a white panel scrubs across behind a green crosshair line with a price tag
-  function slices(cut, color) {
-    const pan = el(fx, { left: 0, top: 0, width: 1080, height: 1920, background: "#F7F8F7" });
-    const cur = el(fx, { left: 1074, top: 0, width: 8, height: 1920, background: C.g2 });
-    const tag = el(cur, { left: -150, top: 900, width: 150, height: 56, borderRadius: 10, background: C.g2, color: "#fff",
-      font: "700 28px/56px 'IBM Plex Mono'", textAlign: "center" }, "PSX");
-    gsap.set([pan, cur], { x: -1090 });
-    tl.to([pan, cur], { x: 0, duration: 0.32, ease: "power3.in" }, cut - 0.34)
-      .to(pan, { x: 1090, duration: 0.36, ease: "power3.out" }, cut + 0.02)
-      .to(cur, { x: 1090 + 8, duration: 0.36, ease: "power3.out" }, cut + 0.02);
-  }
-  // whip → SMOOTH PAN: the outgoing scene slides away as the next slides in, like scrolling a chart
-  function whip(outS, inS, t, dir = -1) {
-    tl.to(outS, { x: dir * 120, opacity: 0, duration: 0.3, ease: "power2.in" }, t - 0.3);
-    if (inS) tl.fromTo(inS, { x: -dir * 120, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out", immediateRender: false }, t);
-  }
-  // zoomThrough → smooth dolly through (no blur smear)
-  function zoomThrough(outS, inS, t, ox = "50%", oy = "45%") {
-    tl.to(outS, { scale: 1.06, opacity: 0, duration: 0.35, ease: "power2.in", transformOrigin: `${ox} ${oy}` }, t - 0.35)
-      .fromTo(inS, { scale: 0.96, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "power2.out", immediateRender: false }, t);
-  }
+  // legacy transition calls — scene changes are all handled by linkScenes() now
+  function wipe() {}
+  function slices() {}
+  function whip() {}
+  function zoomThrough() {}
   // glitch → TERMINAL SCAN: a green scan line sweeps the screen with a soft trail (a quote refresh)
   function glitch(t, d = 0.35) {
     const sc = el(fx, { left: 0, top: -260, width: 1080, height: 260, opacity: 0,
@@ -455,6 +440,6 @@
     return band;
   }
 
-  window.K = { C, tl, stage, cam, fx, el, scene, kin, charsIn, charsOut, scramble, bar, roller, roll, who, sym, react, pose, talk, life, enter,
+  window.K = { C, tl, stage, cam, fx, el, scene, kin, charsIn, charsOut, scramble, bar, roller, roll, who, sym, react, pose, talk, life, enter, linkScenes,
                tape, candles, line, gauge, tickerBand, wipe, slices, whip, zoomThrough, glitch, flash, shake, punch, camReset, rnd, pick };
 })();

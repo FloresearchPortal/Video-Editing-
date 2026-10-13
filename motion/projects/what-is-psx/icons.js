@@ -13,8 +13,7 @@
       <g class="awning">${[0, 1, 2, 3, 4, 5, 6, 7].map((i) => `<path d="M${40 + i * 90},180 h90 v74 a45,45 0 0 1 -90,0Z" fill="${i % 2 ? W : C.g}" ${S}/>`).join("")}</g>
       <rect x="40" y="170" width="720" height="18" fill="#0B0F14"/>
       <g class="counter"><rect x="40" y="430" width="720" height="170" rx="12" fill="${W}" ${S}/><path d="M40,472 h720" ${S}/>
-      <rect x="290" y="500" width="220" height="64" rx="12" fill="${C.g}" ${S}/>
-      <text x="400" y="544" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="32" fill="#0B0F14">CHAI ☕</text></g>
+</g>
       <g class="cups">${[590, 655].map((x) => `<path d="M${x},378 h46 l-6,52 h-34Z" fill="${W}" ${S}/><path class="steam" d="M${x + 12},356 q-10,-16 0,-32 q10,-16 0,-32" fill="none" stroke="#C9D3CD" stroke-width="7" stroke-linecap="round"/>`).join("")}
       <path d="M120,380 h120 l-10,50 h-100Z" fill="${WASH}" ${S}/><path d="M142,380 q-10,-44 38,-44 q48,0 38,44" fill="${W}" ${S}/></g></svg>`,
     miniStall: () => `<svg viewBox="0 0 200 180"><rect x="20" y="50" width="160" height="120" fill="${W}" ${S}/>
