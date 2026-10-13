@@ -9,8 +9,8 @@ const G = '#38D100', G2 = '#2AA300', G3 = '#1F7A00', WASH = '#CFF2BF';
 const v = (n) => 'variant' + String(n).padStart(2, '0');
 
 const EXPR = {             // eyes, brows, lips
-  neutral: [3, 4, 4], smile: [3, 4, 22], happy: [1, 4, 3], grin: [3, 4, 25], talk: [3, 4, 8],
-  wow: [5, 11, 15], worried: [3, 13, 24], shocked: [5, 13, 11], think: [3, 11, 20], blink: [2, 4, 22],
+  neutral: [3, 4, 4], smile: [3, 4, 22], happy: [1, 4, 3], grin: [1, 4, 25], talk: [3, 4, 8],
+  wow: [5, 12, 15], worried: [3, 13, 24], shocked: [5, 13, 11], think: [3, 2, 20], blink: [2, 4, 22],
 };
 const GEST = ['hand', 'handPhone', 'point', 'pointLongArm', 'ok', 'okLongArm', 'waveLongArm', 'waveOkLongArms'];
 
@@ -18,7 +18,7 @@ const GEST = ['hand', 'handPhone', 'point', 'pointLongArm', 'ok', 'okLongArm', '
 const LEVEL = process.argv[2] || 'less';
 const SH = { more: [G, G, G, WASH, G, WASH, WASH, G], mid: [G, '#fff', G, '#fff', WASH, '#fff', WASH, '#fff'], less: Array(8).fill('#fff') }[LEVEL];
 const CAST = {
-  ahmed:  { hair: 16, beard: 3, body: 13, shirt: SH[0] },
+  ahmed:  { hair: 16, beard: 9, body: 13, shirt: SH[0] },
   aap:    { hair: 'hat', body: 11, shirt: SH[1], hatTint: G },
   guide:  { hair: 38, body: 3, shirt: SH[2], glasses: 4 },
   sana:   { hair: 62, body: 1, shirt: SH[3], hijabTint: G3 },
@@ -58,7 +58,7 @@ function render(c, expr, gesture) {
     beard: [v(c.beard || 1)], beardProbability: c.beard ? 100 : 0,
     glasses: [v(c.glasses || 1)], glassesProbability: c.glasses ? 100 : 0,
     gesture: [gesture], gestureProbability: 100, bodyIconProbability: 0,
-    eyes: [v(e)], brows: [v(b)], lips: [v(l)],
+    eyes: [v(e)], brows: [v(b)], lips: [v(l)], nose: [v(14)],   // short low nose: nothing between the brows
   }).toString();
 }
 

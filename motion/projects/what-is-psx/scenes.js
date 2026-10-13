@@ -28,9 +28,9 @@
   const w1 = kin(s1, "AAJKAL", { y: 700, size: 200 });
   const w2 = kin(s1, "HAR TARAF", { y: 700, size: 170 });
   charsIn.slam(w1, 0.02, 0.02); charsOut.up(w1, 0.62); charsIn.slam(w2, 0.7, 0.02); charsOut.blast(w2, 1.12);
-  const logo = el(s1, { left: 300, top: 470, width: 480, height: 574 }, `<img src="assets/psx/psx-logo-on-dark.png" style="width:100%;height:100%;object-fit:contain">`);
+  const logo = el(s1, { left: 300, top: 470, width: 480, height: 574 }, `<img src="assets/psx/psx-logo.png" style="width:100%;height:100%;object-fit:contain">`);
   tl.fromTo(logo, { scale: 3.2, opacity: 0, filter: "blur(20px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.42, ease: "expo.out" }, 1.15);
-  flash(1.15, "#fff", 0.6); shake(1.2, 22);
+  flash(1.15, C.g, 0.3); shake(1.2, 22);
   const ring = el(s1, { left: 290, top: 450, width: 500, height: 500, border: `10px solid ${C.gold}`, borderRadius: "50%" });
   gsap.set(ring, { opacity: 0 }); tl.fromTo(ring, { scale: 0.6, opacity: 0.9 }, { scale: 2.4, opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false }, 1.2);
   const sub = kin(s1, "SUNA HI HOGA?", { y: 1100, size: 64, font: "IBM Plex Mono", weight: 600, color: C.mute, track: 0.02 });
@@ -38,9 +38,9 @@
   // market upar / neeche
   tl.to(logo, { scale: 0.42, y: -300, duration: 0.45, ease: "expo.inOut" }, 3.0).to(sub, { opacity: 0, duration: 0.15 }, 3.0);
   tl.to(cd, { opacity: 0.12, duration: 0.3 }, 3.0);
-  const upL = line(s1, [[0, 0.05], [0.18, 0.25], [0.3, 0.18], [0.5, 0.55], [0.62, 0.48], [0.82, 0.85], [1, 1]], { x: 80, y: 560, w: 920, h: 520, color: C.g, sw: 16 });
+  const upL = line(s1, [[0, 0.05], [0.18, 0.25], [0.3, 0.18], [0.5, 0.55], [0.62, 0.48], [0.82, 0.85], [1, 1]], { x: 80, y: 560, w: 920, h: 520, color: C.gt, sw: 16 });
   upL.draw(3.2, 0.8);
-  const up = kin(s1, "UPAR", { y: 1060, size: 240, accent: C.g, color: C.g });
+  const up = kin(s1, "UPAR", { y: 1060, size: 240, accent: C.g, color: C.gt });
   const upA = el(s1, { left: 820, top: 990, width: 170, height: 170 }, `<svg viewBox="0 0 120 120"><path d="M60,108 V18 M18,58 L60,14 L102,58" fill="none" stroke="${C.g}" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
   charsIn.stretch(up, 3.28); tl.fromTo(upA, { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "back.out(2)" }, 3.4);
   tl.to(upA, { y: -40, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 3.75);
@@ -59,7 +59,7 @@
   const l2 = kin(s2, "YE SAB", { y: 540, size: 230 });
   const l3 = kin(s2, "HAI *KIA?*", { y: 780, size: 230 });
   charsIn.rise(l1, 5.46); charsIn.flip(l2, 5.96, 0.04); charsIn.slam(l3, 6.36, 0.035);
-  const bigQ = el(s2, { left: 340, top: 1000, width: 400, height: 440, font: "800 420px/1 Manrope", color: C.g, textAlign: "center", textShadow: `0 0 60px ${C.g}` }, "?");
+  const bigQ = el(s2, { left: 340, top: 1000, width: 400, height: 440, font: "800 420px/1 Manrope", color: C.gt, textAlign: "center", textShadow: `0 0 60px ${C.g}` }, "?");
   tl.fromTo(bigQ, { rotationY: -540, scale: 0, transformPerspective: 900 }, { rotationY: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 6.7);
   tl.to([l1, l2, l3, bigQ], { scale: 0.3, opacity: 0, duration: 0.22, ease: "power3.in", stagger: 0.02 }, 7.12);
   const a1 = kin(s2, "MAIN", { y: 520, size: 170, color: C.mute });
@@ -105,7 +105,7 @@
     const q = who(s3, n, 470 + i * 140, 870 + (i % 2) * 24, 270, { expr: "happy" });
     tl.fromTo(q, { x: 800 }, { x: 0, duration: 0.55, ease: "power2.out" }, 12.95 + i * 0.12);
     for (let k = 0; k < 4; k++) tl.to(q, { y: -24, duration: 0.11, yoyo: true, repeat: 1, ease: "sine.out" }, 12.95 + i * 0.12 + k * 0.14);
-    const plus = el(q, { left: 110, top: -20, font: "800 54px Manrope", color: C.g, textShadow: "0 0 20px #38D10088" }, "+1");
+    const plus = el(q, { left: 110, top: -20, font: "800 54px Manrope", color: C.gt, textShadow: "0 0 20px #38D10088" }, "+1");
     tl.fromTo(plus, { y: 20, opacity: 0 }, { y: -40, opacity: 1, duration: 0.3, ease: "back.out(2)" }, 13.6 + i * 0.1).to(plus, { opacity: 0, duration: 0.3 }, 14.2);
   });
 
@@ -166,14 +166,14 @@
 
   // ═══ S6 24.05–29.9: listed on PSX → 1,000 shares × Rs 100 ═════════════════
   const s6 = scene(24.05, 29.9, { push: 1.04 });
-  const lg6 = el(s6, { left: 410, top: 200, width: 260, height: 311 }, `<img src="assets/psx/psx-logo-on-dark.png" style="width:100%;height:100%;object-fit:contain">`);
+  const lg6 = el(s6, { left: 410, top: 200, width: 260, height: 311 }, `<img src="assets/psx/psx-logo.png" style="width:100%;height:100%;object-fit:contain">`);
   tl.fromTo(lg6, { scale: 0, rotation: -20 }, { scale: 1, rotation: 0, duration: 0.45, ease: "back.out(2)" }, 24.12);
-  const board = el(s6, { left: 70, top: 560, width: 940, height: 260, background: "#0B0F14", border: `4px solid ${C.g}`, borderRadius: 28, boxShadow: `0 0 60px ${C.g}44` });
+  const board = el(s6, { left: 70, top: 560, width: 940, height: 260, background: "#fff", border: `4px solid ${C.g}`, borderRadius: 28, boxShadow: "0 24px 50px rgba(20,40,20,.14)" });
   const bn = kin(board, "AHMED CHAI", { x: 0, y: 30, w: 940, size: 96, font: "IBM Plex Mono", weight: 600, track: 0.04 });
-  const bs = kin(board, "TICKER: ACHAI", { x: 0, y: 150, w: 940, size: 52, font: "IBM Plex Mono", weight: 600, color: C.g, track: 0.08 });
+  const bs = kin(board, "TICKER: ACHAI", { x: 0, y: 150, w: 940, size: 52, font: "IBM Plex Mono", weight: 600, color: C.gt, track: 0.08 });
   tl.fromTo(board, { scaleY: 0 }, { scaleY: 1, duration: 0.3, ease: "expo.out" }, 24.3);
   scramble(bn, 24.4, 0.7); scramble(bs, 24.7, 0.5);
-  const stamp = el(s6, { left: 600, top: 410, width: 400, height: 140, border: `10px solid ${C.g}`, borderRadius: 20, font: "800 84px/120px Manrope", color: C.g, textAlign: "center", background: "#06090Bdd" }, "LISTED ✓");
+  const stamp = el(s6, { left: 600, top: 410, width: 400, height: 140, border: `10px solid ${C.g}`, borderRadius: 20, font: "800 84px/120px Manrope", color: C.gt, textAlign: "center", background: "#ffffffee" }, "LISTED ✓");
   tl.fromTo(stamp, { scale: 3, rotation: -20, opacity: 0 }, { scale: 1, rotation: -9, opacity: 1, duration: 0.24, ease: "power4.in" }, 25.25);
   shake(25.5, 24); flash(25.49, C.g, 0.3);
   // 1,000 shares wave
@@ -183,24 +183,24 @@
   for (let i = 0; i < 1000; i++) gh += `<i style="position:absolute;left:${(i % 40) * 20}px;top:${Math.floor(i / 40) * 20}px;width:15px;height:15px;border-radius:4px;background:${C.g};box-shadow:0 0 6px ${C.g}"></i>`;
   grid.innerHTML = gh;
   tl.fromTo(grid.children, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(3)", stagger: { each: 0.0009, grid: [25, 40], from: "center" } }, 26.2);
-  const r1000 = roller(s6, { x: 0, y: 1090, size: 150, text: "1,000", color: C.white }); roll(r1000, 26.22, 1.0);
+  const r1000 = roller(s6, { x: 0, y: 1090, size: 150, text: "1,000", color: C.text }); roll(r1000, 26.22, 1.0);
   const shL = kin(s6, "*SHARES*", { y: 300, size: 150 }); charsIn.slam(shL, 26.56, 0.03);
   // one share = Rs 100
   tl.to(grid, { opacity: 0.18, scale: 0.92, duration: 0.3 }, 28.0).to([r1000, shL], { opacity: 0, duration: 0.2 }, 28.0);
   const tk = icon(s6, "ticket", 290, 600, 500, 292, "1 SHARE");
   tl.fromTo(tk, { rotationY: 180, scale: 0.2, opacity: 0, transformPerspective: 900 }, { rotationY: 0, scale: 1, opacity: 1, duration: 0.6, ease: "back.out(1.6)" }, 28.05);
-  const r100 = roller(s6, { x: 0, y: 1000, size: 170, text: "Rs 100", color: C.g }); roll(r100, 29.2, 0.6);
+  const r100 = roller(s6, { x: 0, y: 1000, size: 170, text: "Rs 100", color: C.gt }); roll(r100, 29.2, 0.6);
 
   // ═══ S7 29.9–34.85: 1 lakh from the market, no bank ═══════════════════════
   const s7 = scene(29.9, 34.85, { push: 1.05 });
   zoomThrough(s6, s7, 29.9);
   const e1 = kin(s7, "1,000", { x: -60, y: 300, w: 600, size: 130, font: "IBM Plex Mono", weight: 600 });
-  const ex = kin(s7, "×", { x: 440, y: 300, w: 200, size: 130, color: C.g });
+  const ex = kin(s7, "×", { x: 440, y: 300, w: 200, size: 130, color: C.gt });
   const e2 = kin(s7, "Rs 100", { x: 560, y: 300, w: 520, size: 130, font: "IBM Plex Mono", weight: 600, upper: false });
   tl.fromTo(e1, { x: -700 }, { x: 0, duration: 0.45, ease: "expo.out" }, 30.0).fromTo(e2, { x: 700 }, { x: 0, duration: 0.45, ease: "expo.out" }, 30.2);
   tl.fromTo(ex, { scale: 0, rotation: 180 }, { scale: 1, rotation: 0, duration: 0.4, ease: "back.out(3)" }, 30.4);
   tl.to([e1, e2, ex], { y: -60, scale: 0.6, opacity: 0.5, duration: 0.3, ease: "power3.inOut" }, 32.0);
-  const lakh = roller(s7, { x: 0, y: 480, size: 150, text: "Rs 1,00,000", color: C.g });
+  const lakh = roller(s7, { x: 0, y: 480, size: 150, text: "Rs 1,00,000", color: C.gt });
   tl.fromTo(lakh, { scale: 1.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "expo.out" }, 32.25); roll(lakh, 32.25, 0.7);
   const lk2 = kin(s7, "1 LAKH RUPAY", { y: 680, size: 70, color: C.ink }); const lkb = bar(s7, 220, 676, 640, 96, C.g, 32.6, 0.3); s7.insertBefore(lkb, lk2); charsIn.rise(lk2, 32.66);
   const ahm7 = who(s7, "ahmed", 40, 850, 520, { expr: "smile", gesture: "hand" }); enter(ahm7, 30.1, "left"); life(ahm7, 30.2, 34.8, "smile", 6);
@@ -238,8 +238,9 @@
   const s9 = scene(39.35, 45.25, { push: 1.04 });
   zoomThrough(s8, s9, 39.35);
   const aap = who(s9, "aap", 140, 760, 800, { expr: "smile" }); enter(aap, 39.4, "bottom"); life(aap, 39.5, 45.2, "smile", 9);
-  const bub = el(s9, { left: 70, top: 220, width: 940, height: 380, background: "#fff", borderRadius: 40, boxShadow: "0 20px 50px rgba(0,0,0,.5)" });
-  el(bub, { left: 540, top: 360, width: 0, height: 0, borderLeft: "40px solid transparent", borderRight: "40px solid transparent", borderTop: "60px solid #fff" });
+  const bub = el(s9, { left: 70, top: 220, width: 940, height: 380, background: "#fff", borderRadius: 40, border: "4px solid #0B0F14", boxShadow: "0 20px 50px rgba(20,40,20,.15)" });
+  el(bub, { left: 536, top: 372, width: 0, height: 0, borderLeft: "44px solid transparent", borderRight: "44px solid transparent", borderTop: "64px solid #0B0F14" });
+  el(bub, { left: 542, top: 368, width: 0, height: 0, borderLeft: "38px solid transparent", borderRight: "38px solid transparent", borderTop: "56px solid #fff" });
   const bq = kin(bub, "\"YAAR, AHMED KI CHAI | TOH *KAMAAL* HAI!\"", { x: 30, y: 70, w: 880, size: 84, color: C.ink, accent: C.g3, lh: 1.15 });
   tl.fromTo(bub, { scale: 0, transformOrigin: "60% 100%" }, { scale: 1, duration: 0.4, ease: "back.out(2)" }, 40.1);
   charsIn.words(bq, 40.26, 0.12);
@@ -278,12 +279,12 @@
   tl.to([clk, m6], { y: -260, scale: 0.6, opacity: 0, duration: 0.4, ease: "power3.inOut" }, 46.3);
   const row5 = [0, 1, 2, 3, 4].map((i) => icon(s10, "miniStall", 40 + i * 202, 380, 190, 171));
   row5.forEach((m, i) => tl.fromTo(m, { y: -800 }, { y: 0, duration: 0.45, ease: "bounce.out" }, 46.56 + i * 0.12));
-  const pc = el(s10, { left: 60, top: 640, width: 960, height: 660, background: "#0B0F14", border: "3px solid #24302A", borderRadius: 36 });
+  const pc = el(s10, { left: 60, top: 640, width: 960, height: 660, background: "#fff", border: "3px solid #E3E9E5", borderRadius: 36, boxShadow: "0 24px 50px rgba(20,40,20,.12)" });
   el(pc, { left: 44, top: 36, font: "600 38px 'IBM Plex Mono'", color: C.mute }, "ACHAI · SHARE PRICE");
-  const pa = roller(pc, { x: 44, y: 90, w: 600, size: 110, text: "Rs 100", color: "#fff" }); pa.style.textAlign = "left";
-  const pb = roller(pc, { x: 44, y: 90, w: 600, size: 110, text: "Rs 200", color: C.g }); pb.style.textAlign = "left";
+  const pa = roller(pc, { x: 44, y: 90, w: 600, size: 110, text: "Rs 100", color: C.text }); pa.style.textAlign = "left";
+  const pb = roller(pc, { x: 44, y: 90, w: 600, size: 110, text: "Rs 200", color: C.gt }); pb.style.textAlign = "left";
   const badge = el(pc, { left: 640, top: 108, width: 280, height: 90, background: C.g, borderRadius: 45, font: "800 50px/90px Manrope", textAlign: "center", color: C.ink }, "▲ 100%");
-  const pl = line(pc, [[0, 0.05], [0.15, 0.12], [0.28, 0.1], [0.45, 0.4], [0.58, 0.35], [0.78, 0.72], [0.9, 0.68], [1, 0.95]], { x: 44, y: 260, w: 872, h: 340, color: C.g, sw: 14 });
+  const pl = line(pc, [[0, 0.05], [0.15, 0.12], [0.28, 0.1], [0.45, 0.4], [0.58, 0.35], [0.78, 0.72], [0.9, 0.68], [1, 0.95]], { x: 44, y: 260, w: 872, h: 340, color: C.gt, sw: 14 });
   tl.fromTo(pc, { y: 900, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, 48.2);
   roll(pa, 48.3, 0.4); pl.draw(48.5, 1.3);
   tl.set(pa, { autoAlpha: 0 }, 49.68); roll(pb, 49.68, 0.5);
@@ -312,7 +313,7 @@
   const ringV = el(A11.scr, { left: 10, top: 212, width: 330, height: 84, borderRadius: 20, border: "5px solid #38D100", opacity: 0 });
   tl.fromTo(ringV, { scale: 1.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, 53.44);
   tl.fromTo(A11.card, { boxShadow: "0 0 0 0 rgba(56,209,0,0)" }, { boxShadow: "0 0 0 8px rgba(56,209,0,.55)", duration: 0.3 }, 53.44);
-  const plus = kin(K.fx, "+Rs 500", { x: 0, y: 1300, w: 1080, size: 110, color: C.g, font: "IBM Plex Mono", weight: 600, upper: false });
+  const plus = kin(K.fx, "+Rs 500", { x: 0, y: 1300, w: 1080, size: 110, color: C.gt, font: "IBM Plex Mono", weight: 600, upper: false });
   charsIn.slam(plus, 53.5, 0.03); tl.to(plus, { opacity: 0, y: -60, duration: 0.3 }, 54.6);
   tl.set(document.getElementById("caps"), { autoAlpha: 0 }, 52.75).set(document.getElementById("caps"), { autoAlpha: 1 }, 54.35);
   const x2 = el(K.fx, { left: 840, top: 300, width: 180, height: 180, background: C.g, borderRadius: "50%", font: "800 80px/180px Manrope", textAlign: "center", color: C.ink, boxShadow: `0 0 50px ${C.g}` }, "×2");
@@ -321,7 +322,7 @@
   flash(53.4, C.g, 0.25); punch(52.75, 1.28, 0.45, -110, 300); camReset(54.3, 0.35);
   const conf = el(s11, { left: 0, top: 0, width: 1080, height: 1920 });
   for (let i = 0; i < 40; i++) {
-    const p = el(conf, { left: 640, top: 560, width: 18, height: 30, background: [C.g, C.gold, "#fff", C.lime][i % 4], borderRadius: 4 });
+    const p = el(conf, { left: 640, top: 560, width: 18, height: 30, background: [C.g, C.gold, C.g3, C.lime][i % 4], borderRadius: 4 });
     const a = (i / 40) * Math.PI * 2;
     tl.fromTo(p, { x: 0, y: 0, opacity: 0 }, { x: Math.cos(a) * (300 + (i * 37) % 300), y: Math.sin(a) * (300 + (i * 53) % 300) + 400, rotation: 720, opacity: 1, duration: 1.3, ease: "power2.out" }, 53.45)
       .to(p, { opacity: 0, duration: 0.3 }, 54.45);
@@ -332,7 +333,7 @@
   const s12 = scene(54.95, 57.4, { push: 1.1 });
   const sw = kin(s12, "LEKIN SAWAL YE HAI", { y: 300, size: 70, color: C.mute }); charsIn.rise(sw, 55.0);
   const qk = kin(s12, "QEEMAT | *KYUN* BADHI?", { y: 1000, size: 140 }); charsIn.flip(qk, 56.2, 0.025);
-  const q12 = el(s12, { left: 290, top: 400, width: 500, height: 560, font: "800 520px/1 Manrope", color: C.g, textAlign: "center", textShadow: `0 0 80px ${C.g}` }, "?");
+  const q12 = el(s12, { left: 290, top: 400, width: 500, height: 560, font: "800 520px/1 Manrope", color: C.gt, textAlign: "center", textShadow: `0 0 80px ${C.g}` }, "?");
   tl.fromTo(q12, { rotationY: 720, scale: 0, transformPerspective: 900 }, { rotationY: 0, scale: 1, duration: 0.8, ease: "back.out(1.5)" }, 55.4);
   tl.to(q12, { rotation: 10, duration: 0.25, yoyo: true, repeat: 3, ease: "sine.inOut" }, 56.2);
 
@@ -358,7 +359,7 @@
     return w;
   });
   tl.to(buyers, { scale: 0.8, y: -120, duration: 0.35, ease: "power3.inOut" }, 63.3);
-  const gD = gauge(s13, "DEMAND", { x: 320, y: 1100, color: C.g, start: 0.2 });
+  const gD = gauge(s13, "DEMAND", { x: 320, y: 1100, color: C.gt, start: 0.2 });
   tl.fromTo(gD, { y: 400, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out" }, 63.3); gD.to(0.95, 63.6, 1.0);
   punch(63.6, 1.05, 0.3, 0, -80);
 
@@ -370,7 +371,7 @@
   const sirf = kin(s14, "SIRF *1,000* SHARES", { y: 760, size: 100 }); charsIn.slam(sirf, 66.1, 0.015);
   const lock = icon(s14, "lock", 700, 560, 180, 214);
   tl.fromTo(lock, { y: -700 }, { y: 0, duration: 0.4, ease: "bounce.out" }, 67.1); shake(67.3, 16);
-  const gD2 = gauge(s14, "DEMAND", { x: 40, y: 960, color: C.g, start: 0.95 });
+  const gD2 = gauge(s14, "DEMAND", { x: 40, y: 960, color: C.gt, start: 0.95 });
   const gS = gauge(s14, "SUPPLY", { x: 600, y: 960, color: "#9AA49F", start: 0.3 });
   tl.fromTo([gD2, gS], { y: 400, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "expo.out", stagger: 0.1 }, 66.9);
   const lim = el(s14, { left: 640, top: 900, background: C.ink, color: "#fff" }, "LIMITED 🔒", "tag");
@@ -381,8 +382,8 @@
   whip(s14, s15, 68.7);
   const dz = kin(s15, "DEMAND *ZYADA*", { y: 260, size: 110 }); charsIn.slam(dz, 69.3, 0.015);
   const sk = kin(s15, "SUPPLY KAM", { y: 400, size: 110, color: C.mute }); charsIn.drop(sk, 70.14, 0.02);
-  const eq = kin(s15, "=", { y: 540, size: 140, color: C.g }); charsIn.stretch(eq, 70.9);
-  const rocket = line(s15, [[0, 0], [0.2, 0.12], [0.32, 0.08], [0.55, 0.42], [0.66, 0.36], [0.85, 0.75], [1, 1]], { x: 120, y: 620, w: 840, h: 440, color: C.g, sw: 20 });
+  const eq = kin(s15, "=", { y: 540, size: 140, color: C.gt }); charsIn.stretch(eq, 70.9);
+  const rocket = line(s15, [[0, 0], [0.2, 0.12], [0.32, 0.08], [0.55, 0.42], [0.66, 0.36], [0.85, 0.75], [1, 1]], { x: 120, y: 620, w: 840, h: 440, color: C.gt, sw: 20 });
   rocket.draw(71.3, 1.0);
   const qu = kin(s15, "QEEMAT *UPAR!*", { y: 1170, size: 130 }); charsIn.slam(qu, 71.24, 0.02);
   punch(72.24, 1.1, 0.35, 0, 60); flash(72.24, C.g, 0.35);
@@ -391,20 +392,29 @@
   // ═══ S16 73.6–84.05: bad news → panic selling → price DOWN ════════════════
   const s16 = scene(73.6, 84.05, { push: 1.03 });
   camReset(73.6, 0.1);
-  const red = el(s16, { left: 0, top: 0, width: 1080, height: 1920, background: "radial-gradient(80% 60% at 50% 45%, rgba(255,51,85,.16), rgba(0,0,0,0) 70%)" });
+  const red = el(s16, { left: 0, top: 0, width: 1080, height: 1920, background: "radial-gradient(80% 60% at 50% 45%, rgba(228,0,43,.07), rgba(0,0,0,0) 70%)" });
   const agar = kin(s16, "AGAR LOGON KO LAGE...", { y: 240, size: 70, color: C.mute }); charsIn.rise(agar, 73.7);
-  const sink = el(s16, { left: 240, top: 420, width: 600, height: 560, overflow: "hidden" });
-  const st16 = icon(sink, "stall", 0, 40, 600, 480);
-  const water = icon(s16, "water", 90, 880, 900, 220, undefined, undefined, true);
-  tl.fromTo([sink, water], { y: 700 }, { y: 0, duration: 0.5, ease: "expo.out", stagger: 0.05 }, 73.7);
-  tl.to(water, { x: -110, duration: 1.1, yoyo: true, repeat: 3, ease: "sine.inOut" }, 74.2);
-  tl.to(st16, { y: 420, rotation: 9, duration: 1.3, ease: "power2.in" }, 75.6);
+  // "doob raha hai" — told in market terms: bad-news alert, red candles breaking down, price card falling
+  const alert = el(s16, { left: 110, top: 360, width: 860, height: 170, background: "#fff", borderRadius: 28, border: `4px solid ${C.red}`, boxShadow: "0 20px 44px rgba(20,40,20,.14)" });
+  el(alert, { left: 28, top: 26, background: C.red, color: "#fff", borderRadius: 10, padding: "4px 14px", font: "800 26px Manrope", letterSpacing: ".08em" }, "ALERT");
+  el(alert, { left: 28, top: 78, font: "800 46px Manrope", color: C.text }, "Ahmed Chai ka business slow?");
+  tl.fromTo(alert, { y: -300, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 74.25);
+  const crashC = candles(s16, { x: 80, y: 590, w: 920, h: 420, n: 16, trend: (p2, r) => (p2 < 0.35 ? (r() - 0.45) * 0.1 : -0.07 - r() * 0.05) });
+  crashC.grow(74.7, 0.06);
+  const pcard = el(s16, { left: 150, top: 1050, width: 780, height: 200, background: "#fff", borderRadius: 30, border: "3px solid #E3E9E5", boxShadow: "0 24px 50px rgba(20,40,20,.14)" });
+  el(pcard, { left: 36, top: 30, font: "600 34px 'IBM Plex Mono'", color: C.mute }, "ACHAI");
+  const pFall = roller(pcard, { x: 36, y: 74, w: 460, size: 96, text: "Rs 140", color: C.red }); pFall.style.textAlign = "left";
+  const dBadge = el(pcard, { left: 520, top: 66, width: 230, height: 86, background: C.red, borderRadius: 43, font: "800 46px/86px Manrope", textAlign: "center", color: "#fff" }, "▼ 30%");
+  tl.fromTo(pcard, { y: 400, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "expo.out" }, 75.3);
+  roll(pFall, 75.6, 0.7);
+  tl.fromTo(dBadge, { scale: 0 }, { scale: 1, duration: 0.35, ease: "back.out(3)" }, 75.75);
   tl.to(agar, { opacity: 0, y: -60, duration: 0.2 }, 75.3);
   const doob = kin(s16, "*DOOB* RAHA HAI?", { y: 235, size: 110, accent: C.red }); charsIn.drop(doob, 75.5, 0.02);
-  const ahm16 = who(s16, "ahmed", 640, 1080, 360, { expr: "worried" }); enter(ahm16, 74.9, "right");
-  react.shock(ahm16, 75.75, { flashColor: C.red });
+  tl.to(alert, { y: -70, scale: 0.9, duration: 0.3, ease: "power2.out" }, 75.4);
+  const ahm16 = who(s16, "ahmed", 740, 1150, 320, { expr: "worried" }); enter(ahm16, 74.9, "right");
+  react.shock(ahm16, 75.75, { flashColor: C.red }); shake(75.8, 14);
   // panic sell
-  tl.to([sink, water, doob, agar, ahm16], { opacity: 0, y: -200, duration: 0.3, ease: "power3.in", stagger: 0.02 }, 76.75);
+  tl.to([alert, crashC, pcard, doob, agar, ahm16], { opacity: 0, y: -200, duration: 0.3, ease: "power3.in", stagger: 0.02 }, 76.75);
   const sellers = ["bilal", "sana", "usman", "ayesha"].map((n, i) => {
     const w = who(s16, n, 20 + i * 262, 330, 300, { expr: "worried", gesture: "point" });
     tl.fromTo(w, { y: -900 }, { y: 0, duration: 0.4, ease: "back.out(1.6)" }, 76.95 + i * 0.07);
@@ -413,8 +423,8 @@
     react.worry(w, 77.3 + i * 0.1, 1.8);
     return w;
   });
-  const gS3 = gauge(s16, "SUPPLY", { x: 40, y: 720, color: "#C9D3CD", start: 0.3 });
-  const gD3 = gauge(s16, "DEMAND", { x: 600, y: 720, color: C.g, start: 0.95 });
+  const gS3 = gauge(s16, "SUPPLY", { x: 40, y: 720, color: "#8A948F", start: 0.3 });
+  const gD3 = gauge(s16, "DEMAND", { x: 600, y: 720, color: C.gt, start: 0.95 });
   tl.fromTo([gS3, gD3], { y: 500, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "expo.out", stagger: 0.08 }, 78.1);
   gS3.to(0.95, 78.5, 1.0); gD3.to(0.12, 79.95, 1.0);
   tl.to(gD3.querySelector(".arc"), { stroke: C.red, duration: 0.3 }, 80.0);
@@ -427,7 +437,7 @@
 
   // ═══ S17 84.05–87.95: MARKET VOLATILITY ═══════════════════════════════════
   const s17 = scene(84.05, 87.95, { push: 1.08 });
-  const osc = line(s17, Array.from({ length: 23 }, (_, i) => [i / 22, i % 2 ? 0.85 - (i % 4) * 0.08 : 0.15 + (i % 3) * 0.08]), { x: 30, y: 380, w: 1020, h: 560, color: C.g, sw: 12 });
+  const osc = line(s17, Array.from({ length: 23 }, (_, i) => [i / 22, i % 2 ? 0.85 - (i % 4) * 0.08 : 0.15 + (i % 3) * 0.08]), { x: 30, y: 380, w: 1020, h: 560, color: C.gt, sw: 12 });
   osc.draw(84.15, 1.5);
   tl.to(osc.path, { stroke: C.red, duration: 0.01, repeat: 9, yoyo: true, repeatDelay: 0.18 }, 84.7);
   const uc = el(s17, { left: 80, top: 300 }, "▲ UPAR", "chip"); tl.fromTo(uc, { scale: 0 }, { scale: 1, duration: 0.3, ease: "back.out(3)" }, 84.74);
@@ -444,7 +454,7 @@
   const nums = el(s18, { left: 0, top: 0, width: 1080, height: 1920 });
   let nh = "";
   const NS = ["+2.4%", "-1.1%", "1,042.5", "+0.8%", "-3.2%", "88.10", "+5.6%", "-0.4%"];
-  for (let i = 0; i < 40; i++) nh += `<div class="abs mono" style="left:${(i * 211) % 960}px;top:${600 + ((i * 137) % 700)}px;font-size:${40 + (i % 4) * 22}px;color:${i % 5 ? "#3B4A42" : (i % 2 ? C.g : C.red)}">${NS[i % 8]}</div>`;
+  for (let i = 0; i < 40; i++) nh += `<div class="abs mono" style="left:${(i * 211) % 960}px;top:${600 + ((i * 137) % 700)}px;font-size:${40 + (i % 4) * 22}px;color:${i % 5 ? "#C5D0CA" : (i % 2 ? C.gt : C.red)}">${NS[i % 8]}</div>`;
   nums.innerHTML = nh;
   tl.fromTo(nums.children, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.2, stagger: 0.008 }, 87.95);
   const sn = kin(s18, "SIRF NUMBERS", { y: 240, size: 120 }); const sn2 = kin(s18, "*NAHI.*", { y: 370, size: 150 });
@@ -459,14 +469,14 @@
     charsIn.slam(L, t, 0.03);
     if (kind === "worry") react.worry(w, t, 2.2);
     if (kind === "think") { react.think(w, t, 1.6); X(tl, w.av, "happy", t + 0.6); }
-    if (kind === "joy") react.joy(w, t, { face: "grin", color: C.g });
+    if (kind === "joy") react.joy(w, t, { face: "grin", color: C.gt });
     tl.to(w, { scale: 1.15, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out" }, t);
   });
 
   // ═══ S19 93.8–99.1: PSX = regulated marketplace ═══════════════════════════
   const s19 = scene(93.8, 99.1, { push: 1.04 });
   zoomThrough(s18, s19, 93.8);
-  const lg19 = el(s19, { left: 330, top: 230, width: 420, height: 502 }, `<img src="assets/psx/psx-logo-on-dark.png" style="width:100%;height:100%;object-fit:contain">`);
+  const lg19 = el(s19, { left: 330, top: 230, width: 420, height: 502 }, `<img src="assets/psx/psx-logo.png" style="width:100%;height:100%;object-fit:contain">`);
   tl.fromTo(lg19, { scale: 0.4, opacity: 0, rotationY: -90, transformPerspective: 1000 }, { scale: 1, opacity: 1, rotationY: 0, duration: 0.6, ease: "expo.out" }, 93.84);
   const sh = icon(s19, "shield", 690, 520, 200, 230);
   tl.fromTo(sh, { scale: 3, opacity: 0, rotation: -30 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.3, ease: "power4.in" }, 94.8); shake(95.1, 14);
@@ -495,17 +505,17 @@
   charsIn.rise(c1, 100.08); charsIn.slam(c2, 100.74, 0.03); charsIn.flip(c3, 101.04, 0.03);
   punch(100.74, 1.06, 0.3); camReset(102.2, 0.3);
   tl.to([c1, c2, c3], { scale: 0.2, opacity: 0, duration: 0.3, ease: "power3.in", stagger: 0.03 }, 102.3);
-  const mark = [[C.g, 0], [C.g2, 1], ["#fff", 2]].map(([c, i]) => {
+  const mark = [[C.g, 0], [C.g2, 1], [C.ink, 2]].map(([c, i]) => {
     const b = el(s20, { left: 330 + i * 150, top: 560, width: 110, height: 340, background: c, borderRadius: 22, boxShadow: `0 0 40px ${c}88` });
     gsap.set(b, { skewX: -20 }); return b; });
   tl.set(mark, { autoAlpha: 0 }, 0).set(mark, { autoAlpha: 1 }, 102.38);
   tl.fromTo(mark, { yPercent: 340 }, { yPercent: 0, duration: 0.45, ease: "expo.out", stagger: 0.07, immediateRender: false }, 102.4)
     .to(mark, { scaleY: 0.15, scaleX: 0.15, x: (i) => (1 - i) * 60, opacity: 0, duration: 0.3, ease: "power3.in", stagger: 0.03 }, 102.9);
-  const fl = el(s20, { left: 90, top: 470, width: 900, height: 300 }, `<img src="assets/logos/flostocks-logo-full-on-dark.png" style="width:100%;height:100%;object-fit:contain">`);
+  const fl = el(s20, { left: 90, top: 470, width: 900, height: 300 }, `<img src="assets/logos/flostocks-logo-full.png" style="width:100%;height:100%;object-fit:contain">`);
   tl.fromTo(fl, { scale: 0.7, opacity: 0, filter: "blur(16px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 103.05);
   flash(103.05, C.g, 0.25);
   const gl = el(s20, { left: 90, top: 470, width: 900, height: 300, overflow: "hidden",
-    webkitMask: "url(assets/logos/flostocks-logo-full-on-dark.png) center / contain no-repeat", mask: "url(assets/logos/flostocks-logo-full-on-dark.png) center / contain no-repeat" },
+    webkitMask: "url(assets/logos/flostocks-logo-full.png) center / contain no-repeat", mask: "url(assets/logos/flostocks-logo-full.png) center / contain no-repeat" },
     `<i style="position:absolute;top:-40%;left:0;width:140px;height:180%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.9),rgba(255,255,255,0))"></i>`);
   tl.fromTo(gl.firstChild, { xPercent: -150, skewX: -20 }, { xPercent: 800, duration: 0.8, ease: "power2.inOut" }, 103.45);
   const fol = el(s20, { left: 190, top: 810, width: 700, height: 116, background: C.g, borderRadius: 58, font: "800 52px/116px Manrope", whiteSpace: "nowrap", textAlign: "center", color: C.ink, boxShadow: `0 0 50px ${C.g}66` }, "FOLLOW FLOSTOCKS");
@@ -517,7 +527,7 @@
   const simp = kin(s20, "*SIMPLE.*", { y: 1080, size: 190 }); charsIn.slam(simp, 106.42, 0.04); punch(106.42, 1.04, 0.3);
   camReset(107.6, 0.4);
   tl.to([mk, strike, simp], { opacity: 0, y: -40, duration: 0.35, ease: "power2.in" }, 108.1);
-  const disc = el(s20, { left: 100, top: 1000, width: 880, padding: "26px 30px", borderTop: `4px solid ${C.g}`, font: "500 31px/1.5 Inter", color: "#B9C6BF", textAlign: "center" },
+  const disc = el(s20, { left: 100, top: 1000, width: 880, padding: "26px 30px", borderTop: `4px solid ${C.g}`, font: "500 31px/1.5 Inter", color: "#3F4A44", textAlign: "center" },
     `<div style="font:800 26px Manrope;letter-spacing:.16em;color:${C.g};margin-bottom:10px">DISCLAIMER</div>Trading and investing in the PSX involve market risks, price fluctuations, and potential financial losses. Past performance does not guarantee future results. Learn the risks before you trade.`);
   tl.fromTo(disc, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" }, 108.45);
   tl.to(fl, { scale: 1.03, duration: 5.4, ease: "none" }, 108.5);
