@@ -224,20 +224,19 @@
       tl.to(w.av, { y: s * 0.05, rotation: -3, scale: 0.97, transformOrigin: "50% 100%", duration: 0.6, ease: "power2.out" }, t);
       tl.to(w.av, { x: 0, duration: 0.2 }, t + d);
     },
-    // THINK: finger to chin, head tilts and turns up, weight shifts onto one side, finger taps; head straightens on the idea
+    // THINK: finger to chin, head tilts, weight shifts onto one side — one smooth move, held (static thought chip)
     think(w, t, d = 1.4) {
       const g = "hand", s = w.size;
       CAST.expr(tl, w.av, "think", t);
       armIn(w, t, g);
       pose(w, t, { h: [10, 14, -8], b: [1.01, 1], g }, 0.5, "sine.inOut");
       tl.to(w.av, { rotation: 4, x: s * 0.02, transformOrigin: "50% 100%", duration: 0.55, ease: "sine.inOut" }, t);
-      pose(w, t + d * 0.75, { h: [-3, 0, -10], b: [1.04, 1], g }, 0.25, "power2.out");
-      tl.to(w.av, { rotation: 0, x: 0, duration: 0.3, ease: "power2.out" }, t + d * 0.75);
+      pose(w, t + d, {}, 0.5, "sine.inOut");                                  // one tilt in, hold, one ease back
+      tl.to(w.av, { rotation: 0, x: 0, duration: 0.5, ease: "sine.inOut" }, t + d);
       const h = head(w);
       const dots = el(w, { left: h.x + s * 0.2, top: h.y - s * 0.34, width: 96, height: 44, borderRadius: 22, background: "#fff", border: "3px solid #E3E9E5", boxShadow: "0 8px 18px rgba(20,40,20,.12)" },
         `<div style="display:flex;gap:9px;justify-content:center;align-items:center;height:100%">${[0, 1, 2].map(() => '<i style="width:12px;height:12px;border-radius:6px;background:#6B7570;display:block"></i>').join("")}</div>`);
       tl.fromTo(dots, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out" }, t).to(dots, { scale: 0, opacity: 0, duration: 0.2 }, t + d);
-      dots.querySelectorAll("i").forEach((d2, i) => tl.to(d2, { opacity: 0.35, duration: 0.2, yoyo: true, repeat: 3, ease: "sine.inOut" }, t + 0.3 + i * 0.1));
     },
     // LOVE ("kamaal!"): OK-sign shoots up, head tilts happily, shoulder shimmy with two little hops
     love(w, t, o = {}) {
