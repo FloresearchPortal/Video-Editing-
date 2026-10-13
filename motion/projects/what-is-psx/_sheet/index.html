@@ -1,0 +1,33 @@
+<!doctype html><html lang="en" data-resolution="portrait"><head><meta charset="UTF-8"/>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>@font-face{font-family:"Manrope";font-weight:200 800;src:url("assets/brand/fonts/Manrope-Variable.ttf");}
+*{margin:0;padding:0}html,body{width:1080px;height:1920px;background:#F3F8EF;overflow:hidden}#root{position:relative;width:100%;height:100%;font-family:Manrope}
+svg{position:absolute}.lab{position:absolute;width:340px;text-align:center;font-weight:800;font-size:30px;color:#0B0F14}.sub{display:block;font-weight:500;font-size:22px;color:#1F7A00}
+h1{position:absolute;left:0;right:0;top:70px;text-align:center;font-size:52px;font-weight:800;color:#0B0F14}</style></head>
+<body><div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+<div id="c" class="clip" data-start="0" data-duration="4" data-track-index="0" style="position:absolute;inset:0"><h1>Cast — "What is PSX"</h1></div></div>
+<script src="char.js"></script><script>
+const cast=[
+ [{skin:"a",hair:"short",top:"apron",mustache:true,propR:"kettle"},"Ahmed","chai dhaaba owner","grin",["R",-20,120]],
+ [{skin:"c",hair:"cap",hairColor:"#38D100",top:"tee",topColor:"#FFFFFF",sleeve:"#38D100",propR:"phone"},"Aap","the viewer / investor","smile",["R",-15,115]],
+ [{skin:"b",hair:"quiff",top:"hoodie",glasses:true},"Guide","explains (\"Main samjhata hoon\")","grin",["R",-150,-25]],
+ [{skin:"c",hair:"hijab",hairColor:"#1F7A00",top:"tee",topColor:"#F3EBDD",propL:"cup"},"Sana","customer / shareholder","smile",["L",20,-115]],
+ [{skin:"d",hair:"curly",top:"shirt",topColor:"#2E3A40",beard:true,propR:"ticket"},"Bilal","shareholder","o",["R",-60,70]],
+ [{skin:"a",hair:"long",top:"dupatta",topColor:"#FFFFFF",propL:"coin"},"Ayesha","shareholder","smile",["L",30,-105]]];
+let h="";
+cast.forEach(([o,n,s],i)=>{const x=(i%3)*350+10,y=Math.floor(i/3)*700+170;
+ h+=`<svg width="400" height="580" viewBox="0 0 400 580" style="left:${x-30}px;top:${y}px" id="p${i}">${CH.person(o)}</svg><div class="lab" style="left:${x}px;top:${y+585}px">${n}<span class="sub">${s}</span></div>`;});
+const moods=["smile","grin","o","worry","flat"];
+moods.forEach((m,i)=>{h+=`<svg width="200" height="230" viewBox="100 40 200 230" style="left:${40+i*205}px;top:1600px" id="e${i}">${CH.person(cast[0][0])}</svg><div class="lab" style="left:${i*205-30}px;top:1835px;font-size:22px">${m}</div>`;});
+document.getElementById("c").insertAdjacentHTML("beforeend",h);
+cast.forEach(([o,n,s,m,a],i)=>{const p=document.getElementById("p"+i);CH.mood(null,p,m);CH.pose(null,p,...a);});
+moods.forEach((m,i)=>CH.mood(null,document.getElementById("e"+i),m));
+const tl=gsap.timeline({paused:true});
+cast.forEach((c,i)=>{const p=document.getElementById("p"+i);CH.blinks(tl,p,0,4,i+1);CH.idle(tl,p,0.1*i,4,1);});
+const A=document.getElementById("p0"),V=document.getElementById("p1"),Gd=document.getElementById("p2"),B=document.getElementById("p4"),S=document.getElementById("p3");
+CH.talk(tl,A,[0.3,0.5,0.7,0.9,1.1,1.3]);CH.mood(tl,A,"smile",1.5);CH.pose(tl,A,"L",40,-60,1.6);CH.pose(tl,A,"L",0,0,2.6);
+CH.pose(tl,V,"L",160,-30,0.8);[1.15,1.45,1.75].forEach((t,i)=>CH.pose(tl,V,"L",i%2?160:140,i%2?-30:-50,t,0.3,"sine.inOut"));CH.mood(tl,V,"grin",0.8);CH.pose(tl,V,"L",0,0,2.2);CH.mood(tl,V,"smile",2.2);
+[0.4,0.75,1.1,1.45].forEach((t,i)=>CH.pose(tl,Gd,"R",i%2?-150:-130,i%2?-25:-45,t,0.3,"sine.inOut"));CH.talk(tl,Gd,[0.3,0.55,0.8,1.05,1.3]);CH.mood(tl,Gd,"smile",1.6);
+CH.mood(tl,B,"worry",1.2);CH.mood(tl,B,"grin",2.6);CH.mood(tl,S,"o",1.8);CH.mood(tl,S,"smile",2.8);
+tl.fromTo(".steam",{y:0,opacity:1},{y:-14,opacity:0.2,duration:1,repeat:3,ease:"none"},0);
+window.__timelines["main"]=tl;</script></body></html>

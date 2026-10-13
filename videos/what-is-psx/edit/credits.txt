@@ -1,0 +1,1 @@
+Music bed, coin, crowd: synthesized in videos/what-is-psx/music/make_bed.py (original, owned by the channel, no licence needed). Other SFX: reelkit.sfx_gen (synthesized, owned).

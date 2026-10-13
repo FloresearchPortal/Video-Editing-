@@ -73,3 +73,7 @@ motion/**/renders/
 motion/**/snapshots/
 **/edit/overlays/
 .hyperframes/
+
+# per-video raw inputs (voiceovers, reference images) stay local
+videos/*/raw/
+motion/**/snaps/
