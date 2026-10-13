@@ -185,7 +185,8 @@
   rise(bank, 33.3, 60, 0.4);
   const xx = el(s7, { left: 610, top: 830, width: 390, height: 360 }, `<svg viewBox="0 0 390 360"><path d="M40,40 L350,320 M350,40 L40,320" stroke="${C.red}" stroke-width="30" stroke-linecap="round"/></svg>`, "icon");
   tl.fromTo(xx, { scale: 1.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "power4.in" }, 34.0);
-  const nb = words(s7, "bina kisi bank ke", { y: 1240, size: 60, weight: 700, color: C.ink }); reveal(nb, 33.32);
+  const nb = el(s7, { left: 650, top: 770, background: C.red, color: "#fff", borderRadius: 14, padding: "6px 18px", font: "800 40px Manrope", border: `5px solid ${C.ink}` }, "BINA BANK KE");
+  tl.fromTo(nb, { scale: 0.5, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: -4, duration: 0.4, ease: "back.out(2)" }, 33.32);
 
   // ── S8 34.85–39.35: people get hissay = shares ─────────────────────────────
   const s8 = scene(34.85, 39.35);
