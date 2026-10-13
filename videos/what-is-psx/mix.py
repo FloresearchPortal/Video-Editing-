@@ -20,10 +20,10 @@ SFX["crowd"] = HERE / "music/crowd.wav"
 
 # (time s, sfx, gain) — only the big visual hits; voice always wins
 CUES = [
-    (1.15, "impact", .22), (3.28, "swoosh_short", .14), (4.30, "bass_drop", .2), (5.10, "whoosh", .12),
-    (8.08, "whoosh", .12), (14.42, "whoosh", .12), (17.72, "glitch", .15), (25.25, "impact", .2),
+    (1.5, "whoosh", .1), (3.28, "swoosh_short", .14), (4.30, "bass_drop", .2), (5.10, "whoosh", .12),
+    (8.08, "whoosh", .12), (14.42, "whoosh", .12), (17.72, "swoosh_short", .13), (25.25, "impact", .2),
     (32.30, "coin", .18), (42.95, "click", .2), (43.92, "tick", .1), (44.30, "click", .2), (44.90, "whoosh", .12),
-    (53.40, "coin", .2), (61.40, "crowd", .2), (67.20, "click", .18), (73.45, "glitch", .16), (75.75, "bass_drop", .17),
+    (53.40, "coin", .2), (61.40, "crowd", .2), (67.20, "click", .18), (73.45, "swoosh_short", .13), (75.75, "bass_drop", .17),
     (82.60, "bass_drop", .15), (86.44, "impact", .22), (94.80, "impact", .13), (98.75, "whoosh", .12),
     (103.05, "sparkle", .18), (106.42, "impact", .13),
 ]

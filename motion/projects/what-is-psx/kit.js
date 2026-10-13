@@ -23,13 +23,26 @@
 
   // ── world: background, grid, glow, grain, vignette, camera ────────────────
   const bg = el(stage, { left: 0, top: 0, width: 1080, height: 1920, background: `radial-gradient(90% 60% at 50% 42%, #FFFFFF 0%, #F2F7EF 75%)` });
-  const grid = el(stage, { left: -200, top: -200, width: 1480, height: 2320, opacity: 0.55,
-    backgroundImage: "linear-gradient(rgba(31,122,0,.06) 2px, transparent 2px), linear-gradient(90deg, rgba(31,122,0,.06) 2px, transparent 2px)",
-    backgroundSize: "90px 90px" });
-  tl.fromTo(grid, { x: 0, y: 0 }, { x: -90, y: -180, duration: 114, ease: "none" }, 0);
+  // chart paper: fine horizontal price lines + faint time divisions, scrolling like a live chart
+  const grid = el(stage, { left: -240, top: -120, width: 1560, height: 2160, opacity: 0.9,
+    backgroundImage: "linear-gradient(rgba(31,122,0,.055) 2px, transparent 2px), linear-gradient(90deg, rgba(31,122,0,.03) 2px, transparent 2px)",
+    backgroundSize: "120px 120px, 240px 120px" });
+  tl.fromTo(grid, { x: 0 }, { x: -240, duration: 114, ease: "none" }, 0);
+  // faint full-width market line behind everything (seeded random walk), drifting left the whole video
+  {
+    let v = 0.55; const P = [];
+    for (let i = 0; i <= 160; i++) { v = Math.min(0.9, Math.max(0.1, v + (rnd() - 0.48) * 0.06)); P.push(`${i ? "L" : "M"}${i * 24},${(1 - v) * 900}`); }
+    const bgl = el(stage, { left: 0, top: 560, width: 3840, height: 900, opacity: 0.07 },
+      `<svg viewBox="0 0 3840 900" width="3840" height="900"><path d="${P.join(" ")}" fill="none" stroke="#1F7A00" stroke-width="5" stroke-linejoin="round"/></svg>`);
+    tl.fromTo(bgl, { x: 0 }, { x: -2760, duration: 114, ease: "none" }, 0);
+  }
   const glow = el(stage, { left: 140, top: 560, width: 800, height: 800, borderRadius: "50%", background: "radial-gradient(circle, rgba(56,209,0,.10), rgba(56,209,0,0) 65%)" });
   tl.fromTo(glow, { scale: 0.9 }, { scale: 1.15, duration: 6, yoyo: true, repeat: 18, ease: "sine.inOut" }, 0);
-  const cam = el(stage, { left: 0, top: 0, width: 1080, height: 1920 }, "", "cam");   // scenes live in the camera
+  // camera rig: a slow, continuous handheld-dolly drift (never a dead frame); cam inside it takes the push-ins
+  const rig = el(stage, { left: 0, top: 0, width: 1080, height: 1920 });
+  for (let t = 0, k = 0; t < 114; t += 4, k++)
+    tl.to(rig, { x: k % 2 ? -10 : 10, y: k % 3 === 0 ? -8 : 8, rotation: k % 2 ? -0.35 : 0.35, duration: 4, ease: "sine.inOut" }, t);
+  const cam = el(rig, { left: 0, top: 0, width: 1080, height: 1920 }, "", "cam");   // scenes live in the camera
   const fx = el(stage, { left: 0, top: 0, width: 1080, height: 1920, zIndex: 60, pointerEvents: "none" }, "", "fx");
   el(stage, { left: 0, top: 0, width: 1080, height: 1920, zIndex: 70, pointerEvents: "none",
     background: "radial-gradient(120% 80% at 50% 45%, rgba(0,0,0,0) 60%, rgba(31,60,20,.08) 100%)" });
@@ -37,15 +50,18 @@
     backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")` });
 
   // camera moves
-  const punch = (t, s = 1.12, d = 0.35, x = 0, y = 0) => tl.to(cam, { scale: s, x, y, duration: d, ease: "expo.out" }, t);
-  const camReset = (t, d = 0.4) => tl.to(cam, { scale: 1, x: 0, y: 0, rotation: 0, duration: d, ease: "expo.inOut" }, t);
+  // push-ins ease in AND out (no snap zooms); the slow drift on the rig keeps moving underneath
+  const punch = (t, s = 1.12, d = 0.35, x = 0, y = 0) => tl.to(cam, { scale: 1 + (s - 1) * 0.8, x: x * 0.8, y: y * 0.8, duration: Math.max(0.55, d * 1.6), ease: "power3.inOut" }, t - 0.12);
+  const camReset = (t, d = 0.4) => tl.to(cam, { scale: 1, x: 0, y: 0, rotation: 0, duration: Math.max(0.5, d * 1.4), ease: "power3.inOut" }, t);
+  // a short damped jolt — only for market shocks; kept small so the frame never looks broken
   function shake(t, amp = 18, n = 6, target = cam) {
-    for (let i = 0; i < n; i++) tl.to(target, { x: (i % 2 ? -1 : 1) * amp * (1 - i / n), y: (i % 3 - 1) * amp * 0.5 * (1 - i / n), duration: 0.04, ease: "none" }, t + i * 0.04);
-    tl.to(target, { x: 0, y: 0, duration: 0.08 }, t + n * 0.04);
+    const a = Math.min(8, amp * 0.35);
+    for (let i = 0; i < 4; i++) tl.to(target, { x: (i % 2 ? -1 : 1) * a * (1 - i / 4), duration: 0.05, ease: "sine.inOut" }, t + i * 0.05);
+    tl.to(target, { x: 0, duration: 0.1, ease: "sine.out" }, t + 0.2);
   }
   function flash(t, color = "#38D100", peak = 0.35, d = 0.18) {
     const f = el(fx, { left: 0, top: 0, width: 1080, height: 1920, background: color, opacity: 0 });
-    tl.to(f, { opacity: peak, duration: 0.03 }, t).to(f, { opacity: 0, duration: d, ease: "power2.out" }, t + 0.03);
+    tl.to(f, { opacity: Math.min(0.12, peak * 0.4), duration: 0.05 }, t).to(f, { opacity: 0, duration: d + 0.15, ease: "power2.out" }, t + 0.05);
   }
 
   // scene layer: visible on [t0, t1); slow camera push inside the scene keeps every hold alive
@@ -292,29 +308,70 @@
     if (o.bg) row.style.background = o.bg;
     return row;
   }
+  // chart frame: horizontal price grid + right-hand price axis (labels top→bottom), like a trading screen
+  function chartGrid(W, H, o) {
+    const labs = o.axis || [], rows = o.rows || (labs.length > 1 ? labs.length - 1 : 4);
+    let g = "";
+    for (let r = 0; r <= rows; r++) {
+      const y = (r / rows) * H;
+      g += `<line x1="0" x2="${W}" y1="${y}" y2="${y}" stroke="#D9E3DC" stroke-width="2" stroke-dasharray="${r === rows ? "0" : "6 8"}"/>`;
+      if (labs.length === rows + 1) g += `<text x="${W + 14}" y="${y + 9}" font-family="IBM Plex Mono" font-weight="600" font-size="24" fill="#8A948F">${labs[r]}</text>`;
+    }
+    return g;
+  }
   function candles(parent, o) {
     const n = o.n || 18, W = o.w, H = o.h, cw = W / n;
     let v = 0.5; const data = [];
     for (let i = 0; i < n; i++) { const dir = o.trend(i / (n - 1), rnd); const open = v; v = Math.min(0.95, Math.max(0.05, v + dir)); data.push([open, v, Math.max(open, v) + rnd() * 0.06, Math.min(open, v) - rnd() * 0.06]); }
     const svg = data.map(([op, cl, hi, lo], i) => {
-      const up = cl >= op, x = i * cw + cw * 0.2, w = cw * 0.6, c = up ? C.g : C.red;
+      const up = cl >= op, x = i * cw + cw * 0.18, w = cw * 0.64, c = up ? C.g2 : C.red;
       const y1 = H * (1 - Math.max(op, cl)), y2 = H * (1 - Math.min(op, cl));
-      return `<g class="cdl"><line x1="${x + w / 2}" x2="${x + w / 2}" y1="${H * (1 - hi)}" y2="${H * (1 - lo)}" stroke="${c}" stroke-width="5"/><rect x="${x}" y="${y1}" width="${w}" height="${Math.max(6, y2 - y1)}" rx="4" fill="${c}"/></g>`;
+      return `<g class="cdl"><line x1="${x + w / 2}" x2="${x + w / 2}" y1="${H * (1 - hi)}" y2="${H * (1 - lo)}" stroke="${c}" stroke-width="3"/><rect x="${x}" y="${y1}" width="${w}" height="${Math.max(5, y2 - y1)}" rx="2" fill="${c}"/></g>`;
     }).join("");
-    const box = el(parent, { left: o.x, top: o.y, width: W, height: H }, `<svg viewBox="0 0 ${W} ${H}" style="overflow:visible">${svg}</svg>`);
+    const box = el(parent, { left: o.x, top: o.y, width: W, height: H },
+      `<svg viewBox="0 0 ${W} ${H}" style="overflow:visible">${o.grid ? chartGrid(W, H, o) : ""}${svg}</svg>`);
     box.c = box.querySelectorAll(".cdl");
-    box.grow = (t, st = 0.05) => tl.fromTo(box.c, { scaleY: 0, opacity: 0, transformOrigin: "50% 50%" }, { scaleY: 1, opacity: 1, duration: 0.3, ease: "back.out(2)", stagger: st }, t);
+    // candles print left → right like a live session
+    box.grow = (t, st = 0.05) => tl.fromTo(box.c, { scaleY: 0, opacity: 0, transformOrigin: "50% 50%" }, { scaleY: 1, opacity: 1, duration: 0.22, ease: "power3.out", stagger: st, immediateRender: false }, t);
+    gsap.set(box.c, { opacity: 0 });
     return box;
   }
+  // line chart: the key points are densified into a natural price path (seeded micro-moves), with an area
+  // fill, optional grid/price axis, and a dot that rides the tip while it draws
+  let lineN = 0;
   function line(parent, pts, o) {
-    const W = o.w, H = o.h;
-    const d = pts.map(([x, y], i) => `${i ? "L" : "M"}${(x * W).toFixed(1)},${((1 - y) * H).toFixed(1)}`).join(" ");
+    const W = o.w, H = o.h, n = o.n || 56, noise = o.noise ?? 0.035, col = o.color || C.g2, id = "lg" + ++lineN;
+    const P = [];
+    for (let i = 0; i <= n; i++) {
+      const x = pts[0][0] + (pts[pts.length - 1][0] - pts[0][0]) * (i / n);
+      let k = 0; while (k < pts.length - 2 && pts[k + 1][0] < x) k++;
+      const [x0, y0] = pts[k], [x1, y1] = pts[k + 1];
+      let y = y0 + (y1 - y0) * Math.min(1, Math.max(0, (x - x0) / ((x1 - x0) || 1)));
+      if (i && i < n) y += (rnd() - 0.5) * noise;
+      P.push([x, Math.min(1, Math.max(0, y))]);
+    }
+    const d = P.map(([x, y], i) => `${i ? "L" : "M"}${(x * W).toFixed(1)},${((1 - y) * H).toFixed(1)}`).join(" ");
+    const sw = Math.min(o.sw || 8, 9);
+    const area = o.area === false ? "" : `<defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".22"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>
+      <path class="ar" d="${d} L${(P[P.length - 1][0] * W).toFixed(1)},${H} L${(P[0][0] * W).toFixed(1)},${H} Z" fill="url(#${id})" style="clip-path:inset(0 100% 0 0)"/>`;
     const box = el(parent, { left: o.x, top: o.y, width: W, height: H },
-      `<svg viewBox="0 0 ${W} ${H}" style="overflow:visible"><path class="ln" d="${d}" fill="none" stroke="${o.color || C.g}" stroke-width="${o.sw || 12}" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 14px ${o.color || C.g})"/></svg>`);
-    const p = box.querySelector(".ln"), len = p.getTotalLength();
+      `<svg viewBox="0 0 ${W} ${H}" style="overflow:visible">${o.grid ? chartGrid(W, H, o) : ""}${area}<path class="ln" d="${d}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
+    const p = box.querySelector(".ln"), ar = box.querySelector(".ar"), len = p.getTotalLength();
     p.style.strokeDasharray = len; p.style.strokeDashoffset = len;
-    box.draw = (t, dd = 1) => tl.fromTo(p, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: dd, ease: "power2.inOut", immediateRender: false }, t);
-    box.path = p;
+    const dot = el(box, { left: -13, top: -13, width: 26, height: 26, borderRadius: "50%", background: col, border: "5px solid #fff", boxShadow: `0 0 0 4px ${col}33`, opacity: 0 });
+    const x0 = P[0][0] * W, x1 = P[P.length - 1][0] * W;
+    box.draw = (t, dd = 1) => {
+      const pr = { v: 0 };
+      tl.fromTo(pr, { v: 0 }, { v: 1, duration: dd, ease: "power1.inOut", immediateRender: false, onUpdate: () => {
+        p.style.strokeDashoffset = len * (1 - pr.v);
+        const q = p.getPointAtLength(len * pr.v);
+        dot.style.transform = `translate(${q.x}px,${q.y}px)`;
+        if (ar) ar.style.clipPath = `inset(0 ${Math.max(0, 100 - ((q.x - 0) / W) * 100)}% 0 0)`;
+      } }, t);
+      tl.set(dot, { opacity: 1 }, t).set(box, { autoAlpha: 1 }, t);
+    };
+    gsap.set(box, { autoAlpha: 0 });
+    box.path = p; box.dot = dot; box.pts = P;
     return box;
   }
   // semicircle gauge with needle; v in 0..1
@@ -331,39 +388,63 @@
     return box;
   }
 
-  // ── transitions ────────────────────────────────────────────────────────────
-  function wipe(cut, colors = [C.g, C.g3, C.night]) {
-    const bars = colors.map((c, i) => el(fx, { left: -300 + i * 470, top: 0, width: 760, height: 1920, background: c }));
-    bars.forEach((b) => gsap.set(b, { skewX: -16, yPercent: 120 }));
-    tl.to(bars, { yPercent: 0, duration: 0.3, ease: "power3.in", stagger: 0.03 }, cut - 0.36)
-      .to(bars, { yPercent: -120, duration: 0.34, ease: "power3.out", stagger: 0.03 }, cut + 0.03);
+  // ── transitions: one finance vocabulary (bar-chart rise, chart-cursor sweep, smooth pan, terminal scan) ──
+  // wipe → BAR-CHART RISE: columns of different heights grow up like a volume histogram, then clear upward
+  function wipe(cut, colors) {
+    const n = 9, H = [0.62, 0.8, 0.7, 0.92, 1, 0.86, 0.95, 0.74, 0.88];
+    const cols = Array.from({ length: n }, (_, i) => el(fx, { left: i * 120, top: 0, width: 122, height: 1920,
+      background: i % 3 === 1 ? C.g3 : i % 3 === 2 ? C.g2 : C.g }));
+    cols.forEach((c, i) => gsap.set(c, { scaleY: 0, transformOrigin: "50% 100%" }));
+    tl.to(cols, { scaleY: (i) => 1.02 + H[i] * 0, duration: 0.3, ease: "power3.in", stagger: { each: 0.025, from: "start" } }, cut - 0.36)
+      .set(cols, { transformOrigin: "50% 0%" }, cut + 0.01)
+      .to(cols, { scaleY: 0, duration: 0.34, ease: "power3.out", stagger: { each: 0.025, from: "start" } }, cut + 0.02);
   }
-  function slices(cut, color = C.g3, n = 6) {
-    const s = Array.from({ length: n }, (_, i) => el(fx, { left: 0, top: i * (1920 / n), width: 1080, height: 1920 / n + 2, background: color }));
-    s.forEach((b, i) => gsap.set(b, { xPercent: i % 2 ? 100 : -100 }));
-    tl.to(s, { xPercent: 0, duration: 0.24, ease: "power3.in", stagger: 0.02 }, cut - 0.3)
-      .to(s, { xPercent: (i) => (i % 2 ? -100 : 100), duration: 0.28, ease: "power3.out", stagger: 0.02 }, cut + 0.02);
+  // slices → CHART-CURSOR SWEEP: a white panel scrubs across behind a green crosshair line with a price tag
+  function slices(cut, color) {
+    const pan = el(fx, { left: 0, top: 0, width: 1080, height: 1920, background: "#F7F8F7" });
+    const cur = el(fx, { left: 1074, top: 0, width: 8, height: 1920, background: C.g2 });
+    const tag = el(cur, { left: -150, top: 900, width: 150, height: 56, borderRadius: 10, background: C.g2, color: "#fff",
+      font: "700 28px/56px 'IBM Plex Mono'", textAlign: "center" }, "PSX");
+    gsap.set([pan, cur], { x: -1090 });
+    tl.to([pan, cur], { x: 0, duration: 0.32, ease: "power3.in" }, cut - 0.34)
+      .to(pan, { x: 1090, duration: 0.36, ease: "power3.out" }, cut + 0.02)
+      .to(cur, { x: 1090 + 8, duration: 0.36, ease: "power3.out" }, cut + 0.02);
   }
+  // whip → SMOOTH PAN: the outgoing scene slides away as the next slides in, like scrolling a chart
   function whip(outS, inS, t, dir = -1) {
-    tl.to(outS, { x: dir * 1200, filter: "blur(24px)", duration: 0.26, ease: "power3.in" }, t - 0.26)
-      .fromTo(inS, { x: -dir * 1200, filter: "blur(24px)" }, { x: 0, filter: "blur(0px)", duration: 0.32, ease: "power3.out", immediateRender: false }, t);
+    tl.to(outS, { x: dir * 1080, duration: 0.5, ease: "power3.inOut" }, t - 0.3);
+    if (inS) tl.fromTo(inS, { x: -dir * 1080 }, { x: 0, duration: 0.5, ease: "power3.inOut", immediateRender: false }, t - 0.3 + 0.02);
   }
+  // zoomThrough → smooth dolly through (no blur smear)
   function zoomThrough(outS, inS, t, ox = "50%", oy = "45%") {
-    tl.to(outS, { scale: 5, opacity: 0, filter: "blur(14px)", duration: 0.3, ease: "power3.in", transformOrigin: `${ox} ${oy}` }, t - 0.3)
-      .fromTo(inS, { scale: 0.4, opacity: 0, filter: "blur(10px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out", immediateRender: false }, t);
+    tl.to(outS, { scale: 1.8, opacity: 0, duration: 0.4, ease: "power2.in", transformOrigin: `${ox} ${oy}` }, t - 0.4)
+      .fromTo(inS, { scale: 0.88, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "power3.out", immediateRender: false }, t);
   }
+  // glitch → TERMINAL SCAN: a green scan line sweeps the screen with a soft trail (a quote refresh)
   function glitch(t, d = 0.35) {
-    const r = el(fx, { left: 0, top: 0, width: 1080, height: 1920, background: "rgba(255,51,85,.35)", mixBlendMode: "screen", opacity: 0 });
-    const g = el(fx, { left: 0, top: 0, width: 1080, height: 1920, background: "rgba(56,209,0,.3)", mixBlendMode: "screen", opacity: 0 });
-    for (let k = 0; k < 6; k++) {
-      const at = t + k * (d / 6);
-      tl.set(r, { opacity: k % 2 ? 0 : 1, x: (rnd() - 0.5) * 40, clipPath: `inset(${rnd() * 80}% 0 ${rnd() * 15}% 0)` }, at)
-        .set(g, { opacity: k % 2 ? 1 : 0, x: (rnd() - 0.5) * 40, clipPath: `inset(${rnd() * 15}% 0 ${rnd() * 80}% 0)` }, at)
-        .set(cam, { x: (rnd() - 0.5) * 30 }, at);
-    }
-    tl.set([r, g], { opacity: 0 }, t + d).set(cam, { x: 0 }, t + d);
+    const sc = el(fx, { left: 0, top: -260, width: 1080, height: 260, opacity: 0,
+      background: `linear-gradient(180deg, rgba(56,209,0,0) 0%, rgba(56,209,0,.16) 85%, ${C.g} 100%)` });
+    tl.set(sc, { opacity: 1 }, t).fromTo(sc, { y: 0 }, { y: 2180, duration: Math.max(0.45, d * 1.4), ease: "power1.inOut", immediateRender: false }, t)
+      .set(sc, { opacity: 0 }, t + Math.max(0.45, d * 1.4));
+  }
+
+  // ── always-on PSX ticker band (business-news strip), camera-independent ─────────────────
+  function tickerBand(items, t0, t1, y = 1548) {
+    const band = el(stage, { left: 0, top: y, width: 1080, height: 66, zIndex: 58, background: "#FFFFFF",
+      borderTop: "2px solid #E3E9E5", borderBottom: "2px solid #E3E9E5", boxShadow: "0 10px 26px rgba(20,40,20,.08)", overflow: "hidden" });
+    const row = el(band, { left: 236, top: 0, height: 66, whiteSpace: "nowrap", font: "600 28px/66px 'IBM Plex Mono'" });
+    const one = items.map(([s2, pr, ch]) => `<span style="margin-right:44px"><b style="color:${C.text}">${s2}</b> <span style="color:${C.mute}">${pr}</span> <span style="color:${ch >= 0 ? C.gt : C.red}">${ch >= 0 ? "▲" : "▼"}${Math.abs(ch).toFixed(2)}%</span></span>`).join("");
+    row.innerHTML = one + one + one + one;
+    el(band, { left: 0, top: 0, width: 236, height: 66, background: C.ink, color: "#fff", font: "800 26px/66px Manrope", textAlign: "center", letterSpacing: ".04em" },
+      `<span style="color:${C.g}">●</span> KSE-100`);
+    gsap.set(band, { autoAlpha: 0 });
+    tl.fromTo(band, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: "power3.out", immediateRender: false }, t0)
+      .to(band, { autoAlpha: 0, y: 40, duration: 0.35, ease: "power2.in" }, t1);
+    const w = row.scrollWidth / 4 || 2400;
+    for (let t = t0, k = 0; t < t1; t += 30, k++) tl.fromTo(row, { x: 0 }, { x: -w, duration: 30, ease: "none", immediateRender: false }, t);
+    return band;
   }
 
   window.K = { C, tl, stage, cam, fx, el, scene, kin, charsIn, charsOut, scramble, bar, roller, roll, who, sym, react, pose, talk, life, enter,
-               tape, candles, line, gauge, wipe, slices, whip, zoomThrough, glitch, flash, shake, punch, camReset, rnd, pick };
+               tape, candles, line, gauge, tickerBand, wipe, slices, whip, zoomThrough, glitch, flash, shake, punch, camReset, rnd, pick };
 })();
