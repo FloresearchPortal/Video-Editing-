@@ -9,8 +9,8 @@ const G = '#38D100', G2 = '#2AA300', G3 = '#1F7A00', WASH = '#CFF2BF';
 const v = (n) => 'variant' + String(n).padStart(2, '0');
 
 const EXPR = {             // eyes, brows, lips
-  neutral: [3, 4, 4], smile: [3, 4, 22], happy: [4, 12, 3], grin: [4, 12, 25], talk: [3, 4, 8],
-  wow: [5, 12, 15], worried: [3, 13, 18], shocked: [5, 12, 15], think: [3, 2, 20], blink: [2, 4, 22], delight: [4, 12, 25],
+  neutral: [4, 4, 4], smile: [4, 4, 22], happy: [4, 12, 3], grin: [4, 12, 25], talk: [4, 4, 8],
+  wow: [5, 12, 15], worried: [4, 13, 18], shocked: [5, 12, 15], think: [4, 2, 20], blink: [4, 4, 22], delight: [4, 12, 25],
 };
 const GEST = ['hand', 'handPhone', 'point', 'pointLongArm', 'ok', 'okLongArm', 'waveLongArm', 'waveOkLongArms'];
 

@@ -30,12 +30,8 @@
   const expr = (tl, el, e, at) => sw(tl, el, "x", e, at);
   const gesture = (tl, el, g, at) => sw(tl, el, "g", g, at);
 
-  // blink: swap to the blink face for 0.12 s, then back to `face` (deterministic spacing)
-  function blinks(tl, el, t0, t1, face = "smile", seed = 1) {
-    for (let t = t0 + 0.6 + (seed % 5) * 0.29; t < t1 - 0.3; t += 2.3 + ((seed * 7 + Math.floor(t)) % 9) * 0.13) {
-      expr(tl, el, "blink", t); expr(tl, el, face, t + 0.12);
-    }
-  }
+  // no blinking: eyes stay open (client preference); kept as a no-op so callers don't change
+  function blinks() {}
   // lip flap on a list of word times, ending on `rest`
   function talk(tl, el, times, rest = "smile") {
     times.forEach((t, i) => expr(tl, el, i % 2 ? "smile" : "talk", t));
