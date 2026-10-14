@@ -16,10 +16,10 @@ export const Ranking: React.FC = () => {
   const f0 = bf(S.ranking.start), f1 = bf(S.ranking.end);
   if (f < f0 - 2 || f > f1 + 26) return null;
   const max = TOP[0].mcap_bn;
-  const fold = (i: number) => ramp(f, f1 - 3 + (9 - i) * 0.4, f1 - 3 + (9 - i) * 0.4 + 11, E.inOut);
+  const fold = (i: number) => ramp(f, f1 - 5 + (9 - i) * 0.4, f1 - 5 + (9 - i) * 0.4 + 11, E.inOut);
   return (
     <AbsoluteFill>
-      <div style={{ position: 'absolute', left: 72, top: 236, ...life(f, f0 + 2, f1 - 7) }}>
+      <div style={{ position: 'absolute', left: 72, top: 236, ...life(f, f0 + 2, f1 - 9) }}>
         <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 56, lineHeight: '64px', letterSpacing: -1, color: C.ink }}>
           PSX <span style={{ color: C.green }}>·</span> TOP 10 BY MARKET CAP
         </div>
@@ -28,7 +28,7 @@ export const Ranking: React.FC = () => {
       {TOP.map((co, i) => {
         const top = ROW0 + i * PITCH;
         const enter = i === 0 ? f0 + 8 : f0 + 3 + i * 2.2;
-        const leave = f1 - 7 + (9 - i) * 0.4;
+        const leave = f1 - 9 + (9 - i) * 0.4;
         const w = (co.mcap_bn / max) * BMAX;
         // bar rect: grows in (row 1 morphs from the column), then folds into the rule
         let r = { x: BX, y: top + BAR_DY, w: w * ramp(f, enter + 3, enter + 17, E.out), h: BAR_H };

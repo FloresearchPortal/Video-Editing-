@@ -4,7 +4,7 @@
   .venv/bin/python videos/psx-top10/build.py --preview  # half size      -> output/psx-top10_preview.mp4
   .venv/bin/python videos/psx-top10/build.py --stills-only
 
-QA (printed + output/qa.json): format, duration 40-45 s, CTA hold 5 s perfectly still, loudness
+QA (printed + output/qa.json): format, duration 40-45 s, CTA hold perfectly still, loudness
 -14 LUFS / TP <= -1.5 dBTP on the delivered AAC, silent beat, no black frames.
 """
 import argparse, json, re, subprocess, sys
@@ -31,12 +31,18 @@ def sh(cmd, **kw):
 
 def key_frames():
     """A still on every transition: section boundaries, every rank change, the drop, the hold."""
-    beats = [0.0, 0.5, 1.2, 2.3, 3.3, 4.6, 5.6, 7.0, 7.5, 8.3, 9.5, 12.5, 14.6, 15.4, 16.5, 17.6, 18.2]
+    ex, bu, dr, rk, cta = S['explain'], S['build'], S['drop'], S['ranking'], S['cta']
+    beats = [0.0, 0.5, 1.2, 2.3, 3.3, 4.6, 5.6, S['hook']['exit'], S['hook']['exit'] + 0.5, ex['start'] + 0.3, ex['line'] + 0.5,
+             ex['cards'][1] + 0.5, ex['cards'][3] + 0.6, ex['closer'] - 0.4, ex['closer'] + 1, ex['end'] - 0.6, ex['end'] + 0.2]
     b = S['countdown']['start']
     for r in range(10, 1, -1):
         beats += [b + 0.15, b + 1.5]
         b += S['countdown']['beats_rank2'] if r == 2 else S['countdown']['beats_per_company']
-    beats += [63.8, 64.6, 65.5, 66.5, 67.1, 67.6, 69.0, 71.1, 71.6, 72.5, 73.3, 73.9, 74.3, 74.8, 76, 81.9, 82.4, 83, 84]
+    d0 = dr['start']
+    beats += [bu['start'] - 0.2, bu['number_one'] + 0.1, bu['silence'][0] - 0.5, bu['silence'][0] + 0.5, d0 + 0.1, d0 + 0.6,
+              d0 + 2, dr['contract'] + 0.1, dr['contract'] + 0.6, dr['value_lands'] - 0.5, dr['value_lands'] + 0.3,
+              dr['end'] - 0.3, rk['start'] + 0.3, rk['start'] + 0.8, rk['start'] + 2, rk['end'] - 0.6, cta['start'] + 0.4,
+              cta['start'] + 1, cta['static_from']]
     frames = sorted({min(END - 1, max(0, round(bf(x)))) for x in beats} | {CTA_STATIC, END - 1})
     return frames
 
@@ -83,7 +89,7 @@ def qa(final: Path, preview: bool):
     fr = np.frombuffer(raw, np.uint8).reshape(-1, h, w).astype(np.int16)
     still = int(np.abs(fr - fr[0]).max()) if len(fr) else 999
     rep['cta_hold'] = dict(seconds=round((END - CTA_STATIC) / FPS, 2), frames=len(fr), max_pixel_change=still)
-    if still > 10 or (END - CTA_STATIC) / FPS < 5: fails.append('cta_hold')
+    if still > 10 or (END - CTA_STATIC) / FPS < S['cta']['hold_seconds']: fails.append('cta_hold')
     bd = subprocess.run(['ffmpeg', '-hide_banner', '-i', str(final), '-vf', 'blackdetect=d=0.03:pix_th=0.12', '-an', '-f', 'null', '-'],
                         capture_output=True, text=True).stderr
     rep['black_frames'] = re.findall(r'black_start:\S+ black_end:\S+', bd)
@@ -136,6 +142,7 @@ def main():
         (OUT / f'qa{tag}.json').write_text(json.dumps(rep, indent=1))
         print(json.dumps({k: v for k, v in rep.items() if k != 'data'}, indent=1))
         print('QA', 'PASSED' if rep['passed'] else f"FAILED: {rep['fails']}")
+    import shutil; shutil.rmtree(stills, ignore_errors=True)  # never mix in stills from an older timeline
     sh(['node', 'scripts/psx-top10.mjs', 'stills', str(stills), f'--scale={scale}', *map(str, key_frames())], cwd=REM)
     contact_sheet(stills, OUT / ('contact_sheet_preview.png' if a.preview else 'contact_sheet.png'))
 

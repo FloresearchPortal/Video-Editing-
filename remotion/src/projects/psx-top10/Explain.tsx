@@ -43,10 +43,9 @@ export const Explain: React.FC = () => {
       <Op ch="=" x={540} y={1272} style={life(f, c3, out + 2.5, 40)} />
       <Card green title="Market cap" sub="what the whole company is worth" w={920} h={210} style={{ left: 80, top: 1334, ...life(f, c4, out + 3) }} />
       {/* closer */}
-      <div style={{ position: 'absolute', left: 80, right: 80, top: 760, textAlign: 'center', ...life(f, closerIn, closerOut) }}>
-        <div style={{ fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 110, lineHeight: '120px', color: C.ink }}>now meet the</div>
-        <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 150, lineHeight: '160px', letterSpacing: -5, color: C.green }}>10 biggest</div>
-        <div style={{ fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 110, lineHeight: '120px', color: C.ink }}>on the PSX.</div>
+      <div style={{ position: 'absolute', left: 80, right: 80, top: 720, textAlign: 'center', ...life(f, closerIn, closerOut) }}>
+        <div style={{ fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 120, lineHeight: '130px', color: C.ink }}>Now meet the</div>
+        <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 210, lineHeight: '210px', letterSpacing: -7, color: C.green }}>top 10</div>
         <div style={{ margin: '34px auto 0', width: 150, height: 10, borderRadius: 5, background: C.lime, transformOrigin: 'center', transform: `scaleX(${ramp(f, closerIn + 6, closerIn + 16, E.inOut)})` }} />
       </div>
     </AbsoluteFill>

@@ -192,6 +192,7 @@ for w in hook['words']:
 # explainer card plucks
 for i, c in enumerate(ex['cards']):
     put(stab(chord_at(c)[1], 0.45, 0.25, 2000), b2s(c))
+put(stab(chord_at(ex['closer'])[1], 0.8, 0.4, 3000), b2s(ex['closer']))  # "Now meet the top 10"
 # rank changes: stab + low hit
 for i, rb in enumerate(rank_beats):
     big = rb >= top3_beat
