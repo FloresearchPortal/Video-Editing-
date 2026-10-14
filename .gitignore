@@ -66,3 +66,6 @@ media/library/sfx/generated/
 
 # Remotion agent skills — fetched by scripts/install-remotion-skills.sh (upstream has no licence file)
 .claude/skills/remotion-*/
+
+# PSX portal page snapshots fetched by videos/psx-top10/data/fetch_psx.py (regenerable)
+videos/*/data/raw/
