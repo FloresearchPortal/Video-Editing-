@@ -1,6 +1,6 @@
 # FLOSTOCKS · Top 10 companies by market capitalization in PSX
 
-9:16 Instagram Reel, 1080 × 1920, 30 fps, about 44.7 s, H.264 yuv420p (BT.709) + AAC 48 kHz,
+9:16 Instagram Reel, 1080 × 1920, 30 fps, about 43.8 s, H.264 yuv420p (BT.709) + AAC 48 kHz,
 −14 LUFS, true peak ≤ −1.5 dBTP, faststart. Built in Remotion, so every frame is deterministic code.
 The music is an original 128 BPM track synthesised by `music/make_music.py` (numpy, no samples),
 so there is nothing to license.

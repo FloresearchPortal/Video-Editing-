@@ -13,7 +13,7 @@ import { C, FONT, life } from '../../projects/psx-top10/theme';
 import { bf, S, END_FRAME, SOURCE_LINE } from '../../projects/psx-top10/timeline';
 
 // durationInSeconds must equal END_FRAME / 30 (cta.static_from beat + hold) — checked below.
-export const compositionConfig = { id: 'PsxTop10', durationInSeconds: 44.7333, fps: 30, width: 1080, height: 1920 };
+export const compositionConfig = { id: 'PsxTop10', durationInSeconds: 43.7667, fps: 30, width: 1080, height: 1920 };
 if (Math.round(compositionConfig.durationInSeconds * compositionConfig.fps) !== END_FRAME) {
   throw new Error(`PsxTop10: set durationInSeconds to ${(END_FRAME / 30).toFixed(4)} (timeline end frame ${END_FRAME})`);
 }

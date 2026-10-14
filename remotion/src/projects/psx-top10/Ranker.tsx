@@ -214,8 +214,8 @@ export const Ranker: React.FC = () => {
           <span style={{ display: 'inline-block', width: RANK.size * 0.64, textAlign: 'center' }}>1</span>
         </div>
       )}
-      {f >= fDrop && f < fContract + 6 && (
-        <div style={{ position: 'absolute', left: 80, right: 80, top: 1290, textAlign: 'center', fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 76, lineHeight: '84px', color: '#fff', ...life(f, bf(DROP.start + 0.5), fContract - 6) }}>
+      {f >= fDrop && f < fContract + 14 && (
+        <div style={{ position: 'absolute', left: 80, right: 80, top: 1290, textAlign: 'center', fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 76, lineHeight: '84px', color: '#fff', ...life(f, fDrop + 1, fContract + 1) }}>
           the largest listed company on the PSX.
         </div>
       )}

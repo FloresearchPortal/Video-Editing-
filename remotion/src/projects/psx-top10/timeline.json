@@ -9,8 +9,8 @@
   "explain": {"start": 8, "end": 22, "line": 9, "cards": [11, 12, 13, 14], "closer": 17.5},
   "countdown": {"start": 22, "end": 68, "beats_per_company": 5, "beats_rank2": 6, "top3_from_rank": 3},
   "build": {"start": 68, "end": 71, "and": 68, "number_one": 68.5, "silence": [70, 71]},
-  "drop": {"start": 71, "end": 79, "hold_beats": 4, "contract": 75, "value_lands": 77},
-  "ranking": {"start": 79, "end": 87},
-  "cta": {"start": 87, "static_from": 89, "hold_seconds": 3}
+  "drop": {"start": 71, "end": 77, "hold_beats": 2, "contract": 73, "value_lands": 75},
+  "ranking": {"start": 77, "end": 85},
+  "cta": {"start": 85, "static_from": 87, "hold_seconds": 3}
  }
 }
