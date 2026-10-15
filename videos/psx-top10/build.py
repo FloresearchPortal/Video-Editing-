@@ -30,14 +30,13 @@ def sh(cmd, **kw):
 
 
 def key_frames():
-    """A still on every transition: each section's entry, key cues, exit, and the CTA hold."""
-    beats = [0.0, 0.4, 0.9, 1.4, 1.85, 2.4, 3.2, 3.8, 4.3, 5.5, 7.4, 7.8]
-    for k in ('title', 'explain', 'sort', 'chart'):
-        sec = S[k]
-        beats += [sec['start'] - 0.3, sec['start'] + 0.4, sec['start'] + 1.5, (sec['start'] + sec['end']) / 2, sec['end'] - 0.6]
-    beats += [b + 0.4 for b in S['title']['lines']] + [b + 0.4 for b in S['explain']['terms']]
-    beats += [S['sort'][k] + 0.8 for k in ('scatter', 'rank', 'top', 'meet')] + [S['intro']['zoom'] + 0.3]
-    beats += [S['chart']['start'] + 3, S['cta']['start'] + 0.4, S['cta']['start'] + 1.2, S['cta']['static_from']]
+    """A still on every transition: each wipe, each section's entry and middle, the countdown and the hold."""
+    beats = [0.0, 0.3, 0.8, 1.6, 2.4, 3.2]
+    for w in TL['wipes']:
+        beats += [w + 0.3, w + 0.65, w + 1.2]
+    for k, sec in S.items():
+        beats += [sec['start'] + 0.5, (sec['start'] + sec.get('end', sec['start'] + 2)) / 2]
+    beats += [S['board']['first_row'] + i + 0.4 for i in range(0, 10, 2)] + [S['board']['total'] + 1, S['cta']['static_from']]
     return sorted({min(END - 1, max(0, round(bf(x)))) for x in beats} | {CTA_STATIC, END - 1})
 
 

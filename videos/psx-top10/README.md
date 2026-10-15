@@ -1,6 +1,6 @@
-# FLOSTOCKS · Top 10 companies by market capitalization in PSX
+# FLOSTOCKS EXPLAINS · EP 01 — Top 10 companies by market capitalization in PSX
 
-9:16 Instagram Reel, 1080 × 1920, 30 fps, 18.7 s (under 20 s), H.264 yuv420p (BT.709) + AAC 48 kHz,
+9:16 Instagram Reel, 1080 × 1920, 30 fps, 17.0 s, H.264 yuv420p (BT.709) + AAC 48 kHz,
 −14 LUFS, true peak ≤ −1.5 dBTP, faststart. Built in Remotion, so every frame is deterministic code.
 The music is an original 140 BPM track synthesised by `music/make_music.py` (numpy, no samples),
 so there is nothing to license.
@@ -10,10 +10,11 @@ so there is nothing to license.
 |---|---|
 | **Timing (one shared file)** | `remotion/src/projects/psx-top10/timeline.json`: sections in beats; the visuals *and* the music read it |
 | Data | `remotion/src/projects/psx-top10/data.json` (written by `data/fetch_psx.py`) |
-| Scenes | `remotion/src/projects/psx-top10/`, in order: `Intro` (PSX Live dashboard, click, green flood, TOP 10 slam, zoom-through iris), `Title` (kinetic whip-in lines), `Explain` (Market cap = Share price × Number of shares, one term per beat), `Sort` (20 real PSX companies as circles sized by market cap, sorted by size; the 10 biggest become the Top 10), `Wipe`, `Chart` (animated ranking with Rs … bn values and a summary card), `Cta`; plus `Backdrop`, `Eyebrow`, `Num`, `theme.ts` (colours, fonts, `pushStyle` screen transition) |
+| Series kit | `remotion/src/series/flostocks/` (see its README): BrandWipe, Punch, TickerStrip, EpisodeCard, Leaderboard, EndCard, Backdrop, theme. Fonts + FloStocks logos in `media/series/flostocks/` |
+| Episode scenes | `remotion/src/projects/psx-top10/`: `Hook` (WHO ARE / THE BIGGEST / ON THE PSX?), `Concept` (MARKET CAP = SHARE PRICE × TOTAL SHARES → BIGGER VALUE = HIGHER RANK); the episode card, countdown leaderboard and end card come from the kit |
 | Composition | `remotion/src/shots/psx-top10/PsxTop10.tsx` (id `PsxTop10`) |
 | Logos | `media/projects/psx-top10/logos/<TICKER>.png` + `remotion/src/projects/psx-top10/logos.json` |
-| Font (SIL OFL) | **Poppins only**: `media/projects/psx-top10/fonts/` (Black → Regular, plus italics). Digits use fixed-width cells (`Num.tsx`) because Poppins has no tabular figures; ▲ is drawn as SVG because Poppins has no such glyph |
+| Font (SIL OFL) | **Poppins only**: `media/series/flostocks/fonts/` (Black → Regular, plus italics). Digits use fixed-width cells (`Num.tsx`) because Poppins has no tabular figures; ▲ is drawn as SVG because Poppins has no such glyph |
 | Music | `music/make_music.py` → `output/music.wav` |
 | Build + QA | `build.py` → `output/psx-top10.mp4`, `output/qa.json`, `output/contact_sheet.png`, `output/stills/` |
 

@@ -166,19 +166,18 @@ def put_bed(sig, at, gain=1.0):
     e = min(len(mixL), at + s.shape[1])
     music_bed[0][at:e] += gain * s[0, :e - at]; music_bed[1][at:e] += gain * s[1, :e - at]
 
-intro, title, ex, srt, chart, cta = (S[k] for k in ('intro', 'title', 'explain', 'sort', 'chart', 'cta'))
+# each section declares its energy in the timeline: light | groove | full | soft
+SECS = sorted(S.values(), key=lambda v: v['start'])
+cta = S['cta']
 end_beat = END_S / BEAT
 riser_spans = [(c['beat'], c['to']) for c in TL['cues'] if c['type'] in ('riser', 'fill')]
 
 def energy(beat):
-    """'light' | 'groove' | 'full' | 'soft' per beat."""
-    if beat < intro['burst']: return 'groove'
-    if beat < intro['end']: return 'full'
-    if beat < title['end']: return 'groove'
-    if beat < ex['end']: return 'light'
-    if beat < srt['end']: return 'groove'
-    if beat < cta['start']: return 'full'
-    return 'soft'
+    cur = SECS[0]['energy']
+    for sec in SECS:
+        if beat >= sec['start']:
+            cur = sec['energy']
+    return cur
 
 def in_riser(beat):
     return any(a <= beat < b for a, b in riser_spans)
@@ -207,7 +206,8 @@ while beat < end_beat:
     beat += 1
 
 # pads: explainer (light) and CTA (soft), one per bar
-for b0, b1, lvl, cut in ((ex['start'], ex['end'], 0.8, 1100), (cta['start'], end_beat + 1, 3.2, 1000)):
+pad_spans = [(v['start'], v['end'], 0.8, 1100) for v in SECS if v['energy'] == 'light'] + [(cta['start'], end_beat + 1, 3.2, 1000)]
+for b0, b1, lvl, cut in pad_spans:
     bb = b0
     while bb < b1:
         nb = min(b1, (bb // 4 + 1) * 4)
