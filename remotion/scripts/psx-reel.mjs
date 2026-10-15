@@ -14,6 +14,7 @@ const gl = (rest.find((a) => a.startsWith('--gl=')) || '--gl=angle').split('=')[
 const frames = rest.filter((a) => !a.startsWith('--')).map(Number);
 const chromiumOptions = { gl };
 
+await import('./gen-font-data.mjs');
 const serveUrl = await bundle({ entryPoint: path.join(root, 'src', 'projects', 'psx-reel', 'index.ts'), publicDir: path.join(root, '..', 'media') });
 const composition = await selectComposition({ serveUrl, id, chromiumOptions });
 

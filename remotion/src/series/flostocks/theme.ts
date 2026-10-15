@@ -28,24 +28,15 @@ export const SHADOW = {
   lg: '0 8px 24px rgba(11,15,20,0.08), 0 40px 90px rgba(11,15,20,0.14)',
 };
 
-const FACES: [string, string, string][] = [
-  ['Poppins-Black.ttf', '900', 'normal'], ['Poppins-BlackItalic.ttf', '900', 'italic'],
-  ['Poppins-ExtraBold.ttf', '800', 'normal'], ['Poppins-Bold.ttf', '700', 'normal'],
-  ['Poppins-SemiBold.ttf', '600', 'normal'], ['Poppins-SemiBoldItalic.ttf', '600', 'italic'],
-  ['Poppins-Medium.ttf', '500', 'normal'], ['Poppins-MediumItalic.ttf', '500', 'italic'],
-  ['Poppins-Regular.ttf', '400', 'normal'], ['Poppins-Italic.ttf', '400', 'italic'],
-];
-// Load every face; a face that has not loaded within 12 s is retried once (heavy WebGL renders can
-// starve the local font fetch), and the render is never held longer than ~40 s by fonts.
-const loadFace = ([file, weight, style]: [string, string, string]) => {
-  const once = () => new FontFace(FONT, `url('${staticFile(`series/flostocks/fonts/${file}`)}')`, { weight, style }).load();
-  const timeout = (ms: number) => new Promise<never>((_, rej) => setTimeout(() => rej(new Error('font timeout')), ms));
-  return Promise.race([once(), timeout(12000)]).catch(() => Promise.race([once(), timeout(25000)]))
-    .then((f) => { (document.fonts as any).add(f); }).catch((e) => console.error('font', file, e));
-};
+// Fonts are embedded in the bundle (fontData.gen.ts, from scripts/gen-font-data.mjs) and loaded from
+// memory, so a render tab never waits on a network fetch.
+import { FONT_DATA } from './fontData.gen';
+const b64 = (s: string) => { const bin = atob(s); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.buffer; };
 if (typeof document !== 'undefined') {
-  const handle = delayRender('flostocks fonts', { timeoutInMilliseconds: 120000 });
-  Promise.all(FACES.map(loadFace)).then(() => continueRender(handle));
+  const handle = delayRender('flostocks fonts');
+  Promise.all(FONT_DATA.map(([weight, style, data]) => new FontFace(FONT, b64(data), { weight, style }).load()
+    .then((f) => { (document.fonts as any).add(f); }).catch((e) => console.error('font', weight, style, e))))
+    .then(() => continueRender(handle));
 }
 export const seriesAsset = (p: string) => staticFile(`series/flostocks/${p}`);
 

@@ -12,6 +12,7 @@ const [mode, out, ...rest] = process.argv.slice(2);
 const scale = Number((rest.find((a) => a.startsWith('--scale=')) || '--scale=1').split('=')[1]);
 const frames = rest.filter((a) => !a.startsWith('--')).map(Number);
 
+await import('./gen-font-data.mjs');
 const serveUrl = await bundle({ entryPoint: path.join(root, 'src', 'projects', 'psx-top10', 'index.ts'), publicDir: path.join(root, '..', 'media') });
 const composition = await selectComposition({ serveUrl, id: 'PsxTop10' });
 
