@@ -10,8 +10,8 @@ export const Cta: React.FC = () => {
   const f = useCurrentFrame();
   const f0 = bf(S.cta.start);
   if (f < f0) return null;
-  const it = (i: number): React.CSSProperties => ({ position: 'absolute', left: 0, right: 0, textAlign: 'center', ...life(f, f0 + 5 + i * 1.1, Infinity, 60) });
-  const big: React.CSSProperties = { fontFamily: FONT.display, fontWeight: 900, fontSize: 134, lineHeight: '128px', letterSpacing: -4 };
+  const it = (i: number): React.CSSProperties => ({ position: 'absolute', left: 0, right: 0, textAlign: 'center', ...life(f, f0 + 9 + i * 0.8, Infinity, 60, 10) });
+  const big: React.CSSProperties = { fontFamily: FONT.display, fontWeight: 900, fontSize: 118, lineHeight: '128px', letterSpacing: -2 };
   const settled = f >= f0 + 10;
   return (
     <AbsoluteFill>
@@ -23,9 +23,9 @@ export const Cta: React.FC = () => {
       <div style={{ ...it(3), ...big, top: 888, color: C.green }}>INVEST</div>
       <div style={{ ...it(4), ...big, top: 1016, color: C.green }}>SMARTER.</div>
       {settled && <div style={{ position: 'absolute', left: RULE.x, top: RULE.y, width: RULE.w, height: RULE.h, borderRadius: RULE.h / 2, background: C.lime }} />}
-      <div style={{ ...it(5), top: 1234, fontFamily: FONT.display, fontWeight: 900, fontSize: 54, lineHeight: '64px', letterSpacing: 5, color: C.ink }}>FOLLOW FLOSTOCKS</div>
+      <div style={{ ...it(5), top: 1234, fontFamily: FONT.display, fontWeight: 900, fontSize: 48, lineHeight: '64px', letterSpacing: 3, color: C.ink }}>FOLLOW FLOSTOCKS</div>
       <div style={{ ...it(6), top: 1312, fontFamily: FONT.display, fontWeight: 700, fontSize: 34, lineHeight: '44px', letterSpacing: 0.5, color: C.grey }}>By Floret Capitals</div>
-      <div style={{ ...it(7), top: 1574, fontFamily: FONT.display, fontWeight: 700, fontSize: 24, lineHeight: '32px', color: C.grey, opacity: 0.85 }}>Investments in securities are subject to market risks.</div>
+      <div style={{ ...it(7), top: 1574, fontFamily: FONT.display, fontWeight: 600, fontSize: 22, lineHeight: '32px', color: C.grey, opacity: 0.85 }}>Investments in securities are subject to market risks.</div>
     </AbsoluteFill>
   );
 };

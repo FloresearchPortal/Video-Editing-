@@ -10,10 +10,10 @@ so there is nothing to license.
 |---|---|
 | **Timing (one shared file)** | `remotion/src/projects/psx-top10/timeline.json`: sections in beats; the visuals *and* the music read it |
 | Data | `remotion/src/projects/psx-top10/data.json` (written by `data/fetch_psx.py`) |
-| Scenes | `remotion/src/projects/psx-top10/`, in order: `Intro` (SaaS show-reel open: PSX Live dashboard, click, green zoom-through, ticker burst, TOP 10 slam), `Title`, `Explain` (market-cap formula cards), `Wipe`, `Meet`, `Chart` (animated ranking), `Cta`; plus `Backdrop` and `theme.ts` (colours, fonts) |
+| Scenes | `remotion/src/projects/psx-top10/`, in order: `Intro` (SaaS show-reel open: PSX Live dashboard, click, green zoom-through, ticker grid, TOP 10 slam, morph into the hero card), `Title` (Gen Z investor style: stickers, stamped chip, marker scribble, notification toast), `Explain` (market-cap formula cards), `Wipe`, `Meet`, `Chart` (animated ranking), `Cta`; plus `Backdrop` and `theme.ts` (colours, fonts) |
 | Composition | `remotion/src/shots/psx-top10/PsxTop10.tsx` (id `PsxTop10`) |
 | Logos | `media/projects/psx-top10/logos/<TICKER>.png` + `remotion/src/projects/psx-top10/logos.json` |
-| Fonts (SIL OFL) | `media/projects/psx-top10/fonts/`: Inter Display Black/ExtraBold/Bold, Instrument Serif Italic, JetBrains Mono |
+| Font (SIL OFL) | **Poppins only**: `media/projects/psx-top10/fonts/` (Black → Regular, plus italics). Digits use fixed-width cells (`Num.tsx`) because Poppins has no tabular figures; ▲ is drawn as SVG because Poppins has no such glyph |
 | Music | `music/make_music.py` → `output/music.wav` |
 | Build + QA | `build.py` → `output/psx-top10.mp4`, `output/qa.json`, `output/contact_sheet.png`, `output/stills/` |
 

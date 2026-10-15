@@ -13,15 +13,22 @@ export const C = {
   grid: '#F1F3F0',
 };
 
-export const FONT = { display: 'FS Display', serif: 'FS Serif', mono: 'FS Mono' };
+// Poppins only (SIL OFL, media/projects/psx-top10/fonts). The three roles are all Poppins:
+// display = Black/ExtraBold, accent = Medium Italic, label = SemiBold caps.
+export const FONT = { display: 'Poppins', serif: 'Poppins', mono: 'Poppins' };
+export const ACCENT = { fontFamily: 'Poppins', fontStyle: 'italic' as const, fontWeight: 500 };
 
-// Fonts ship with the project (SIL OFL, media/projects/psx-top10/fonts) so renders are deterministic.
 const FACES: [string, string, string, string][] = [
-  [FONT.display, 'InterDisplay-Black.ttf', '900', 'normal'],
-  [FONT.display, 'InterDisplay-ExtraBold.ttf', '800', 'normal'],
-  [FONT.display, 'InterDisplay-Bold.ttf', '700', 'normal'],
-  [FONT.serif, 'InstrumentSerif-Italic.ttf', '400', 'italic'],
-  [FONT.mono, 'JetBrainsMono.ttf', '100 800', 'normal'],
+  ['Poppins', 'Poppins-Black.ttf', '900', 'normal'],
+  ['Poppins', 'Poppins-ExtraBold.ttf', '800', 'normal'],
+  ['Poppins', 'Poppins-Bold.ttf', '700', 'normal'],
+  ['Poppins', 'Poppins-SemiBold.ttf', '600', 'normal'],
+  ['Poppins', 'Poppins-Medium.ttf', '500', 'normal'],
+  ['Poppins', 'Poppins-Regular.ttf', '400', 'normal'],
+  ['Poppins', 'Poppins-Italic.ttf', '400', 'italic'],
+  ['Poppins', 'Poppins-MediumItalic.ttf', '500', 'italic'],
+  ['Poppins', 'Poppins-SemiBoldItalic.ttf', '600', 'italic'],
+  ['Poppins', 'Poppins-BlackItalic.ttf', '900', 'italic'],
 ];
 if (typeof document !== 'undefined') {
   const handle = delayRender('psx-top10 fonts');
@@ -60,8 +67,8 @@ export const liftOut = (f: number, start: number, dist = 48, dur = 9) => {
   return { opacity: 1 - t, y: -t * dist };
 };
 // combined enter/leave: visible between enter and leave (leave = Infinity for never)
-export const life = (f: number, enter: number, leave = Infinity, dist = 56) => {
-  const a = riseIn(f, enter, dist);
+export const life = (f: number, enter: number, leave = Infinity, dist = 56, dur = 12) => {
+  const a = riseIn(f, enter, dist, dur);
   const b = leave === Infinity ? { opacity: 1, y: 0 } : liftOut(f, leave);
   return { opacity: a.opacity * b.opacity, transform: `translateY(${a.y + b.y}px)` };
 };
