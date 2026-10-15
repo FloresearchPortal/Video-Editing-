@@ -1,6 +1,6 @@
 # FLOSTOCKS · Top 10 companies by market capitalization in PSX
 
-9:16 Instagram Reel, 1080 × 1920, 30 fps, 19.6 s (under 20 s), H.264 yuv420p (BT.709) + AAC 48 kHz,
+9:16 Instagram Reel, 1080 × 1920, 30 fps, 19.5 s (under 20 s), H.264 yuv420p (BT.709) + AAC 48 kHz,
 −14 LUFS, true peak ≤ −1.5 dBTP, faststart. Built in Remotion, so every frame is deterministic code.
 The music is an original 140 BPM track synthesised by `music/make_music.py` (numpy, no samples),
 so there is nothing to license.
@@ -10,7 +10,7 @@ so there is nothing to license.
 |---|---|
 | **Timing (one shared file)** | `remotion/src/projects/psx-top10/timeline.json`: sections in beats; the visuals *and* the music read it |
 | Data | `remotion/src/projects/psx-top10/data.json` (written by `data/fetch_psx.py`) |
-| Scenes | `remotion/src/projects/psx-top10/`, in order: `Intro` (SaaS show-reel open: PSX Live dashboard, click, green zoom-through, ticker grid, TOP 10 slam, morph into the hero card), `Title` (Gen Z investor style: stickers, stamped chip, marker scribble, notification toast), `Explain` (market-cap formula cards), `Wipe`, `Meet`, `Chart` (animated ranking), `Cta`; plus `Backdrop` and `theme.ts` (colours, fonts) |
+| Scenes | `remotion/src/projects/psx-top10/`, in order: `Intro` (SaaS show-reel open: PSX Live dashboard, click, green zoom-through, ticker grid, TOP 10 slam, morph into the hero card), `Title` (flostocks.com hero style: eyebrow pill, ExtraBold headline with the green-gradient phrase, grey subtitle, source line), `Eyebrow` (site section label), `Explain` (market-cap formula cards), `Wipe`, `Meet`, `Chart` (animated ranking), `Cta`; plus `Backdrop` and `theme.ts` (colours, fonts) |
 | Composition | `remotion/src/shots/psx-top10/PsxTop10.tsx` (id `PsxTop10`) |
 | Logos | `media/projects/psx-top10/logos/<TICKER>.png` + `remotion/src/projects/psx-top10/logos.json` |
 | Font (SIL OFL) | **Poppins only**: `media/projects/psx-top10/fonts/` (Black → Regular, plus italics). Digits use fixed-width cells (`Num.tsx`) because Poppins has no tabular figures; ▲ is drawn as SVG because Poppins has no such glyph |
@@ -27,7 +27,7 @@ From the repo root (one-time: `cd remotion && npm ci`, then `python3 -m venv .ve
 fully offline), muxes and re-encodes for delivery, then runs QA:
 - format;
 - duration ≤ 20 s;
-- the CTA's final hold (`cta.hold_seconds`, 2.5 s) pixel-still;
+- the CTA's final hold (`cta.hold_seconds`, 1 s) pixel-still;
 - loudness and true peak, measured on the delivered AAC;
 - no black frames.
 

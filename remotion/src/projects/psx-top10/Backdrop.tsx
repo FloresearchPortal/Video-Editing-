@@ -47,7 +47,9 @@ export const Backdrop: React.FC<{ opacity?: number }> = ({ opacity = 1 }) => {
   const y = (v: number) => Y1 - v * (Y1 - Y0);
   const ma = MA.map((v, i) => `${i ? 'L' : 'M'}${(i * STEP + BW / 2).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   return (
-    <AbsoluteFill style={{ backgroundColor: C.paper }}>
+    <AbsoluteFill style={{ background: 'linear-gradient(180deg, #FFFFFF, #F7FBF8)' }}>
+      {/* the site hero's soft green light */}
+      <AbsoluteFill style={{ background: 'radial-gradient(900px 620px at 82% 6%, rgba(44,156,0,0.10), transparent 62%), radial-gradient(760px 640px at 0% 94%, rgba(44,156,0,0.05), transparent 62%)' }} />
       <svg width={1080} height={1920} style={{ position: 'absolute', opacity }}>
         <defs>
           <pattern id="grid" width={90} height={90} patternUnits="userSpaceOnUse">

@@ -1,4 +1,5 @@
 // FLOSTOCKS PSX Top 10 — look: colours, type, shared geometry, easing helpers.
+import type React from 'react';
 import { continueRender, delayRender, Easing, interpolate, staticFile } from 'remotion';
 
 export const C = {
@@ -7,7 +8,10 @@ export const C = {
   green: '#2C9C00', // FLOSTOCKS logo green
   lime: '#3ACC00', // logo lime, accents only
   deep: '#1E6E00', // darker shade of the logo green (hook bands only)
-  grey: '#7E857D',
+  grey: '#6B7280', // site grey-50
+  grey70: '#3C434D', // site grey-70
+  line: '#E7EBF0', // site grey-line
+  mist: '#F5F7FA',
   ghost: '#C9CEC7',
   track: '#EEF1ED',
   grid: '#F1F3F0',
@@ -17,6 +21,20 @@ export const C = {
 // display = Black/ExtraBold, accent = Medium Italic, label = SemiBold caps.
 export const FONT = { display: 'Poppins', serif: 'Poppins', mono: 'Poppins' };
 export const ACCENT = { fontFamily: 'Poppins', fontStyle: 'italic' as const, fontWeight: 500 };
+
+// flostocks.com look: ExtraBold headlines with tight tracking, a green gradient on the key phrase,
+// soft layered shadows, 22 px cards with hairline borders, uppercase eyebrows with a short green rule.
+export const H = { fontFamily: 'Poppins', fontWeight: 800, letterSpacing: '-0.035em' };
+export const GRAD_TEXT = (t = 1): React.CSSProperties => ({
+  backgroundImage: `linear-gradient(90deg, #1E6E00 0%, #2C9C00 45%, #3ACC00 100%)`,
+  backgroundSize: '200% 100%', backgroundPosition: `${(1 - t) * 100}% 0`,
+  WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent',
+});
+export const SHADOW = {
+  sm: '0 1px 2px rgba(11,15,20,0.04), 0 8px 24px rgba(11,15,20,0.05)',
+  md: '0 2px 6px rgba(11,15,20,0.05), 0 24px 60px rgba(11,15,20,0.09)',
+  lg: '0 8px 24px rgba(11,15,20,0.08), 0 40px 90px rgba(11,15,20,0.14)',
+};
 
 const FACES: [string, string, string, string][] = [
   ['Poppins', 'Poppins-Black.ttf', '900', 'normal'],

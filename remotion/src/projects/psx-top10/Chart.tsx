@@ -17,16 +17,16 @@ const barColor = (rank: number) => (rank === 1 ? C.green : rank <= 3 ? C.lime : 
 export const Chart: React.FC = () => {
   const f = useCurrentFrame();
   const f0 = bf(S.chart.start), f1 = bf(S.chart.end);
-  if (f < f0 - 2 || f > f1 + 22) return null;
+  if (f < f0 - 6 || f > f1 + 14) return null;
   const max = TOP[0].mcap_bn;
   // row text leaves first, then the bars fold, then the CTA text arrives: nothing crosses anything
-  const fold = (i: number) => ramp(f, f1 - 4 + (9 - i) * 0.35, f1 - 4 + (9 - i) * 0.35 + 9, E.inOut);
+  const fold = (i: number) => ramp(f, f1 - 9 + (9 - i) * 0.3, f1 - 9 + (9 - i) * 0.3 + 8, E.inOut);
   const rowIn = (i: number) => f0 + 4 + i * 1.6;
   const totalIn = rowIn(10) + 2;
   const total = DATA.total_bn * ramp(f, totalIn, totalIn + 18, E.out);
   return (
     <AbsoluteFill>
-      <div style={{ position: 'absolute', left: 72, top: 246, ...life(f, f0 - 5, f1 - 12) }}>
+      <div style={{ position: 'absolute', left: 72, top: 246, ...life(f, f0 - 5, f1 - 20) }}>
         <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 46, lineHeight: '58px', letterSpacing: -0.5, color: C.ink }}>
           PSX <span style={{ color: C.green }}>·</span> TOP 10 BY MARKET CAP
         </div>
@@ -35,7 +35,7 @@ export const Chart: React.FC = () => {
       {TOP.map((co, i) => {
         const top = ROW0 + i * PITCH;
         const enter = rowIn(i);
-        const leave = f1 - 12 + (9 - i) * 0.3;
+        const leave = f1 - 20 + (9 - i) * 0.3;
         const w = (co.mcap_bn / max) * BMAX;
         const g = spring({ frame: f - enter - 3, fps: FPS, config: { damping: 15, stiffness: 120, mass: 0.7 } });
         let r = { x: BX, y: top + BAR_DY, w: w * g, h: BAR_H };
@@ -58,11 +58,11 @@ export const Chart: React.FC = () => {
           </React.Fragment>
         );
       })}
-      <div style={{ position: 'absolute', left: 72, right: 140, top: 1552, display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 70, padding: '0 28px', borderRadius: 22, background: C.ink, ...life(f, totalIn, f1 - 12, 60) }}>
+      <div style={{ position: 'absolute', left: 72, right: 140, top: 1552, display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 70, padding: '0 28px', borderRadius: 22, background: C.ink, ...life(f, totalIn, f1 - 20, 60) }}>
         <span style={{ fontFamily: FONT.mono, fontWeight: 600, fontSize: 22, letterSpacing: 3, color: 'rgba(255,255,255,0.75)' }}>TOP-10 TOTAL</span>
         <span style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: 36, lineHeight: '50px', color: '#fff' }}>Rs <span style={{ color: C.lime }}><Num v={(total / 1000).toFixed(2)} cell={0.66} /></span> trillion</span>
       </div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 1648, textAlign: 'center', fontFamily: FONT.mono, fontWeight: 500, fontSize: 22, lineHeight: '30px', color: C.grey, ...life(f, f0 + 6, f1 - 12, 20) }}>{SOURCE_LINE}</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 1648, textAlign: 'center', fontFamily: FONT.mono, fontWeight: 500, fontSize: 22, lineHeight: '30px', color: C.grey, ...life(f, f0 + 6, f1 - 20, 20) }}>{SOURCE_LINE}</div>
     </AbsoluteFill>
   );
 };

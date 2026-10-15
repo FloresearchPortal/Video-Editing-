@@ -1,4 +1,4 @@
-// FLOSTOCKS · "Top 10 companies by market capitalization in PSX" — 9:16 reel, under 20 s, 140 BPM.
+// FLOSTOCKS · "Top 10 companies by market capitalization in PSX" — 9:16 reel, under 20 s, 140 BPM, flostocks.com look.
 // Source + README: videos/psx-top10/. Timing: src/projects/psx-top10/timeline.json (shared with the
 // music generator). Data: src/projects/psx-top10/data.json (videos/psx-top10/data/fetch_psx.py).
 import React from 'react';
@@ -15,7 +15,7 @@ import { C } from '../../projects/psx-top10/theme';
 import { END_FRAME, S } from '../../projects/psx-top10/timeline';
 
 // durationInSeconds must equal END_FRAME / 30 (cta.static_from beat + hold) — checked below.
-export const compositionConfig = { id: 'PsxTop10', durationInSeconds: 19.6333, fps: 30, width: 1080, height: 1920 };
+export const compositionConfig = { id: 'PsxTop10', durationInSeconds: 19.5333, fps: 30, width: 1080, height: 1920 };
 if (Math.round(compositionConfig.durationInSeconds * compositionConfig.fps) !== END_FRAME) {
   throw new Error(`PsxTop10: set durationInSeconds to ${(END_FRAME / 30).toFixed(4)} (timeline end frame ${END_FRAME})`);
 }

@@ -13,7 +13,7 @@ import { Num, Up } from './Num';
 
 const W = 1080, H = 1920;
 const I = S.intro;
-export const CARD = { x: 280, y: 250, w: 520, h: 380, r: 56 }; // title hero card (screen coords)
+export const CARD = { x: 280, y: 250, w: 520, h: 380, r: 44 }; // title hero card (screen coords)
 const sp = (f: number, at: number, cfg = { damping: 14, stiffness: 150, mass: 0.7 }) => spring({ frame: f - at, fps: FPS, config: cfg });
 
 // decorative chart path for the window (no labels / numbers)
@@ -148,10 +148,12 @@ export const Intro: React.FC = () => {
         </div>
       )}
       {f >= click + 1 && (
-        <div style={{ position: 'absolute', left: rect.x, top: rect.y, width: rect.w, height: rect.h, borderRadius: rect.r, overflow: 'hidden', opacity: out.opacity, transform: `translateY(${out.y}px)`, boxShadow: m > 0 ? `0 30px 70px rgba(44,156,0,${0.3 * m})` : 'none' }}>
+        <div style={{ position: 'absolute', left: rect.x, top: rect.y, width: rect.w, height: rect.h, borderRadius: rect.r, overflow: 'hidden', opacity: out.opacity, transform: `translateY(${out.y}px)`, boxShadow: m > 0 ? `0 8px 24px rgba(11,15,20,${0.08 * m}), 0 40px 90px rgba(44,156,0,${0.25 * m})` : 'none' }}>
           <div style={{ position: 'absolute', left: -rect.x, top: -rect.y, width: W, height: H }}>
             {f < burst + 2 ? <div style={{ position: 'absolute', left: BTN.x - R, top: BTN.y - R, width: 2 * R, height: 2 * R, borderRadius: R, background: C.green }} />
               : <div style={{ position: 'absolute', inset: 0, background: C.green }} />}
+            {/* as it becomes the hero card it takes the site's deep-to-bright green gradient */}
+            {m > 0 && <div style={{ position: 'absolute', left: rect.x, top: rect.y, width: rect.w, height: rect.h, background: `linear-gradient(135deg, ${C.deep}, ${C.green} 55%, #3ACC00)`, opacity: m }} />}
             {f >= burst && f < slam + 24 && [0, 1, 2].map((i) => {
               const t = ramp(f, burst + i * 5, burst + i * 5 + 24, E.out);
               const r = mix(60, 900, t);

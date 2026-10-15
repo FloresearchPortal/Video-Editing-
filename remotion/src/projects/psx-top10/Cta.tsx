@@ -10,9 +10,9 @@ export const Cta: React.FC = () => {
   const f = useCurrentFrame();
   const f0 = bf(S.cta.start);
   if (f < f0) return null;
-  const it = (i: number): React.CSSProperties => ({ position: 'absolute', left: 0, right: 0, textAlign: 'center', ...life(f, f0 + 9 + i * 0.8, Infinity, 60, 10) });
+  const it = (i: number): React.CSSProperties => ({ position: 'absolute', left: 0, right: 0, textAlign: 'center', ...life(f, f0 + 1 + i * 0.6, Infinity, 50, 8) });
   const big: React.CSSProperties = { fontFamily: FONT.display, fontWeight: 900, fontSize: 118, lineHeight: '128px', letterSpacing: -2 };
-  const settled = f >= f0 + 10;
+  const settled = f >= f0;
   return (
     <AbsoluteFill>
       <div style={{ ...it(0), top: 380, display: 'flex', justifyContent: 'center' }}>
