@@ -5,7 +5,7 @@ import React from 'react';
 import { AbsoluteFill } from 'remotion';
 import { Backdrop } from '../../projects/psx-top10/Backdrop';
 import { Intro } from '../../projects/psx-top10/Intro';
-import { Title } from '../../projects/psx-top10/Title';
+import { Title, TitleAxis } from '../../projects/psx-top10/Title';
 import { Explain } from '../../projects/psx-top10/Explain';
 import { Meet } from '../../projects/psx-top10/Meet';
 import { Chart } from '../../projects/psx-top10/Chart';
@@ -23,13 +23,14 @@ if (Math.round(compositionConfig.durationInSeconds * compositionConfig.fps) !== 
 const PsxTop10: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: C.paper }}>
     <Backdrop />
-    <Title />
+    <TitleAxis />
     <Explain />
     <Meet />
     <Chart />
     <Cta />
     <Wipe span={S.meet.wipe} />
     <Intro />
+    <Title />
   </AbsoluteFill>
 );
 export default PsxTop10;

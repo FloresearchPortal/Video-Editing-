@@ -3,13 +3,13 @@
 // On the CTA beat every bar folds into the CTA's short lime rule.
 import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame } from 'remotion';
-import { C, E, FONT, fmtBn, life, mix, mixHex, ramp } from './theme';
+import { C, E, FONT, SHADOW, fmtBn, life, mix, mixHex, ramp } from './theme';
 import { bf, FPS, S, TOP, DATA, HAS_LOGOS, SOURCE_LINE } from './timeline';
 import { Logo } from './Logo';
 import { Num } from './Num';
 
 export const RULE = { x: 540 - 70, y: 1182, w: 140, h: 10 }; // the CTA rule the bars fold into
-const ROW0 = 432, PITCH = 110, BAR_DY = 74, BAR_H = 14;
+const ROW0 = 420, PITCH = 104, BAR_DY = 72, BAR_H = 14; // rows 420-1444
 const TX = HAS_LOGOS ? 280 : 168; // ticker / bar start
 const BX = TX, BMAX = 940 - BX;
 const barColor = (rank: number) => (rank === 1 ? C.green : rank <= 3 ? C.lime : C.ink);
@@ -30,7 +30,7 @@ export const Chart: React.FC = () => {
         <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 46, lineHeight: '58px', letterSpacing: -0.5, color: C.ink }}>
           PSX <span style={{ color: C.green }}>·</span> TOP 10 BY MARKET CAP
         </div>
-        <div style={{ marginTop: 10, fontFamily: FONT.mono, fontWeight: 600, fontSize: 26, lineHeight: '34px', letterSpacing: 1, color: C.grey }}>Rs bn · close {DATA.close_date}</div>
+        <div style={{ marginTop: 10, fontFamily: FONT.mono, fontWeight: 600, fontSize: 26, lineHeight: '34px', letterSpacing: 1, color: C.grey }}>Market capitalization · close {DATA.close_date}</div>
       </div>
       {TOP.map((co, i) => {
         const top = ROW0 + i * PITCH;
@@ -53,16 +53,33 @@ export const Chart: React.FC = () => {
               {HAS_LOGOS && <div style={{ position: 'absolute', left: 140, top: 6 }}><Logo ticker={co.ticker} maxW={118} maxH={58} /></div>}
               <div style={{ position: 'absolute', left: TX, top: 0, fontFamily: FONT.display, fontWeight: 900, fontSize: 52, lineHeight: '68px', color: C.ink }}>{co.ticker}</div>
               {one && <span style={{ position: 'absolute', left: TX + 186, top: 16, padding: '4px 16px', borderRadius: 20, background: C.green, fontFamily: FONT.mono, fontWeight: 700, fontSize: 20, lineHeight: '30px', letterSpacing: 2, color: '#fff', ...life(f, enter + 10, leave, 20) }}>LARGEST</span>}
-              <div style={{ position: 'absolute', right: 1080 - 940, top: 10, fontFamily: FONT.display, fontWeight: 800, fontSize: 42, lineHeight: '60px', color: one ? C.green : C.ink }}><Num v={fmtBn(count)} cell={0.66} /></div>
+              <div style={{ position: 'absolute', right: 1080 - 940, top: 10, fontFamily: FONT.display, fontWeight: 800, fontSize: 40, lineHeight: '60px', color: one ? C.green : C.ink, whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 26, fontWeight: 600, color: C.grey }}>Rs </span><Num v={fmtBn(count)} cell={0.66} /><span style={{ fontSize: 26, fontWeight: 600, color: C.grey }}> bn</span>
+              </div>
             </div>
           </React.Fragment>
         );
       })}
-      <div style={{ position: 'absolute', left: 72, right: 140, top: 1552, display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 70, padding: '0 28px', borderRadius: 22, background: C.ink, ...life(f, totalIn, f1 - 20, 60) }}>
-        <span style={{ fontFamily: FONT.mono, fontWeight: 600, fontSize: 22, letterSpacing: 3, color: 'rgba(255,255,255,0.75)' }}>TOP-10 TOTAL</span>
-        <span style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: 36, lineHeight: '50px', color: '#fff' }}>Rs <span style={{ color: C.lime }}><Num v={(total / 1000).toFixed(2)} cell={0.66} /></span> trillion</span>
+      {/* summary card: combined value + each company's share of it */}
+      <div style={{ position: 'absolute', left: 72, top: 1470, width: 936, height: 166, boxSizing: 'border-box', borderRadius: 22, background: '#fff', border: `2px solid ${C.line}`, boxShadow: SHADOW.md, padding: '20px 28px 0', ...life(f, totalIn, f1 - 20, 60) }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+          <span style={{ fontFamily: FONT.mono, fontWeight: 600, fontSize: 21, lineHeight: '30px', letterSpacing: '0.12em', color: C.grey }}>COMBINED VALUE · TOP 10</span>
+          <span style={{ fontFamily: FONT.display, fontWeight: 800, fontSize: 46, lineHeight: '56px', letterSpacing: '-0.02em', color: C.ink, whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 28, fontWeight: 600, color: C.grey }}>Rs </span><Num v={(total / 1000).toFixed(2)} cell={0.66} /><span style={{ fontSize: 28, fontWeight: 600, color: C.grey }}> trillion</span>
+          </span>
+        </div>
+        <div style={{ position: 'relative', marginTop: 16, height: 18, borderRadius: 9, overflow: 'hidden', background: C.track, display: 'flex', gap: 3 }}>
+          {TOP.map((c, i) => {
+            const g = ramp(f, totalIn + 4 + i * 1.2, totalIn + 12 + i * 1.2, E.out);
+            return <div key={c.ticker} style={{ width: `${c.share_pct * g}%`, height: '100%', background: [C.green, '#3ACC00', '#7ED957', C.ink, '#2A3038', '#3C434D', '#565E69', '#6B7280', '#8A929D', '#A9B0BA'][i], flexShrink: 0 }} />;
+          })}
+        </div>
+        <div style={{ marginTop: 10, display: 'flex', justifyContent: 'space-between', fontFamily: FONT.display, fontWeight: 600, fontSize: 19, lineHeight: '24px', color: C.grey, opacity: ramp(f, totalIn + 14, totalIn + 22) }}>
+          <span><span style={{ color: C.green }}>{TOP[0].ticker} {TOP[0].share_pct.toFixed(1)}%</span> of the top-10 total</span>
+          <span>{TOP[9].ticker} {TOP[9].share_pct.toFixed(1)}%</span>
+        </div>
       </div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 1648, textAlign: 'center', fontFamily: FONT.mono, fontWeight: 500, fontSize: 22, lineHeight: '30px', color: C.grey, ...life(f, f0 + 6, f1 - 20, 20) }}>{SOURCE_LINE}</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 1654, textAlign: 'center', fontFamily: FONT.mono, fontWeight: 500, fontSize: 22, lineHeight: '30px', color: C.grey, ...life(f, f0 + 6, f1 - 20, 20) }}>{SOURCE_LINE}</div>
     </AbsoluteFill>
   );
 };

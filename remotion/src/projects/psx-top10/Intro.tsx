@@ -7,13 +7,13 @@
 //        (it stays on screen through the title and lifts out with it)
 import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame } from 'remotion';
-import { C, E, FONT, asset, fmtBn, liftOut, mix, ramp } from './theme';
+import { C, E, FONT, asset, fmtBn, mix, ramp } from './theme';
 import { bf, FPB, FPS, S, TOP } from './timeline';
 import { Num, Up } from './Num';
 
 const W = 1080, H = 1920;
 const I = S.intro;
-export const CARD = { x: 280, y: 250, w: 520, h: 380, r: 44 }; // title hero card (screen coords)
+export const CARD = { x: 80, y: 560, w: 600, h: 200, r: 26 }; // = Title BARS[0]: the green frame becomes the first bar
 const sp = (f: number, at: number, cfg = { damping: 14, stiffness: 150, mass: 0.7 }) => spring({ frame: f - at, fps: FPS, config: cfg });
 
 // decorative chart path for the window (no labels / numbers)
@@ -129,15 +129,18 @@ export const Intro: React.FC = () => {
   const R = flood * 2300;
   const m = ramp(f, morph0, morph1, E.inOut); // green frame -> title card
   const rect = { x: mix(0, CARD.x, m), y: mix(0, CARD.y, m), w: mix(W, CARD.w, m), h: mix(H, CARD.h, m), r: mix(0, CARD.r, m) };
-  const out = liftOut(f, bf(S.title.exit), 80, 9);
   const beat = (f - slam) / FPB, ph = beat >= 0 ? beat % 1 : 0;
   const pulse = beat >= 1 && beat < I.morph - I.slam ? Math.exp(-(ph * FPB) / 3.5) : 0;
   const slamS = sp(f, slam, { damping: 12, stiffness: 170, mass: 0.65 });
   const pull = ramp(f, pull0, slam, E.in);
   const fx = 1 - ramp(f, morph0, morph0 + 6); // tapes / label / rings fade as the card forms
   // TOP/10 block: centre (540, 955) at full size -> card centre at 0.4x
-  const blockS = mix(1, 0.4, m) * mix(1.3, 1, slamS) * (1 + 0.03 * pulse * (1 - m));
+  const blockS = mix(1, 0.3, m) * mix(1.3, 1, slamS) * (1 + 0.03 * pulse * (1 - m));
   const blockDy = mix(0, CARD.y + CARD.h / 2 - 955, m);
+  const blockDx = mix(0, CARD.x + CARD.w / 2 - 540, m);
+  const blockOp = 1 - ramp(f, morph0 + 4, morph0 + 10);
+  const label = ramp(f, morph1 - 4, morph1 + 4, E.out);
+  const barOut = ramp(f, bf(S.title.exit), bf(S.title.exit) + 9, E.inOut); // bar 1 collapses to the axis
 
   return (
     <AbsoluteFill>
@@ -148,7 +151,7 @@ export const Intro: React.FC = () => {
         </div>
       )}
       {f >= click + 1 && (
-        <div style={{ position: 'absolute', left: rect.x, top: rect.y, width: rect.w, height: rect.h, borderRadius: rect.r, overflow: 'hidden', opacity: out.opacity, transform: `translateY(${out.y}px)`, boxShadow: m > 0 ? `0 8px 24px rgba(11,15,20,${0.08 * m}), 0 40px 90px rgba(44,156,0,${0.25 * m})` : 'none' }}>
+        <div style={{ position: 'absolute', left: rect.x, top: rect.y, width: rect.w, height: rect.h, borderRadius: rect.r, overflow: 'hidden', transformOrigin: 'left center', transform: `scaleX(${1 - barOut})`, boxShadow: m > 0 ? `0 8px 24px rgba(11,15,20,${0.08 * m}), 0 40px 90px rgba(44,156,0,${0.25 * m})` : 'none' }}>
           <div style={{ position: 'absolute', left: -rect.x, top: -rect.y, width: W, height: H }}>
             {f < burst + 2 ? <div style={{ position: 'absolute', left: BTN.x - R, top: BTN.y - R, width: 2 * R, height: 2 * R, borderRadius: R, background: C.green }} />
               : <div style={{ position: 'absolute', inset: 0, background: C.green }} />}
@@ -182,7 +185,7 @@ export const Intro: React.FC = () => {
                 ))}
                 {(() => { const t = ramp(f, slam, slam + 20, E.out); const r = mix(200, 1200, t); return <div style={{ position: 'absolute', left: 540 - r, top: 960 - r, width: 2 * r, height: 2 * r, borderRadius: r, border: `${mix(26, 2, t)}px solid rgba(255,255,255,0.5)`, opacity: 1 - t }} />; })()}
                 <div style={{ position: 'absolute', left: 0, right: 0, top: 440, textAlign: 'center', fontFamily: FONT.mono, fontWeight: 600, fontSize: 30, lineHeight: '40px', letterSpacing: 9, color: 'rgba(255,255,255,0.88)', opacity: ramp(f, slam + 4, slam + 12) * fx, transform: `translateY(${(1 - ramp(f, slam + 4, slam + 14)) * 30}px)` }}>PAKISTAN STOCK EXCHANGE</div>
-                <div style={{ position: 'absolute', left: 0, right: 0, top: 540, height: 830, textAlign: 'center', color: '#fff', fontFamily: FONT.display, fontWeight: 900, transformOrigin: '540px 415px', transform: `translateY(${blockDy}px) scale(${blockS})` }}>
+                <div style={{ position: 'absolute', left: 0, right: 0, top: 540, height: 830, textAlign: 'center', color: '#fff', fontFamily: FONT.display, fontWeight: 900, transformOrigin: '540px 415px', opacity: blockOp, transform: `translate(${blockDx}px, ${blockDy}px) scale(${blockS})` }}>
                   <div style={{ fontSize: 300, lineHeight: '320px', height: 320, overflow: 'hidden', letterSpacing: -6 }}>
                     <div style={{ transform: `translateY(${(1 - ramp(f, slam - 1, slam + 8, E.out)) * 320}px)` }}>TOP</div>
                   </div>
@@ -193,6 +196,10 @@ export const Intro: React.FC = () => {
               </>
             )}
           </div>
+          {/* bar 1 label */}
+          {label > 0 && <div style={{ position: 'absolute', left: 48, top: 0, height: '100%', display: 'flex', alignItems: 'center', opacity: label * (1 - barOut), transform: `translateY(${(1 - label) * 30}px)` }}>
+            <span style={{ fontFamily: FONT.display, fontWeight: 800, letterSpacing: '-0.035em', fontSize: 150, lineHeight: '170px', color: '#fff' }}>Top 10</span>
+          </div>}
         </div>
       )}
     </AbsoluteFill>

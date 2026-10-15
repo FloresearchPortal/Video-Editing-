@@ -35,7 +35,8 @@ def key_frames():
     for k in ('title', 'explain', 'meet', 'chart'):
         sec = S[k]
         beats += [sec['start'] - 0.3, sec['start'] + 0.4, sec['start'] + 1.5, (sec['start'] + sec['end']) / 2, sec['end'] - 0.6]
-    beats += [S['title']['lines'][-1] + 0.5] + [c + 0.4 for c in S['explain']['cards']] + [S['explain']['line'] + 1]
+    beats += [b + 0.5 for b in S['title']['bars']] + [S['title']['line'] + 0.8]
+    beats += [S['explain'][k] + 0.6 for k in ('tile', 'zoom', 'merge', 'sub')] + [S['explain']['zoom'] + 1.2]
     beats += [S['chart']['start'] + 3, S['cta']['start'] + 0.4, S['cta']['start'] + 1.2, S['cta']['static_from']]
     return sorted({min(END - 1, max(0, round(bf(x)))) for x in beats} | {CTA_STATIC, END - 1})
 

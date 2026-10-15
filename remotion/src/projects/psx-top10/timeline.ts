@@ -16,3 +16,4 @@ export const TOP = [...DATA.top10].sort((a, b) => a.rank - b.rank) as Co[];
 export const SOURCE_LINE = `Source: ${DATA.source} · close ${DATA.close_date}`;
 // logos are shown only once every top-10 company has its official file
 export const HAS_LOGOS = TOP.every((c) => (logos as Record<string, unknown>)[c.ticker]);
+export const ONE = TOP[0];
