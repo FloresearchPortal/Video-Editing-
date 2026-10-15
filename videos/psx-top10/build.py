@@ -4,8 +4,8 @@
   .venv/bin/python videos/psx-top10/build.py --preview  # half size      -> output/psx-top10_preview.mp4
   .venv/bin/python videos/psx-top10/build.py --stills-only
 
-QA (printed + output/qa.json): format, duration 40-45 s, CTA hold perfectly still, loudness
--14 LUFS / TP <= -1.5 dBTP on the delivered AAC, silent beat, no black frames.
+QA (printed + output/qa.json): format, duration <= 20 s, CTA hold perfectly still, loudness
+-14 LUFS / TP <= -1.5 dBTP on the delivered AAC, no black frames.
 """
 import argparse, json, re, subprocess, sys
 from pathlib import Path
@@ -30,21 +30,14 @@ def sh(cmd, **kw):
 
 
 def key_frames():
-    """A still on every transition: section boundaries, every rank change, the drop, the hold."""
-    ex, bu, dr, rk, cta = S['explain'], S['build'], S['drop'], S['ranking'], S['cta']
-    beats = [0.0, 0.5, 1.2, 2.3, 3.3, 4.6, 5.6, S['hook']['exit'], S['hook']['exit'] + 0.5, ex['start'] + 0.3, ex['line'] + 0.5,
-             ex['cards'][1] + 0.5, ex['cards'][3] + 0.6, ex['closer'] - 0.4, ex['closer'] + 1, ex['end'] - 0.6, ex['end'] + 0.2]
-    b = S['countdown']['start']
-    for r in range(10, 1, -1):
-        beats += [b + 0.15, b + 1.5]
-        b += S['countdown']['beats_rank2'] if r == 2 else S['countdown']['beats_per_company']
-    d0 = dr['start']
-    beats += [bu['start'] - 0.2, bu['number_one'] + 0.1, bu['silence'][0] - 0.5, bu['silence'][0] + 0.5, d0 + 0.1, d0 + 0.6,
-              d0 + 2, dr['contract'] + 0.1, dr['contract'] + 0.6, dr['value_lands'] - 0.5, dr['value_lands'] + 0.3,
-              dr['end'] - 0.3, rk['start'] + 0.3, rk['start'] + 0.8, rk['start'] + 2, rk['end'] - 0.6, cta['start'] + 0.4,
-              cta['start'] + 1, cta['static_from']]
-    frames = sorted({min(END - 1, max(0, round(bf(x)))) for x in beats} | {CTA_STATIC, END - 1})
-    return frames
+    """A still on every transition: each section's entry, key cues, exit, and the CTA hold."""
+    beats = [0.0, 0.4, 0.9, 1.4, 1.85, 2.4, 3.2, 3.8, 4.3, 5.5, 7.4, 7.8]
+    for k in ('title', 'explain', 'meet', 'chart'):
+        sec = S[k]
+        beats += [sec['start'] - 0.3, sec['start'] + 0.4, sec['start'] + 1.5, (sec['start'] + sec['end']) / 2, sec['end'] - 0.6]
+    beats += [S['title']['lines'][-1] + 0.5] + [c + 0.4 for c in S['explain']['cards']] + [S['explain']['line'] + 1]
+    beats += [S['chart']['start'] + 3, S['cta']['start'] + 0.4, S['cta']['start'] + 1.2, S['cta']['static_from']]
+    return sorted({min(END - 1, max(0, round(bf(x)))) for x in beats} | {CTA_STATIC, END - 1})
 
 
 def qa(final: Path, preview: bool):
@@ -59,7 +52,7 @@ def qa(final: Path, preview: bool):
     want = (540, 960) if preview else (1080, 1920)
     if (v['width'], v['height']) != want: fails.append('size')
     if v['r_frame_rate'] != '30/1' or v['codec_name'] != 'h264' or v['pix_fmt'] != 'yuv420p' or a['codec_name'] != 'aac': fails.append('codec')
-    if not 40 <= dur <= 45: fails.append('duration')
+    if dur > 20.0: fails.append('duration')
     head = open(final, 'rb').read(64 * 1024)
     rep['faststart'] = head.find(b'moov') < head.find(b'mdat') if b'mdat' in head else b'moov' in head
     if not rep['faststart']: fails.append('faststart')
@@ -72,16 +65,6 @@ def qa(final: Path, preview: bool):
     rep['loudness'] = dict(lufs=lufs, true_peak_dbtp=tp)
     if abs(lufs + 14) > 0.5: fails.append('lufs')
     if tp > -1.5: fails.append('true_peak')
-    # silent beat, measured on the decoded AAC (inner 90% of the beat, codec pre-echo aside)
-    pcm = subprocess.run(['ffmpeg', '-v', 'error', '-i', str(final), '-map', '0:a', '-f', 'f32le', '-ac', '1', '-ar', '48000', '-'],
-                         capture_output=True, check=True).stdout
-    x = np.frombuffer(pcm, '<f4')
-    s0, s1 = [int(b * BEAT * 48000) for b in S['build']['silence']]
-    pad = int(0.05 * (s1 - s0))
-    seg = x[s0 + pad:s1 - pad]
-    peak_db = 20 * np.log10(max(1e-12, float(np.abs(seg).max())))
-    rep['silent_beat'] = dict(window_s=[round(s0 / 48000, 3), round(s1 / 48000, 3)], peak_dbfs=round(peak_db, 1))
-    if peak_db > -70: fails.append('silent_beat')
     # CTA hold: last 5 s must be pixel-still; no black frames anywhere
     w, h = v['width'] // 4, v['height'] // 4
     raw = subprocess.run(['ffmpeg', '-v', 'error', '-ss', f'{CTA_STATIC / FPS + 0.02:.3f}', '-i', str(final), '-vf', f'scale={w}:{h}', '-f', 'rawvideo', '-pix_fmt', 'gray', '-'],

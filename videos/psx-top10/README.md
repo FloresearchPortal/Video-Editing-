@@ -1,8 +1,8 @@
 # FLOSTOCKS · Top 10 companies by market capitalization in PSX
 
-9:16 Instagram Reel, 1080 × 1920, 30 fps, about 43.8 s, H.264 yuv420p (BT.709) + AAC 48 kHz,
+9:16 Instagram Reel, 1080 × 1920, 30 fps, 19.6 s (under 20 s), H.264 yuv420p (BT.709) + AAC 48 kHz,
 −14 LUFS, true peak ≤ −1.5 dBTP, faststart. Built in Remotion, so every frame is deterministic code.
-The music is an original 128 BPM track synthesised by `music/make_music.py` (numpy, no samples),
+The music is an original 140 BPM track synthesised by `music/make_music.py` (numpy, no samples),
 so there is nothing to license.
 
 ## Where things live
@@ -10,7 +10,7 @@ so there is nothing to license.
 |---|---|
 | **Timing (one shared file)** | `remotion/src/projects/psx-top10/timeline.json`: sections in beats; the visuals *and* the music read it |
 | Data | `remotion/src/projects/psx-top10/data.json` (written by `data/fetch_psx.py`) |
-| Scenes | `remotion/src/projects/psx-top10/`: `Hook`, `Explain`, `Ranker` (countdown + #1 drop), `Ranking`, `Cta`, `Backdrop`, `theme.ts` (colours, fonts, column geometry) |
+| Scenes | `remotion/src/projects/psx-top10/`, in order: `Intro` (SaaS show-reel open: PSX Live dashboard, click, green zoom-through, ticker burst, TOP 10 slam), `Title`, `Explain` (market-cap formula cards), `Wipe`, `Meet`, `Chart` (animated ranking), `Cta`; plus `Backdrop` and `theme.ts` (colours, fonts) |
 | Composition | `remotion/src/shots/psx-top10/PsxTop10.tsx` (id `PsxTop10`) |
 | Logos | `media/projects/psx-top10/logos/<TICKER>.png` + `remotion/src/projects/psx-top10/logos.json` |
 | Fonts (SIL OFL) | `media/projects/psx-top10/fonts/`: Inter Display Black/ExtraBold/Bold, Instrument Serif Italic, JetBrains Mono |
@@ -26,10 +26,9 @@ From the repo root (one-time: `cd remotion && npm ci`, then `python3 -m venv .ve
 `build.py` writes the music, renders the picture (`remotion/scripts/psx-top10.mjs`, its own entry point,
 fully offline), muxes and re-encodes for delivery, then runs QA:
 - format;
-- duration 40–45 s;
-- the CTA's final hold (`cta.hold_seconds`, 3 s) pixel-still;
+- duration ≤ 20 s;
+- the CTA's final hold (`cta.hold_seconds`, 2.5 s) pixel-still;
 - loudness and true peak, measured on the delivered AAC;
-- the silent beat is silent;
 - no black frames.
 
 It also renders a still at every transition. For live editing, run `cd remotion && npx remotion studio src/projects/psx-top10/index.ts`.
@@ -51,9 +50,11 @@ It also renders a still at every transition. For live editing, run `cd remotion 
 ## Logos
 - Put the official files in `media/projects/psx-top10/logos/` and list them in `logos.json` with their pixel
   size (`file`, `w`, `h`).
-- Logos only ever scale proportionally. A missing logo shows as an empty outlined slot, never a stand-in.
+- Logos only ever scale proportionally. The chart shows a logo column only once all ten official files
+  are present; until then the rows show the rank and ticker only, never a stand-in.
 
 ## Change timing
-- Edit `timeline.json`, which is in beats: 1 beat = 0.46875 s = 14.0625 frames.
+- Edit `timeline.json`, which is in beats: 1 beat = 0.4286 s = 12.857 frames at 140 BPM.
+  `sections` place the scenes and set the music's energy; `cues` are the music hits.
 - If you move `cta.static_from`, update `durationInSeconds` in `PsxTop10.tsx`. The composition throws an error
   telling you the right value if they disagree.

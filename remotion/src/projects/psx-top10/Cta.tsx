@@ -4,15 +4,15 @@ import React from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { C, FONT, asset, life } from './theme';
 import { bf, S, CTA_STATIC } from './timeline';
-import { RULE } from './Ranking';
+import { RULE } from './Chart';
 
 export const Cta: React.FC = () => {
   const f = useCurrentFrame();
   const f0 = bf(S.cta.start);
   if (f < f0) return null;
-  const it = (i: number): React.CSSProperties => ({ position: 'absolute', left: 0, right: 0, textAlign: 'center', ...life(f, f0 + 7 + i * 1.2, Infinity, 60) });
+  const it = (i: number): React.CSSProperties => ({ position: 'absolute', left: 0, right: 0, textAlign: 'center', ...life(f, f0 + 5 + i * 1.1, Infinity, 60) });
   const big: React.CSSProperties = { fontFamily: FONT.display, fontWeight: 900, fontSize: 134, lineHeight: '128px', letterSpacing: -4 };
-  const settled = f >= f0 + 12;
+  const settled = f >= f0 + 10;
   return (
     <AbsoluteFill>
       <div style={{ ...it(0), top: 380, display: 'flex', justifyContent: 'center' }}>

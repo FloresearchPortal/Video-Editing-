@@ -1,16 +1,35 @@
 {
- "_doc": "Single source of truth for timing. Positions are in BEATS (128 BPM, 1 beat = 0.46875 s = 14.0625 frames @ 30 fps). Both the Remotion visuals (timeline.ts) and the music generator (videos/psx-top10/music/make_music.py) read this file, so a change here moves picture and sound together.",
- "bpm": 128,
+ "_doc": "Single source of truth for timing. Positions are in BEATS (140 BPM, 1 beat = 0.4286 s = 12.857 frames @ 30 fps). Both the Remotion visuals (timeline.ts) and the music generator (videos/psx-top10/music/make_music.py) read this file: `sections` set the musical energy, `cues` are the hits the picture lands on.",
+ "bpm": 140,
  "fps": 30,
  "width": 1080,
  "height": 1920,
  "sections": {
-  "hook": {"start": 0, "end": 8, "words": [1, 2, 3, 4, 5], "exit": 7.0},
-  "explain": {"start": 8, "end": 22, "line": 9, "cards": [11, 12, 13, 14], "closer": 17.5},
-  "countdown": {"start": 22, "end": 68, "beats_per_company": 5, "beats_rank2": 6, "top3_from_rank": 3},
-  "build": {"start": 68, "end": 71, "and": 68, "number_one": 68.5, "silence": [70, 71]},
-  "drop": {"start": 71, "end": 77, "hold_beats": 2, "contract": 73, "value_lands": 75},
-  "ranking": {"start": 77, "end": 85},
-  "cta": {"start": 85, "static_from": 87, "hold_seconds": 3}
- }
+  "intro":   {"start": 0,  "end": 8,  "window": 0, "click": 1, "burst": 2, "slam": 4, "exit": 7.25},
+  "title":   {"start": 8,  "end": 14, "lines": [8, 9, 10, 11], "exit": 13.25},
+  "explain": {"start": 14, "end": 22, "head": 14, "cards": [15, 16, 17], "line": 18, "exit": 99},
+  "meet":    {"start": 22, "end": 26, "exit": 25.6, "wipe": [21.55, 22.45]},
+  "chart":   {"start": 26, "end": 38},
+  "cta":     {"start": 38, "static_from": 40, "hold_seconds": 2.5}
+ },
+ "cues": [
+  {"beat": 0,  "type": "impact"},
+  {"beat": 1,  "type": "stab"},
+  {"beat": 1.75, "type": "riser", "to": 2},
+  {"beat": 2,  "type": "hit"},
+  {"beat": 3.5, "type": "fill", "to": 4},
+  {"beat": 4,  "type": "impact"},
+  {"beat": 8,  "type": "hit"},
+  {"beat": 9,  "type": "stab"},
+  {"beat": 10, "type": "stab"},
+  {"beat": 11, "type": "stab"},
+  {"beat": 14, "type": "hit"},
+  {"beat": 15, "type": "pluck"},
+  {"beat": 16, "type": "pluck"},
+  {"beat": 17, "type": "stab"},
+  {"beat": 22, "type": "impact"},
+  {"beat": 24, "type": "riser", "to": 26},
+  {"beat": 26, "type": "impact"},
+  {"beat": 38, "type": "hit"}
+ ]
 }

@@ -1,12 +1,12 @@
-"""Original 128 BPM electronic score for the PSX Top 10 reel, synthesised from scratch (numpy only,
+"""Original 140 BPM electronic score for the PSX Top 10 reel, synthesised from scratch (numpy only,
 no samples, so no licence issues). Every cue is read from the shared timeline
 (remotion/src/projects/psx-top10/timeline.json), so the music accents land on the same beats as the
-picture. No separate sound effects; the arrangement itself carries the accents.
+picture: `sections` set the energy, `cues` (impact / hit / stab / pluck / riser / fill) are the hits.
+No separate sound effects; the arrangement itself carries the accents.
 
   .venv/bin/python videos/psx-top10/music/make_music.py [-o videos/psx-top10/output/music.wav]
 
 Master: -14 LUFS integrated, true peak <= -1.5 dBTP (measured with pyloudnorm + 4x oversampling).
-The silent beat (build.silence) is written as exact digital zeros.
 """
 import argparse, json, subprocess
 from pathlib import Path
@@ -155,7 +155,7 @@ def put(sig, at, gain=1.0, pan=0.0):
     e = min(len(mixL), at + l.shape[0])
     mixL[at:e] += gain * l[:e - at]; mixR[at:e] += gain * r[:e - at]
 
-def duck(at, depth=0.6, rel=0.13):
+def duck(at, depth=0.6, rel=0.12):
     n = int(0.5 * SR); t = t_(n)
     e = min(len(sidechain), at + n)
     sidechain[at:e] = np.minimum(sidechain[at:e], (1 - depth * np.exp(-t / rel))[:e - at])
@@ -166,64 +166,41 @@ def put_bed(sig, at, gain=1.0):
     e = min(len(mixL), at + s.shape[1])
     music_bed[0][at:e] += gain * s[0, :e - at]; music_bed[1][at:e] += gain * s[1, :e - at]
 
-hook, ex, cd, bu, dr, rk, cta = (S[k] for k in ('hook', 'explain', 'countdown', 'build', 'drop', 'ranking', 'cta'))
-rank_beats = []
-b = cd['start']
-for r in range(10, 1, -1):
-    rank_beats.append(b); b += cd['beats_rank2'] if r == 2 else cd['beats_per_company']
-top3_beat = rank_beats[10 - cd['top3_from_rank']]
+intro, title, ex, meet, chart, cta = (S[k] for k in ('intro', 'title', 'explain', 'meet', 'chart', 'cta'))
 end_beat = END_S / BEAT
+riser_spans = [(c['beat'], c['to']) for c in TL['cues'] if c['type'] in ('riser', 'fill')]
 
 def energy(beat):
-    """'light' | 'groove' | 'full' | None per beat."""
-    if beat < hook['end']: return 'groove'
+    """'light' | 'groove' | 'full' | 'soft' per beat."""
+    if beat < intro['burst']: return 'groove'
+    if beat < intro['end']: return 'full'
+    if beat < title['end']: return 'groove'
     if beat < ex['end']: return 'light'
-    if beat < top3_beat: return 'groove'
-    if beat < bu['start']: return 'full'
-    if beat < dr['start']: return None
+    if beat < meet['end']: return 'groove'
     if beat < cta['start']: return 'full'
     return 'soft'
 
-# frame-1 hit + title-word stabs
-put(kick(1.1), 0); put(sub_hit(1.0, 1.4), 0); put(crash(1.0), 0)
-put(stab(chord_at(0)[1], 1.2, 0.6), 0)
-for w in hook['words']:
-    put(stab(chord_at(w)[1], 0.85, 0.32, 3200), b2s(w))
-# explainer card plucks
-for i, c in enumerate(ex['cards']):
-    put(stab(chord_at(c)[1], 0.45, 0.25, 2000), b2s(c))
-put(stab(chord_at(ex['closer'])[1], 0.8, 0.4, 3000), b2s(ex['closer']))  # "Now meet the top 10"
-# rank changes: stab + low hit
-for i, rb in enumerate(rank_beats):
-    big = rb >= top3_beat
-    put(stab(chord_at(rb)[1], 1.0 if big else 0.85, 0.45, 3400 if big else 2800), b2s(rb))
-    put(sub_hit(0.75 if big else 0.6, 0.9), b2s(rb))
-    if big: put(crash(0.6), b2s(rb))
+def in_riser(beat):
+    return any(a <= beat < b for a, b in riser_spans)
 
-# grid: drums + bass + pads/arps by energy
+# grid: drums + bass + arps by energy
 beat = 0.0
 while beat < end_beat:
     en = energy(beat)
     s0 = b2s(beat)
-    if en is not None:
-        bar_root, ch = chord_at(beat)
-        kick_on = not (en == 'soft' and beat >= cta['static_from'] - 0.01)
-        if beat >= 1 and kick_on:
-            kl = {'light': 0.7, 'groove': 0.95, 'full': 1.0, 'soft': 0.5}[en]
-            if not (beat == 0):
-                put(kick(kl), s0); duck(s0, 0.65 if en != 'soft' else 0.35)
-        if en in ('groove', 'full') and int(beat) % 2 == 1 and beat >= 2:
-            put(clap(0.8 if en == 'groove' else 0.9), s0)
-        if en in ('groove', 'full', 'light') and beat >= 1:
-            put(hat(0.7 if en == 'light' else 0.9, open_=(en == 'full')), b2s(beat + 0.5), pan=0.25)
-            if en == 'full':
-                put(hat(0.45), b2s(beat + 0.25), pan=-0.3); put(hat(0.45), b2s(beat + 0.75), pan=-0.3)
-        # bass on the off-beat 8th (classic house), quieter in the explainer
-        if en in ('groove', 'full', 'light') and beat >= 1:
-            bl = {'light': 0.55, 'groove': 0.9, 'full': 1.0}[en]
-            put_bed(bass(note(bar_root), int(BEAT * 0.5 * SR), bl), b2s(beat + 0.5))
-        # arp (top 3 + ranking) and pads
+    bar_root, ch = chord_at(beat)
+    kick_on = not (en == 'soft' and beat >= cta['static_from'] - 0.01) and not in_riser(beat)
+    if kick_on and beat > 0:
+        put(kick({'light': 0.75, 'groove': 1.0, 'full': 1.05, 'soft': 0.5}[en]), s0); duck(s0, 0.65 if en != 'soft' else 0.3)
+    if en in ('groove', 'full') and int(beat) % 2 == 1 and not in_riser(beat):
+        put(clap(0.85 if en == 'groove' else 0.95), s0)
+    if en != 'soft':
+        put(hat(0.75 if en == 'light' else 0.95, open_=(en == 'full')), b2s(beat + 0.5), pan=0.25)
         if en == 'full':
+            put(hat(0.5), b2s(beat + 0.25), pan=-0.3); put(hat(0.5), b2s(beat + 0.75), pan=-0.3)
+        bl = {'light': 0.55, 'groove': 0.95, 'full': 1.05}[en]
+        put_bed(bass(note(bar_root), int(BEAT * 0.5 * SR), bl), b2s(beat + 0.5))
+        if en == 'full':  # 16th arp
             for k, nm in enumerate((ch * 2)[:4]):
                 f = note(nm) * (2 if k % 2 else 1)
                 put_bed(np.stack([pluck(f, 0.9) * 0.8, pluck(f, 0.9) * 1.2]), b2s(beat + k * 0.25))
@@ -236,57 +213,58 @@ for b0, b1, lvl, cut in ((ex['start'], ex['end'], 0.8, 1100), (cta['start'], end
         nb = min(b1, (bb // 4 + 1) * 4)
         put_bed(pad(chord_at(bb)[1], b2s(nb) - b2s(bb) + int(0.2 * SR), lvl, cut), b2s(bb))
         bb = nb
-# CTA: soft high pluck arp in eighths until the hold, then pad only
+# CTA: soft high pluck arp in eighths
 bb = cta['start']
-while bb < end_beat - 2:
-    ch = chord_at(bb)[1]
-    put_bed(pluck(note(ch[int(bb * 2) % 3]) * 2, 1.1, 2000), b2s(bb))
+while bb < end_beat - 1.5:
+    put_bed(pluck(note(chord_at(bb)[1][int(bb * 2) % 3]) * 2, 1.1, 2000), b2s(bb))
     bb += 0.5
 
-# build: stabs on "And" / "number one?", snare roll + tonal riser into the silent beat
-put(stab(chord_at(bu['and'])[1], 0.8, 0.4), b2s(bu['and']))
-put(stab(chord_at(bu['number_one'])[1], 0.9, 0.4), b2s(bu['number_one']))
-sil0, sil1 = b2s(bu['silence'][0]), b2s(bu['silence'][1])
-rs, re_ = b2s(bu['start']), sil0
-k = 0; pos = bu['start']
-while pos < bu['silence'][0] - 1e-6:
-    prog = (pos - bu['start']) / (bu['silence'][0] - bu['start'])
-    put(snare(0.8 + 1.4 * prog), b2s(pos))
-    pos += 0.25 if prog < 0.5 else 0.125
-n = re_ - rs; t = t_(n)
-f = 110 * 2 ** (3 * (t / t[-1]) ** 1.5)
-riser = np.zeros(n)
-for i, dc in enumerate((-12, 0, 12)):
-    ph = 2 * np.pi * np.cumsum(f * 2 ** (dc / 1200)) / SR
-    for h in range(1, 7):
-        riser += np.sin(h * ph + i) / h
-riser *= (0.15 + 0.85 * (t / t[-1]) ** 1.6) * 0.22
-put(np.stack([riser * 0.9, riser * 1.1]), rs)
-# drop + #1 hold (pulse each beat) + OGDC reveal hit + value landing
-d0 = dr['start']
-put(kick(1.2), b2s(d0)); put(sub_hit(1.2, 2.2, 40), b2s(d0)); put(crash(1.2, 2.4), b2s(d0))
-put(stab(chord_at(d0)[1] + [chord_at(d0)[1][0][:-1] + '5'], 1.3, 0.9, 4200, 1.3), b2s(d0))
-for i in range(1, dr['hold_beats']):
-    put(stab(chord_at(d0 + i)[1], 0.6, 0.3, 3000), b2s(d0 + i))
-put(sub_hit(1.0, 1.4), b2s(dr['contract'])); put(crash(0.8), b2s(dr['contract']))
-put(stab(chord_at(dr['contract'])[1], 1.1, 0.6, 3800), b2s(dr['contract']))
-put(stab(chord_at(dr['value_lands'])[1], 0.8, 0.35, 3600), b2s(dr['value_lands']))
-# ranking entry + CTA arrival
-put(stab(chord_at(rk['start'])[1], 0.9, 0.45), b2s(rk['start'])); put(crash(0.5), b2s(rk['start']))
-put(stab(chord_at(cta['start'])[1], 0.7, 0.8, 1800), b2s(cta['start'])); put(sub_hit(0.6, 1.6), b2s(cta['start']))
+def riser(b0, b1, level=1.0):
+    rs, re_ = b2s(b0), b2s(b1)
+    n = re_ - rs; t = t_(n)
+    f = 110 * 2 ** (3 * (t / t[-1]) ** 1.5)
+    x = np.zeros(n)
+    for i, dc in enumerate((-12, 0, 12)):
+        ph = 2 * np.pi * np.cumsum(f * 2 ** (dc / 1200)) / SR
+        for h in range(1, 7):
+            x += np.sin(h * ph + i) / h
+    x *= (0.15 + 0.85 * (t / t[-1]) ** 1.6) * 0.22 * level
+    put(np.stack([x * 0.9, x * 1.1]), rs)
+
+def roll(b0, b1, level=1.0):
+    pos = b0
+    while pos < b1 - 1e-6:
+        prog = (pos - b0) / max(1e-6, b1 - b0)
+        put(snare((0.8 + 1.4 * prog) * level), b2s(pos))
+        pos += 0.25 if prog < 0.5 else 0.125
+
+# cues from the shared timeline
+for c in TL['cues']:
+    b, ty = c['beat'], c['type']
+    at, ch = b2s(b), chord_at(b)[1]
+    if ty == 'impact':
+        put(kick(1.2), at); put(sub_hit(1.15, 1.8, 40), at); put(crash(1.1, 2.0), at); duck(at, 0.8, 0.18)
+        put(stab(ch + [ch[0][:-1] + '5'], 1.3, 0.7, 4200, 1.3), at)
+    elif ty == 'hit':
+        put(kick(1.05), at); put(sub_hit(0.8, 1.0), at); put(crash(0.55), at)
+        put(stab(ch, 1.0, 0.45, 3600), at)
+    elif ty == 'stab':
+        put(stab(ch, 0.9, 0.35, 3400), at)
+    elif ty == 'pluck':
+        put(stab(ch, 0.55, 0.25, 2200), at)
+    elif ty == 'riser':
+        riser(b, c['to'], 1.0 if c['to'] - b > 1 else 0.7); roll(b, c['to'], 0.8 if c['to'] - b > 1 else 0.6)
+    elif ty == 'fill':
+        roll(b, c['to'], 0.9)
 
 # ---------------------------------------------------------------- mix + master
 L = mixL + music_bed[0] * sidechain
 R = mixR + music_bed[1] * sidechain
 x = np.stack([L, R])[:, :N]
 x = np.tanh(x * 0.9) / 0.9  # gentle glue saturation
-# fade to silence over the last 3 s (CTA)
-fade_n = int(3.0 * SR)
+# fade to silence over the last 2 s (CTA)
+fade_n = int(2.0 * SR)
 x[:, -fade_n:] *= np.cos(np.linspace(0, np.pi / 2, fade_n)) ** 2
-# exact digital silence for the silent beat (tiny 5 ms fade into it)
-fi = int(0.005 * SR)
-x[:, sil0 - fi:sil0] *= np.linspace(1, 0, fi)
-x[:, sil0:sil1] = 0.0
 
 def true_peak(y):
     up = np.fft.irfft(np.fft.rfft(y, axis=1), y.shape[1] * 4, axis=1) * 4
@@ -316,10 +294,9 @@ for _ in range(6):
     lufs = meter.integrated_loudness(y.T)
     y = y * 10 ** ((target - lufs) / 20)
     y = limit(y, 10 ** (ceil_db / 20))
-    y[:, sil0:sil1] = 0.0
 lufs = meter.integrated_loudness(y.T)
 tp = 20 * np.log10(true_peak(y))
-print(f'music: {N / SR:.3f} s, {lufs:.2f} LUFS, true peak {tp:.2f} dBTP, silent beat {sil0 / SR:.3f}-{sil1 / SR:.3f} s max |x|={np.abs(y[:, sil0:sil1]).max()}')
+print(f'music: {N / SR:.3f} s, {lufs:.2f} LUFS, true peak {tp:.2f} dBTP')
 
 ap = argparse.ArgumentParser(); ap.add_argument('-o', default=str(ROOT / 'videos/psx-top10/output/music.wav'))
 out = Path(ap.parse_args().o); out.parent.mkdir(parents=True, exist_ok=True)

@@ -1,53 +1,71 @@
-// B. What is market cap? (beats 8-18): headline + serif definition, the formula built from UI cards,
-// and a closing line that hands over to the countdown.
+// 3. What is market cap? (beats 14-22): headline, then the formula as SaaS UI cards popping on the
+// beat (share price x total shares = market cap), then the one-line definition.
 import React from 'react';
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
-import { C, E, FONT, life, ramp } from './theme';
-import { bf, S } from './timeline';
+import { AbsoluteFill, spring, useCurrentFrame } from 'remotion';
+import { C, FONT, life, mix, ramp } from './theme';
+import { bf, FPS, S } from './timeline';
 
-const Card: React.FC<{ title: string; sub: string; green?: boolean; w: number; h: number; style: React.CSSProperties }> = ({ title, sub, green, w, h, style }) => (
-  <div style={{
-    position: 'absolute', width: w, height: h, borderRadius: 30, boxSizing: 'border-box', padding: '0 40px',
-    display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 8,
-    background: green ? C.green : '#fff', border: green ? 'none' : `2px solid #E2E6E1`,
-    boxShadow: green ? '0 24px 60px rgba(44,156,0,0.28)' : '0 18px 50px rgba(17,17,17,0.07)', ...style,
-  }}>
-    <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: green ? 76 : 56, lineHeight: 1.0, letterSpacing: -1.5, color: green ? '#fff' : C.ink }}>{title}</div>
-    <div style={{ fontFamily: FONT.serif, fontStyle: 'italic', fontSize: green ? 46 : 40, lineHeight: 1.05, color: green ? 'rgba(255,255,255,0.88)' : C.grey }}>{sub}</div>
-  </div>
-);
+const X = S.explain;
 
-const Op: React.FC<{ ch: string; x: number; y: number; style: React.CSSProperties }> = ({ ch, x, y, style }) => (
-  <div style={{ position: 'absolute', left: x - 50, top: y - 60, width: 100, height: 120, textAlign: 'center', fontFamily: FONT.display, fontWeight: 900, fontSize: 96, lineHeight: '120px', color: C.lime, ...style }}>{ch}</div>
-);
+const Icon: React.FC<{ kind: 'price' | 'shares' | 'cap'; light?: boolean }> = ({ kind, light }) => {
+  const s = light ? '#fff' : C.green;
+  return (
+    <svg width={64} height={64} viewBox="0 0 24 24" fill="none" stroke={s} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+      {kind === 'price' && <><path d="M3 12V4h8l10 10-8 8L3 12z" /><circle cx={7.5} cy={8} r={1.6} /></>}
+      {kind === 'shares' && <><path d="M12 3l9 5-9 5-9-5 9-5z" /><path d="M3 13l9 5 9-5" /><path d="M3 17.5l9 5 9-5" /></>}
+      {kind === 'cap' && <><path d="M3 21h18" /><path d="M5 21V11M10 21V7M15 21V13M20 21V4" /></>}
+    </svg>
+  );
+};
+
+const Card: React.FC<{ f: number; at: number; leave: number; top: number; h: number; kind: 'price' | 'shares' | 'cap'; title: string; sub: string; green?: boolean }> = ({ f, at, leave, top, h, kind, title, sub, green }) => {
+  const s = spring({ frame: f - at, fps: FPS, config: { damping: 13, stiffness: 170, mass: 0.6 } });
+  const v = life(f, at - 1, leave, 0);
+  return (
+    <div style={{
+      position: 'absolute', left: 80, top, width: 920, height: h, borderRadius: 34, boxSizing: 'border-box', padding: '0 40px',
+      display: 'flex', alignItems: 'center', gap: 34, background: green ? C.green : '#fff', border: green ? 'none' : '2px solid #E3E8E2',
+      boxShadow: green ? '0 30px 70px rgba(44,156,0,0.32)' : '0 20px 50px rgba(17,17,17,0.08)',
+      opacity: v.opacity, transform: `${v.transform} translateY(${(1 - s) * 90}px) scale(${mix(0.86, 1, s)})`,
+    }}>
+      <div style={{ width: 112, height: 112, borderRadius: 28, background: green ? 'rgba(255,255,255,0.16)' : '#EFF6EB', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <Icon kind={kind} light={green} />
+      </div>
+      <div>
+        <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: green ? 80 : 62, lineHeight: 1, letterSpacing: -1.5, color: green ? '#fff' : C.ink }}>{title}</div>
+        <div style={{ fontFamily: FONT.serif, fontStyle: 'italic', fontSize: green ? 48 : 44, lineHeight: 1.1, marginTop: 6, color: green ? 'rgba(255,255,255,0.9)' : C.grey }}>{sub}</div>
+      </div>
+    </div>
+  );
+};
+
+const Op: React.FC<{ f: number; at: number; leave: number; ch: string; y: number }> = ({ f, at, leave, ch, y }) => {
+  const s = spring({ frame: f - at, fps: FPS, config: { damping: 10, stiffness: 200, mass: 0.5 } });
+  const v = life(f, at - 1, leave, 0);
+  return <div style={{ position: 'absolute', left: 490, top: y - 50, width: 100, height: 100, borderRadius: 50, background: C.ink, color: C.lime, textAlign: 'center', fontFamily: FONT.display, fontWeight: 900, fontSize: 64, lineHeight: '96px', opacity: v.opacity, transform: `${v.transform} scale(${s})` }}>{ch}</div>;
+};
 
 export const Explain: React.FC = () => {
   const f = useCurrentFrame();
-  const s = S.explain;
-  if (f < bf(s.start) - 6 || f > bf(s.end) + 2) return null;
-  const [c1, c2, c3, c4] = s.cards.map((b) => bf(b) - 2);
-  const out = bf(s.closer) - 9; // formula + headline lift out
-  const closerIn = bf(s.closer) + 3, closerOut = bf(s.end) - 7.5;
+  if (f < bf(X.start) - 4 || f >= bf(S.meet.start)) return null; // swapped out under the green wipe
+  const [c1, c2, c3] = X.cards.map((b) => bf(b) - 1);
+  const out = (i: number) => bf(X.exit) + i * 0.9;
   return (
     <AbsoluteFill>
-      <div style={{ position: 'absolute', left: 80, right: 80, top: 300, ...life(f, bf(s.start) - 4, out) }}>
-        <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 168, lineHeight: '170px', letterSpacing: -6, color: C.green }}>Market cap</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 290, textAlign: 'center', ...life(f, bf(X.head) - 3, out(0), 70) }}>
+        <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 120, lineHeight: '128px', letterSpacing: -4, color: C.ink }}>What is</div>
+        <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 140, lineHeight: '150px', letterSpacing: -5, color: C.green }}>market cap?</div>
       </div>
-      <div style={{ position: 'absolute', left: 84, right: 80, top: 488, fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 80, lineHeight: '88px', color: C.ink, ...life(f, bf(s.line) - 3, out + 2) }}>
+      <Card f={f} at={c1} leave={out(1)} top={640} h={170} kind="price" title="Share price" sub="what one share costs" />
+      <Op f={f} at={c2 - 2} leave={out(2)} ch="×" y={845} />
+      <Card f={f} at={c2} leave={out(2)} top={880} h={170} kind="shares" title="Total shares" sub="every share issued" />
+      <Op f={f} at={c3 - 2} leave={out(3)} ch="=" y={1085} />
+      <Card f={f} at={c3} leave={out(3)} top={1120} h={200} kind="cap" title="Market cap" sub="what the company is worth" green />
+      <div style={{ position: 'absolute', left: 90, right: 90, top: 1372, textAlign: 'center', fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 70, lineHeight: '78px', color: C.ink, ...life(f, bf(X.line) - 2, out(4), 50) }}>
         the total value of a company on the stock market.
       </div>
-      {/* formula: [Share price] x [Total shares] = [Market cap] */}
-      <Card title="Share price" sub="what one share costs" w={920} h={180} style={{ left: 80, top: 730, ...life(f, c1, out + 1) }} />
-      <Op ch="×" x={540} y={970} style={life(f, c2 - 1, out + 1.5, 40)} />
-      <Card title="Total shares" sub="every share issued" w={920} h={180} style={{ left: 80, top: 1030, ...life(f, c2, out + 2) }} />
-      <Op ch="=" x={540} y={1272} style={life(f, c3, out + 2.5, 40)} />
-      <Card green title="Market cap" sub="what the whole company is worth" w={920} h={210} style={{ left: 80, top: 1334, ...life(f, c4, out + 3) }} />
-      {/* closer */}
-      <div style={{ position: 'absolute', left: 80, right: 80, top: 720, textAlign: 'center', ...life(f, closerIn, closerOut) }}>
-        <div style={{ fontFamily: FONT.serif, fontStyle: 'italic', fontSize: 120, lineHeight: '130px', color: C.ink }}>Now meet the</div>
-        <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 210, lineHeight: '210px', letterSpacing: -7, color: C.green }}>top 10</div>
-        <div style={{ margin: '34px auto 0', width: 150, height: 10, borderRadius: 5, background: C.lime, transformOrigin: 'center', transform: `scaleX(${ramp(f, closerIn + 6, closerIn + 16, E.inOut)})` }} />
-      </div>
+      {/* lime sweep under the definition */}
+      <div style={{ position: 'absolute', left: 540 - 90, top: 1548, width: 180, height: 10, borderRadius: 5, background: C.lime, transformOrigin: 'center', transform: `scaleX(${ramp(f, bf(X.line) + 4, bf(X.line) + 14)})`, opacity: 1 - ramp(f, out(4), out(4) + 6) }} />
     </AbsoluteFill>
   );
 };
