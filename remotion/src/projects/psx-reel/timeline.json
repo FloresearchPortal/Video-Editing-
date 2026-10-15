@@ -1,0 +1,34 @@
+{
+ "_doc": "FLOSTOCKS EXPLAINS · EP 01, showreel cut. One continuous 3D camera move. Beats at 140 BPM (12.857 frames per beat @ 30 fps). Shots: ignite (spark draws the price line, candles erupt) · city (crane up over the candle skyline) · share (dive to one share coin, coins stack into a tower = market cap) · towers (10 towers rise #10 -> #1 on the beat, hero #1, wide TOP 10) · logo (towers fold into the logo bars) · cta (end card). The music generator reads `sections` (energy) and `cues`.",
+ "bpm": 140,
+ "fps": 30,
+ "width": 1080,
+ "height": 1920,
+ "sections": {
+  "ignite": {"start": 0, "end": 7, "energy": "groove"},
+  "city": {"start": 7, "end": 13, "energy": "light"},
+  "share": {"start": 13, "end": 22, "energy": "groove", "coin": 13.6, "flip": 16.5, "stack": 16.8, "cap": 19.8},
+  "towers": {"start": 22, "end": 39, "energy": "full", "first_rise": 24, "hero": 32.6, "wide": 35},
+  "logo": {"start": 39, "end": 41.5, "energy": "full"},
+  "cta": {"start": 41.5, "static_from": 43, "hold_seconds": 1.5, "energy": "soft"}
+ },
+ "cues": [
+  {"beat": 0, "type": "impact"},
+  {"beat": 2, "type": "stab"}, {"beat": 4, "type": "stab"},
+  {"beat": 6, "type": "riser", "to": 7},
+  {"beat": 7, "type": "hit"},
+  {"beat": 11.5, "type": "riser", "to": 13},
+  {"beat": 13, "type": "impact"},
+  {"beat": 16.5, "type": "stab"},
+  {"beat": 17, "type": "riser", "to": 19.8},
+  {"beat": 19.8, "type": "impact"},
+  {"beat": 22, "type": "hit"},
+  {"beat": 24, "type": "stab"}, {"beat": 25, "type": "stab"}, {"beat": 26, "type": "stab"}, {"beat": 27, "type": "stab"}, {"beat": 28, "type": "stab"},
+  {"beat": 29, "type": "stab"}, {"beat": 30, "type": "stab"}, {"beat": 31, "type": "stab"}, {"beat": 32, "type": "stab"},
+  {"beat": 32.6, "type": "impact"},
+  {"beat": 35, "type": "hit"},
+  {"beat": 38, "type": "riser", "to": 39},
+  {"beat": 39, "type": "impact"},
+  {"beat": 41.5, "type": "hit"}
+ ]
+}

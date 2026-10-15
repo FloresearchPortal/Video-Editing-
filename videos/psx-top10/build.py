@@ -7,16 +7,21 @@
 QA (printed + output/qa.json): format, duration <= 20 s, CTA hold perfectly still, loudness
 -14 LUFS / TP <= -1.5 dBTP on the delivered AAC, no black frames.
 """
-import argparse, json, re, subprocess, sys
+import argparse, json, os, re, subprocess, sys
 from pathlib import Path
 import numpy as np
+
+# --reel builds the 3D showreel cut (remotion/src/projects/psx-reel) instead of the series 2D cut
+REEL = '--reel' in sys.argv
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 REM = ROOT / 'remotion'
 OUT = HERE / 'output'
-TL = json.loads((REM / 'src/projects/psx-top10/timeline.json').read_text())
-DATA = json.loads((REM / 'src/projects/psx-top10/data.json').read_text())
+PROJ = 'psx-reel' if REEL else 'psx-top10'
+os.environ['PSX_TIMELINE'] = f'remotion/src/projects/{PROJ}/timeline.json'
+TL = json.loads((REM / f'src/projects/{PROJ}/timeline.json').read_text())
+DATA = json.loads((REM / f'src/projects/{PROJ}/data.json').read_text())
 FPS, BEAT = TL['fps'], 60 / TL['bpm']
 S = TL['sections']
 bf = lambda b: b * BEAT * FPS
@@ -27,6 +32,11 @@ END = CTA_STATIC + S['cta']['hold_seconds'] * FPS
 def sh(cmd, **kw):
     print('$', ' '.join(map(str, cmd)))
     return subprocess.run(cmd, check=True, **kw)
+
+
+def key_frames_reel():
+    beats = [0.2, 1.5, 3.5, 6, 7.5, 10, 12.5, 13.8, 15, 16.6, 17.6, 18.8, 20.2, 21.5, 22.8, 24.5, 26.5, 28.5, 30.5, 32.2, 33.4, 34.6, 36, 38, 39.6, 40.8, 41.6, 42.4, 43]
+    return sorted({min(END - 1, max(0, round(bf(x)))) for x in beats} | {CTA_STATIC, END - 1})
 
 
 def key_frames():
@@ -52,7 +62,7 @@ def qa(final: Path, preview: bool):
     want = (540, 960) if preview else (1080, 1920)
     if (v['width'], v['height']) != want: fails.append('size')
     if v['r_frame_rate'] != '30/1' or v['codec_name'] != 'h264' or v['pix_fmt'] != 'yuv420p' or a['codec_name'] != 'aac': fails.append('codec')
-    if dur > 20.0: fails.append('duration')
+    if dur > 20.0: fails.append('duration')  # series + reel: 20 s max
     head = open(final, 'rb').read(64 * 1024)
     rep['faststart'] = head.find(b'moov') < head.find(b'mdat') if b'mdat' in head else b'moov' in head
     if not rep['faststart']: fails.append('faststart')
@@ -105,16 +115,20 @@ def main():
     ap.add_argument('--preview', action='store_true')
     ap.add_argument('--stills-only', action='store_true')
     ap.add_argument('--skip-render', action='store_true')
+    ap.add_argument('--reel', action='store_true')
     a = ap.parse_args()
     OUT.mkdir(exist_ok=True)
     scale = '0.5' if a.preview else '1'
-    stills = OUT / ('stills_preview' if a.preview else 'stills')
+    stills = OUT / (('stills_reel' if REEL else 'stills') + ('_preview' if a.preview else ''))
     if not a.stills_only:
-        tag = '_preview' if a.preview else ''
+        tag = ('_reel' if REEL else '') + ('_preview' if a.preview else '')
         silent, final = OUT / f'video{tag}_silent.mp4', OUT / f'psx-top10{tag}.mp4'
         if not a.skip_render:
             sh([sys.executable, str(HERE / 'music/make_music.py'), '-o', str(OUT / 'music.wav')])
-            sh(['node', 'scripts/psx-top10.mjs', 'video', str(silent), f'--scale={scale}'], cwd=REM)
+            if REEL:
+                sh(['node', 'scripts/psx-reel.mjs', 'video', str(silent), 'PsxReel', f'--scale={scale}', '--gl=swangle'], cwd=REM)
+            else:
+                sh(['node', 'scripts/psx-top10.mjs', 'video', str(silent), f'--scale={scale}'], cwd=REM)
             sh(['ffmpeg', '-v', 'error', '-y', '-i', str(silent), '-i', str(OUT / 'music.wav'), '-map', '0:v', '-map', '1:a',
                 # delivery encode: full-range Remotion frames -> broadcast-range yuv420p BT.709, H.264 High
                 '-vf', 'scale=in_range=pc:out_range=tv:out_color_matrix=bt709,format=yuv420p',
@@ -126,8 +140,11 @@ def main():
         print(json.dumps({k: v for k, v in rep.items() if k != 'data'}, indent=1))
         print('QA', 'PASSED' if rep['passed'] else f"FAILED: {rep['fails']}")
     import shutil; shutil.rmtree(stills, ignore_errors=True)  # never mix in stills from an older timeline
-    sh(['node', 'scripts/psx-top10.mjs', 'stills', str(stills), f'--scale={scale}', *map(str, key_frames())], cwd=REM)
-    contact_sheet(stills, OUT / ('contact_sheet_preview.png' if a.preview else 'contact_sheet.png'))
+    if REEL:
+        sh(['node', 'scripts/psx-reel.mjs', 'stills', str(stills), 'PsxReel', f'--scale={scale}', '--gl=swangle', *map(str, key_frames_reel())], cwd=REM)
+    else:
+        sh(['node', 'scripts/psx-top10.mjs', 'stills', str(stills), f'--scale={scale}', *map(str, key_frames())], cwd=REM)
+    contact_sheet(stills, OUT / ((('contact_sheet_reel' if REEL else 'contact_sheet')) + ('_preview.png' if a.preview else '.png')))
 
 
 if __name__ == '__main__':

@@ -59,3 +59,24 @@ It also renders a still at every transition. For live editing, run `cd remotion 
   `sections` place the scenes and set the music's energy; `cues` are the music hits.
 - If you move `cta.static_from`, update `durationInSeconds` in `PsxTop10.tsx`. The composition throws an error
   telling you the right value if they disagree.
+
+## Showreel cut (3D) — `remotion/src/projects/psx-reel`
+One continuous camera move through a real-time 3D market (three.js via `@remotion/three`, rendered
+headless with WebGL/SwiftShader, `--gl=swangle`), about 20 s at 140 BPM, every move on a beat:
+1. **Ignite**: a lime spark draws the price line through a dark void, and ~1,500 instanced candlesticks
+   erupt behind it. "PAKISTAN / STOCK EXCHANGE".
+2. **City**: the camera cranes up over the candle skyline. "WHO ARE / THE BIGGEST?"
+3. **Share**: the camera dives to one share coin (SHARE PRICE). 80 coins fly in and stack into a tower
+   (× ALL SHARES), which solidifies into a glowing monolith (= MARKET CAP).
+4. **Towers**: ten glass towers at true market-cap heights rise #10 → #1 on the beat, each labelled
+   (rank, ticker, Rs bn, drawn in Poppins). The camera dollies down the row, takes a low-angle hero shot
+   of #1 OGDC, then a diagonal wide of all ten: TOP 10 · Rs 7.23 trillion.
+5. **Logo**: the towers sink and the FloStocks logo mark rises as three slanted 3D bars. The camera
+   pushes through them to a white flash and the series end card.
+
+Post: bloom, vignette, film grain, fog. Camera keyframes and all timing are in `timeline.ts` /
+`timeline.json` (the music reads the same file).
+```bash
+.venv/bin/python videos/psx-top10/build.py --reel --preview   # output/psx-top10_reel_preview.mp4
+.venv/bin/python videos/psx-top10/build.py --reel             # full 1080x1920
+```

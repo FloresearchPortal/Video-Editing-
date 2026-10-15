@@ -14,7 +14,8 @@ import numpy as np
 import pyloudnorm as pyln
 
 ROOT = Path(__file__).resolve().parents[3]
-TL = json.loads((ROOT / 'remotion/src/projects/psx-top10/timeline.json').read_text())
+import os
+TL = json.loads((ROOT / os.environ.get('PSX_TIMELINE', 'remotion/src/projects/psx-top10/timeline.json')).read_text())
 SR = 48000
 BEAT = 60 / TL['bpm']
 S = TL['sections']
