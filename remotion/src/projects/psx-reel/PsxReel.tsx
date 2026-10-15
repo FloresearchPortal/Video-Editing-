@@ -1,4 +1,4 @@
-// FLOSTOCKS EXPLAINS · EP 01, showreel cut: one continuous camera through a 3D market made of light.
+// FLOSTOCKS EXPLAINS · EP 01, showreel cut: one continuous camera through a white, brand-green 3D market.
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion';
 import { ThreeCanvas } from '@remotion/three';
@@ -16,7 +16,7 @@ export const PsxReel: React.FC = () => {
   const end = bf(S.cta.start);
   const flash = rp(f, end - 7, end) * (1 - rp(f, end + 2, end + 10));
   return (
-    <AbsoluteFill style={{ background: '#04070A' }}>
+    <AbsoluteFill style={{ background: '#F7FBF8' }}>
       {f < end + 2 && (
         <ThreeCanvas width={width} height={height} camera={{ position: [0, 2, 10], fov: 42 }} gl={{ antialias: true, preserveDrawingBuffer: true }}>
           <Atmosphere />
@@ -28,9 +28,9 @@ export const PsxReel: React.FC = () => {
           <Towers />
           <LogoBars />
           <EffectComposer multisampling={4}>
-            <Bloom intensity={0.95} luminanceThreshold={0.32} luminanceSmoothing={0.35} mipmapBlur />
-            <Vignette offset={0.28} darkness={0.7} />
-            <Noise opacity={0.06} blendFunction={BlendFunction.SOFT_LIGHT} />
+            <Bloom intensity={0.35} luminanceThreshold={0.9} luminanceSmoothing={0.2} mipmapBlur />
+            <Vignette offset={0.35} darkness={0.22} />
+            <Noise opacity={0.025} blendFunction={BlendFunction.SOFT_LIGHT} />
           </EffectComposer>
         </ThreeCanvas>
       )}

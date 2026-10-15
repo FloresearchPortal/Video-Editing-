@@ -41,10 +41,10 @@ export const Ground: React.FC = () => {
     <>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -20]}>
         <planeGeometry args={[400, 400]} />
-        <meshStandardMaterial color="#06090C" roughness={0.55} metalness={0.4} />
+        <meshStandardMaterial color="#EEF4EF" roughness={0.85} metalness={0.05} />
       </mesh>
       <lineSegments geometry={grid}>
-        <lineBasicMaterial color="#1F6E00" transparent opacity={0.22} />
+        <lineBasicMaterial color="#C9D8CC" transparent opacity={0.7} />
       </lineSegments>
     </>
   );
@@ -69,17 +69,17 @@ export const PriceLine: React.FC = () => {
   return (
     <group visible={fade > 0.01}>
       <mesh geometry={geo}>
-        <meshStandardMaterial color="#3ACC00" emissive="#3ACC00" emissiveIntensity={2.2 * fade} transparent opacity={fade} />
+        <meshStandardMaterial color="#2C9C00" emissive="#3ACC00" emissiveIntensity={0.9 * fade} roughness={0.3} transparent opacity={fade} />
       </mesh>
       <mesh position={[hx, hy, 0]} scale={0.22 * pulse}>
         <sphereGeometry args={[1, 24, 24]} />
-        <meshBasicMaterial color="#E9FFD9" transparent opacity={fade} />
+        <meshBasicMaterial color="#3ACC00" toneMapped={false} transparent opacity={fade} />
       </mesh>
       <mesh position={[hx, hy, 0]} scale={0.6 * pulse}>
         <sphereGeometry args={[1, 24, 24]} />
-        <meshBasicMaterial color="#3ACC00" transparent opacity={0.35 * fade} />
+        <meshBasicMaterial color="#3ACC00" transparent opacity={0.18 * fade} />
       </mesh>
-      <pointLight position={[hx, hy + 0.4, 1.2]} color="#7CFF3A" intensity={60 * fade} distance={16} decay={2} />
+      <pointLight position={[hx, hy + 0.4, 1.2]} color="#7CFF3A" intensity={18 * fade} distance={12} decay={2} />
     </group>
   );
 };
@@ -123,19 +123,19 @@ export const CandleField: React.FC = () => {
   }, [f, data, tmp]);
   useLayoutEffect(() => {
     const c = new THREE.Color();
-    data.forEach((d, i) => { c.set(d.up ? '#2C9C00' : '#1C252D'); bodies.current.setColorAt(i, c); wicks.current.setColorAt(i, c); });
+    data.forEach((d, i) => { c.set(d.up ? '#2C9C00' : '#C3CBD3'); bodies.current.setColorAt(i, c); wicks.current.setColorAt(i, c); });
     bodies.current.instanceColor!.needsUpdate = true; wicks.current.instanceColor!.needsUpdate = true;
   }, [data]);
-  const dim = mx(1, 0.35, rp(f, bf(13), bf(15)));
+  const dim = mx(1, 0.3, rp(f, bf(13), bf(15)));
   return (
     <>
       <instancedMesh ref={bodies} args={[undefined, undefined, data.length]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ffffff" emissive="#2C9C00" emissiveIntensity={0.28 * dim} roughness={0.4} metalness={0.2} />
+        <meshStandardMaterial color="#ffffff" roughness={0.45} metalness={0.05} transparent opacity={dim} />
       </instancedMesh>
       <instancedMesh ref={wicks} args={[undefined, undefined, data.length]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ffffff" emissive="#2C9C00" emissiveIntensity={0.2 * dim} roughness={0.5} />
+        <meshStandardMaterial color="#ffffff" roughness={0.5} transparent opacity={dim} />
       </instancedMesh>
     </>
   );
@@ -208,13 +208,13 @@ export const Coins: React.FC = () => {
       <group position={[0, heroY, TOWER_Z]} rotation={[mx(Math.PI / 2, 0, flip), (1 - flip) * Math.sin(f * 0.12) * 0.5, 0]} scale={appear * (1 - cap)}>
         <mesh>
           <cylinderGeometry args={[0.85, 0.85, 0.16, 64]} />
-          <meshStandardMaterial color="#2C9C00" emissive="#2C9C00" emissiveIntensity={0.5} metalness={0.7} roughness={0.25} />
+          <meshStandardMaterial color="#2C9C00" emissive="#2C9C00" emissiveIntensity={0.15} metalness={0.45} roughness={0.3} />
         </mesh>
         {face && <mesh position={[0, 0.0805, 0]} rotation={[-Math.PI / 2, 0, 0]}><circleGeometry args={[0.85, 64]} /><meshBasicMaterial map={face} toneMapped={false} /></mesh>}
       </group>
       <instancedMesh ref={stack} args={[undefined, undefined, N_COIN]}>
         <cylinderGeometry args={[0.85, 0.85, 0.15, 48]} />
-        <meshStandardMaterial color="#2C9C00" emissive="#3ACC00" emissiveIntensity={0.35} metalness={0.65} roughness={0.3} transparent opacity={1 - cap} />
+        <meshStandardMaterial color="#2C9C00" emissive="#3ACC00" emissiveIntensity={0.1} metalness={0.45} roughness={0.3} transparent opacity={1 - cap} />
       </instancedMesh>
     </group>
   );
@@ -226,9 +226,9 @@ export const Towers: React.FC = () => {
   const f = useCurrentFrame();
   const labels = useFontTextures(() => TOP.map((c) => canvasTex(640, 300, (g) => {
     g.textAlign = 'center';
-    g.fillStyle = c.rank <= 3 ? '#3ACC00' : 'rgba(255,255,255,0.65)'; g.font = '800 46px Poppins'; g.fillText(`#${c.rank}`, 320, 58);
-    g.fillStyle = '#ffffff'; g.font = '900 italic 118px Poppins'; g.fillText(c.ticker, 320, 178);
-    g.fillStyle = 'rgba(255,255,255,0.82)'; g.font = '600 44px Poppins'; g.fillText(`Rs ${c.mcap_bn.toLocaleString('en-US', { minimumFractionDigits: 2 })} bn`, 320, 250);
+    g.fillStyle = c.rank === 1 ? '#FFFFFF' : c.rank <= 3 ? '#2C9C00' : '#6B7280'; g.font = '800 46px Poppins'; g.fillText(`#${c.rank}`, 320, 58);
+    g.fillStyle = c.rank === 1 ? '#FFFFFF' : '#0B0F14'; g.font = '900 italic 118px Poppins'; g.fillText(c.ticker, 320, 178);
+    g.fillStyle = c.rank === 1 ? 'rgba(255,255,255,0.9)' : '#3C434D'; g.font = '600 44px Poppins'; g.fillText(`Rs ${c.mcap_bn.toLocaleString('en-US', { minimumFractionDigits: 2 })} bn`, 320, 250);
   })));
   const cap = rp(f, bf(S.share.cap) - 2, bf(S.share.cap) + 6, EZ.inOut);
   if (f < bf(S.share.cap) - 3) return null;
@@ -249,14 +249,14 @@ export const Towers: React.FC = () => {
           <group key={c.ticker} position={[x, 0, TOWER_Z]}>
             <mesh position={[0, (H * s) / 2, 0]} scale={[1.7, H * s, 1.7]}>
               <boxGeometry args={[1, 1, 1]} />
-              <meshStandardMaterial color={hero ? '#2C9C00' : '#07100B'} emissive={hero ? '#3ACC00' : '#2C9C00'} emissiveIntensity={hero ? 0.55 : top3 ? 0.14 : 0.05} metalness={0.7} roughness={0.22} transparent opacity={hero ? cap : 0.94} />
+              <meshStandardMaterial color={hero ? '#2C9C00' : top3 ? '#F2FAEE' : '#FFFFFF'} emissive={hero ? '#3ACC00' : '#000000'} emissiveIntensity={hero ? 0.18 : 0} metalness={hero ? 0.35 : 0.05} roughness={hero ? 0.3 : 0.25} transparent opacity={hero ? cap : 0.9} />
             </mesh>
             <lineSegments geometry={edgeGeo} position={[0, (H * s) / 2, 0]} scale={[1.71, H * s, 1.71]}>
-              <lineBasicMaterial color={top3 ? '#7CFF3A' : '#3ACC00'} transparent opacity={Math.min(1, k * 3) * (1 - sink(r))} toneMapped={false} />
+              <lineBasicMaterial color={top3 ? '#2C9C00' : '#5DB33A'} transparent opacity={Math.min(1, k * 3) * (1 - sink(r))} />
             </lineSegments>
             <mesh position={[0, H * s + 0.04, 0]} scale={[1.72, 0.08, 1.72]}>
               <boxGeometry args={[1, 1, 1]} />
-              <meshBasicMaterial color={top3 ? '#7CFF3A' : '#3ACC00'} toneMapped={false} transparent opacity={Math.min(1, k * 3) * (1 - sink(r))} />
+              <meshBasicMaterial color={top3 ? '#3ACC00' : '#2C9C00'} toneMapped={false} transparent opacity={Math.min(1, k * 3) * (1 - sink(r))} />
             </mesh>
             {labels && <mesh position={[0, 1.05, 0.9]} scale={[2.72, 1.275, 1]}>
               <planeGeometry args={[1, 1]} />
@@ -282,14 +282,14 @@ export const LogoBars: React.FC = () => {
   const f = useCurrentFrame();
   const a = bf(S.logo.start);
   if (f < a - 1) return null;
-  const cols = ['#2C9C00', '#3ACC00', '#F4FFF0'];
+  const cols = ['#2C9C00', '#3ACC00', '#0B0F14'];
   return (
     <group position={[LOGO_X, 0, LOGO_Z]}>
       {cols.map((c, i) => {
         const k = rp(f, a + 4 + i * 2.5, a + 18 + i * 2.5, EZ.out);
         return (
           <mesh key={i} geometry={barGeo} position={[(i - 1) * 2.9, mx(-14, 0, k), 0]}>
-            <meshStandardMaterial color={c} emissive={c} emissiveIntensity={i === 2 ? 0.35 : 0.6} metalness={0.3} roughness={0.35} />
+            <meshStandardMaterial color={c} emissive={c} emissiveIntensity={i === 2 ? 0 : 0.12} metalness={0.25} roughness={0.35} />
           </mesh>
         );
       })}
@@ -300,16 +300,17 @@ export const LogoBars: React.FC = () => {
 // ---------------------------------------------------------------- lights + atmosphere
 export const Atmosphere: React.FC = () => {
   const f = useCurrentFrame();
-  const far = mx(mx(80, 46, rp(f, bf(13), bf(15))), 120, rp(f, bf(34.4), bf(36.5)));
+  // fog closes in for the coin, opens right up for the towers so their labels stay crisp
+  const far = mx(mx(mx(90, 50, rp(f, bf(13), bf(15))), 110, rp(f, bf(22), bf(23.6))), 140, rp(f, bf(34.4), bf(36.5)));
   return (
     <>
-      <color attach="background" args={['#04070A']} />
-      <fog attach="fog" args={['#04070A', 10, far]} />
-      <ambientLight intensity={0.35} />
-      <hemisphereLight args={['#BFFFA0', '#04070A', 0.35]} />
-      <directionalLight position={[12, 30, 18]} intensity={1.6} color="#ffffff" />
-      <directionalLight position={[-20, 10, -30]} intensity={1.1} color="#3ACC00" />
-      <pointLight position={[0, 18, 10]} intensity={f > bf(S.share.coin) ? 140 : 0} distance={40} color="#ffffff" />
+      <color attach="background" args={['#F7FBF8']} />
+      <fog attach="fog" args={['#F7FBF8', 22, far]} />
+      <ambientLight intensity={0.95} />
+      <hemisphereLight args={['#FFFFFF', '#DDEBDD', 0.8]} />
+      <directionalLight position={[12, 30, 18]} intensity={1.5} color="#ffffff" />
+      <directionalLight position={[-20, 12, -30]} intensity={0.5} color="#BFF2A6" />
+      <pointLight position={[0, 18, 10]} intensity={f > bf(S.share.coin) ? 60 : 0} distance={40} color="#ffffff" />
     </>
   );
 };
