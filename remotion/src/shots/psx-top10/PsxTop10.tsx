@@ -5,9 +5,9 @@ import React from 'react';
 import { AbsoluteFill } from 'remotion';
 import { Backdrop } from '../../projects/psx-top10/Backdrop';
 import { Intro } from '../../projects/psx-top10/Intro';
-import { Title, TitleAxis } from '../../projects/psx-top10/Title';
+import { Title } from '../../projects/psx-top10/Title';
 import { Explain } from '../../projects/psx-top10/Explain';
-import { Meet } from '../../projects/psx-top10/Meet';
+import { Sort } from '../../projects/psx-top10/Sort';
 import { Chart } from '../../projects/psx-top10/Chart';
 import { Cta } from '../../projects/psx-top10/Cta';
 import { Wipe } from '../../projects/psx-top10/Wipe';
@@ -15,7 +15,7 @@ import { C } from '../../projects/psx-top10/theme';
 import { END_FRAME, S } from '../../projects/psx-top10/timeline';
 
 // durationInSeconds must equal END_FRAME / 30 (cta.static_from beat + hold) — checked below.
-export const compositionConfig = { id: 'PsxTop10', durationInSeconds: 19.5333, fps: 30, width: 1080, height: 1920 };
+export const compositionConfig = { id: 'PsxTop10', durationInSeconds: 18.6667, fps: 30, width: 1080, height: 1920 };
 if (Math.round(compositionConfig.durationInSeconds * compositionConfig.fps) !== END_FRAME) {
   throw new Error(`PsxTop10: set durationInSeconds to ${(END_FRAME / 30).toFixed(4)} (timeline end frame ${END_FRAME})`);
 }
@@ -23,12 +23,11 @@ if (Math.round(compositionConfig.durationInSeconds * compositionConfig.fps) !== 
 const PsxTop10: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: C.paper }}>
     <Backdrop />
-    <TitleAxis />
     <Explain />
-    <Meet />
+    <Sort />
     <Chart />
     <Cta />
-    <Wipe span={S.meet.wipe} />
+    <Wipe span={S.sort.wipe} />
     <Intro />
     <Title />
   </AbsoluteFill>

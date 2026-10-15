@@ -1,19 +1,16 @@
-// 1. Intro (beats 0-11): SaaS show-reel open, Pakistan Stock Exchange theme, paced to read.
+// 1. Intro (beats 0-8): SaaS show-reel open, Pakistan Stock Exchange theme, paced to read.
 //   b0   a "PSX Live" dashboard window springs in, its chart drawing
-//   b3   a cursor clicks "Show Top 10"  ->  the button's green floods the frame (zoom-through)
-//   b4   the 10 tickers pop out as pills in a clean grid  ->  b5.5 they are pulled back to the centre
-//   b6   "TOP / 10" slams in (slot-roll digits, shockwave, ticker tapes), pulses on each beat
-//   b10  the green frame shrinks into a rounded app card at the top: the title section's hero card
-//        (it stays on screen through the title and lifts out with it)
+//   b3   a cursor clicks "Show Top 10"  ->  the button's green floods the frame
+//   b4   "TOP / 10" slams in (slot-roll digits, shockwave), pulses on each beat
+//   b7.4 zoom-through: TOP 10 rushes at the camera, white floods in, the title whips in
 import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame } from 'remotion';
-import { C, E, FONT, asset, fmtBn, mix, ramp } from './theme';
+import { C, E, FONT, asset, mix, ramp } from './theme';
 import { bf, FPB, FPS, S, TOP } from './timeline';
-import { Num, Up } from './Num';
+import { Up } from './Num';
 
 const W = 1080, H = 1920;
 const I = S.intro;
-export const CARD = { x: 80, y: 560, w: 600, h: 200, r: 26 }; // = Title BARS[0]: the green frame becomes the first bar
 const sp = (f: number, at: number, cfg = { damping: 14, stiffness: 150, mass: 0.7 }) => spring({ frame: f - at, fps: FPS, config: cfg });
 
 // decorative chart path for the window (no labels / numbers)
@@ -117,30 +114,19 @@ const Slot: React.FC<{ f: number; at: number; to: number; size: number; spins: n
   );
 };
 
-// burst layout: two columns x five rows, clear of each other and of the centre
-const PILL_W = 250, PILL_H = 104;
-const PILL_POS = TOP.map((_, i) => ({ x: i % 2 ? 790 : 290, y: 500 + Math.floor(i / 2) * 190 }));
-
 export const Intro: React.FC = () => {
   const f = useCurrentFrame();
-  if (f > bf(S.title.exit) + 12) return null;
-  const click = bf(I.click), burst = bf(I.burst), slam = bf(I.slam), pull0 = bf(I.pull), morph0 = bf(I.morph), morph1 = bf(S.title.start);
+  if (f > bf(I.end) + 2) return null;
+  const click = bf(I.click), burst = bf(I.burst), slam = bf(I.slam), zoom = bf(I.zoom), end = bf(I.end);
   const flood = ramp(f, click + 1, burst, E.in);
   const R = flood * 2300;
-  const m = ramp(f, morph0, morph1, E.inOut); // green frame -> title card
-  const rect = { x: mix(0, CARD.x, m), y: mix(0, CARD.y, m), w: mix(W, CARD.w, m), h: mix(H, CARD.h, m), r: mix(0, CARD.r, m) };
   const beat = (f - slam) / FPB, ph = beat >= 0 ? beat % 1 : 0;
-  const pulse = beat >= 1 && beat < I.morph - I.slam ? Math.exp(-(ph * FPB) / 3.5) : 0;
+  const pulse = beat >= 1 && beat < I.zoom - I.slam ? Math.exp(-(ph * FPB) / 3.5) : 0;
   const slamS = sp(f, slam, { damping: 12, stiffness: 170, mass: 0.65 });
-  const pull = ramp(f, pull0, slam, E.in);
-  const fx = 1 - ramp(f, morph0, morph0 + 6); // tapes / label / rings fade as the card forms
-  // TOP/10 block: centre (540, 955) at full size -> card centre at 0.4x
-  const blockS = mix(1, 0.3, m) * mix(1.3, 1, slamS) * (1 + 0.03 * pulse * (1 - m));
-  const blockDy = mix(0, CARD.y + CARD.h / 2 - 955, m);
-  const blockDx = mix(0, CARD.x + CARD.w / 2 - 540, m);
-  const blockOp = 1 - ramp(f, morph0 + 4, morph0 + 10);
-  const label = ramp(f, morph1 - 4, morph1 + 4, E.out);
-  const barOut = ramp(f, bf(S.title.exit), bf(S.title.exit) + 9, E.inOut); // bar 1 collapses to the axis
+  // zoom-through: TOP 10 rushes at the camera and white light floods in
+  const zt = ramp(f, zoom, end, E.in);
+  const flash = ramp(f, zoom + 3, end - 1, E.in); // white light floods in as TOP 10 rushes past
+  const blockS = mix(1.3, 1, slamS) * (1 + 0.03 * pulse) * mix(1, 4.5, zt);
 
   return (
     <AbsoluteFill>
@@ -151,56 +137,25 @@ export const Intro: React.FC = () => {
         </div>
       )}
       {f >= click + 1 && (
-        <div style={{ position: 'absolute', left: rect.x, top: rect.y, width: rect.w, height: rect.h, borderRadius: rect.r, overflow: 'hidden', transformOrigin: 'left center', transform: `scaleX(${1 - barOut})`, boxShadow: m > 0 ? `0 8px 24px rgba(11,15,20,${0.08 * m}), 0 40px 90px rgba(44,156,0,${0.25 * m})` : 'none' }}>
-          <div style={{ position: 'absolute', left: -rect.x, top: -rect.y, width: W, height: H }}>
-            {f < burst + 2 ? <div style={{ position: 'absolute', left: BTN.x - R, top: BTN.y - R, width: 2 * R, height: 2 * R, borderRadius: R, background: C.green }} />
-              : <div style={{ position: 'absolute', inset: 0, background: C.green }} />}
-            {/* as it becomes the hero card it takes the site's deep-to-bright green gradient */}
-            {m > 0 && <div style={{ position: 'absolute', left: rect.x, top: rect.y, width: rect.w, height: rect.h, background: `linear-gradient(135deg, ${C.deep}, ${C.green} 55%, #3ACC00)`, opacity: m }} />}
-            {f >= burst && f < slam + 24 && [0, 1, 2].map((i) => {
-              const t = ramp(f, burst + i * 5, burst + i * 5 + 24, E.out);
-              const r = mix(60, 900, t);
-              return <div key={i} style={{ position: 'absolute', left: 540 - r, top: 960 - r, width: 2 * r, height: 2 * r, borderRadius: r, border: `${mix(10, 2, t)}px solid ${C.lime}`, opacity: (1 - t) * 0.7 }} />;
-            })}
-            {/* the ten tickers pop into a grid, then get pulled back into the centre */}
-            {f >= burst && f < slam + 1 && TOP.map((c, i) => {
-              const o = sp(f, burst + i * 1.2, { damping: 13, stiffness: 140, mass: 0.6 });
-              const p = PILL_POS[i];
-              const x = mix(540, p.x, o * (1 - pull)), y = mix(960, p.y, o * (1 - pull));
-              return (
-                <div key={c.ticker} style={{ position: 'absolute', left: x - PILL_W / 2, top: y - PILL_H / 2, width: PILL_W, height: PILL_H, boxSizing: 'border-box', borderRadius: 30, background: '#fff', boxShadow: '0 16px 36px rgba(0,0,0,0.18)', textAlign: 'center', paddingTop: 12, transform: `scale(${mix(0.3, 1, o) * mix(1, 0.4, pull)}) rotate(${(i % 2 ? 3 : -3) * (1 - pull)}deg)`, opacity: Math.min(1, o * 3) * (1 - ramp(f, slam - 3, slam)) }}>
-                  <div style={{ fontFamily: FONT.display, fontWeight: 900, fontSize: 42, lineHeight: '48px', color: C.ink }}>{c.ticker}</div>
-                  <div style={{ fontFamily: FONT.mono, fontWeight: 600, fontSize: 20, lineHeight: '28px', color: C.green }}>Rs <Num v={fmtBn(c.mcap_bn)} cell={0.62} /> bn</div>
+        <AbsoluteFill style={{ overflow: 'hidden' }}>
+          {f < burst + 2 ? <div style={{ position: 'absolute', left: BTN.x - R, top: BTN.y - R, width: 2 * R, height: 2 * R, borderRadius: R, background: C.green }} />
+            : <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg, ${C.deep}, ${C.green} 55%, #3ACC00)` }} />}
+          {f >= slam - 1 && (
+            <>
+              {(() => { const t = ramp(f, slam, slam + 20, E.out); const r = mix(200, 1200, t); return <div style={{ position: 'absolute', left: 540 - r, top: 960 - r, width: 2 * r, height: 2 * r, borderRadius: r, border: `${mix(26, 2, t)}px solid rgba(255,255,255,0.5)`, opacity: 1 - t }} />; })()}
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 440, textAlign: 'center', fontFamily: FONT.mono, fontWeight: 600, fontSize: 30, lineHeight: '40px', letterSpacing: 9, color: 'rgba(255,255,255,0.88)', opacity: ramp(f, slam + 4, slam + 12) * (1 - ramp(f, zoom, zoom + 4)), transform: `translateY(${(1 - ramp(f, slam + 4, slam + 14)) * 30}px)` }}>PAKISTAN STOCK EXCHANGE</div>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 540, height: 830, textAlign: 'center', color: '#fff', fontFamily: FONT.display, fontWeight: 900, transformOrigin: '540px 415px', transform: `scale(${blockS})`, filter: `blur(${zt * 14}px)`, opacity: 1 - ramp(f, zoom + 4, end) }}>
+                <div style={{ fontSize: 300, lineHeight: '320px', height: 320, overflow: 'hidden', letterSpacing: -6 }}>
+                  <div style={{ transform: `translateY(${(1 - ramp(f, slam - 1, slam + 8, E.out)) * 320}px)` }}>TOP</div>
                 </div>
-              );
-            })}
-            {f >= slam - 1 && (
-              <>
-                {[300, 1580].map((y, k) => (
-                  <div key={y} style={{ position: 'absolute', left: 0, top: y, width: W, height: 66, background: C.deep, overflow: 'hidden', opacity: ramp(f, slam, slam + 6) * fx }}>
-                    <div style={{ position: 'absolute', top: 12, left: (k ? -1 : 1) * ((f * 5) % 1400) - (k ? 0 : 1400), whiteSpace: 'nowrap', fontFamily: FONT.mono, fontWeight: 700, fontSize: 28, lineHeight: '42px', color: '#fff', letterSpacing: 2 }}>
-                      {[...TOP, ...TOP, ...TOP].map((c, i) => <span key={i} style={{ marginRight: 46 }}>{c.ticker} <Up color={C.lime} /></span>)}
-                    </div>
-                  </div>
-                ))}
-                {(() => { const t = ramp(f, slam, slam + 20, E.out); const r = mix(200, 1200, t); return <div style={{ position: 'absolute', left: 540 - r, top: 960 - r, width: 2 * r, height: 2 * r, borderRadius: r, border: `${mix(26, 2, t)}px solid rgba(255,255,255,0.5)`, opacity: 1 - t }} />; })()}
-                <div style={{ position: 'absolute', left: 0, right: 0, top: 440, textAlign: 'center', fontFamily: FONT.mono, fontWeight: 600, fontSize: 30, lineHeight: '40px', letterSpacing: 9, color: 'rgba(255,255,255,0.88)', opacity: ramp(f, slam + 4, slam + 12) * fx, transform: `translateY(${(1 - ramp(f, slam + 4, slam + 14)) * 30}px)` }}>PAKISTAN STOCK EXCHANGE</div>
-                <div style={{ position: 'absolute', left: 0, right: 0, top: 540, height: 830, textAlign: 'center', color: '#fff', fontFamily: FONT.display, fontWeight: 900, transformOrigin: '540px 415px', opacity: blockOp, transform: `translate(${blockDx}px, ${blockDy}px) scale(${blockS})` }}>
-                  <div style={{ fontSize: 300, lineHeight: '320px', height: 320, overflow: 'hidden', letterSpacing: -6 }}>
-                    <div style={{ transform: `translateY(${(1 - ramp(f, slam - 1, slam + 8, E.out)) * 320}px)` }}>TOP</div>
-                  </div>
-                  <div style={{ fontSize: 520, lineHeight: '520px', height: 520, marginTop: -10 }}>
-                    <Slot f={f} at={slam - 1} to={1} size={520} spins={1} /><Slot f={f} at={slam + 1} to={0} size={520} spins={2} />
-                  </div>
+                <div style={{ fontSize: 520, lineHeight: '520px', height: 520, marginTop: -10 }}>
+                  <Slot f={f} at={slam - 1} to={1} size={520} spins={1} /><Slot f={f} at={slam + 1} to={0} size={520} spins={2} />
                 </div>
-              </>
-            )}
-          </div>
-          {/* bar 1 label */}
-          {label > 0 && <div style={{ position: 'absolute', left: 48, top: 0, height: '100%', display: 'flex', alignItems: 'center', opacity: label * (1 - barOut), transform: `translateY(${(1 - label) * 30}px)` }}>
-            <span style={{ fontFamily: FONT.display, fontWeight: 800, letterSpacing: '-0.035em', fontSize: 150, lineHeight: '170px', color: '#fff' }}>Top 10</span>
-          </div>}
-        </div>
+              </div>
+            </>
+          )}
+          {flash > 0 && <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 50%, #fff 0%, #fff 55%, rgba(255,255,255,0.85) 100%)', opacity: flash }} />}
+        </AbsoluteFill>
       )}
     </AbsoluteFill>
   );

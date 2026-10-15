@@ -166,7 +166,7 @@ def put_bed(sig, at, gain=1.0):
     e = min(len(mixL), at + s.shape[1])
     music_bed[0][at:e] += gain * s[0, :e - at]; music_bed[1][at:e] += gain * s[1, :e - at]
 
-intro, title, ex, meet, chart, cta = (S[k] for k in ('intro', 'title', 'explain', 'meet', 'chart', 'cta'))
+intro, title, ex, srt, chart, cta = (S[k] for k in ('intro', 'title', 'explain', 'sort', 'chart', 'cta'))
 end_beat = END_S / BEAT
 riser_spans = [(c['beat'], c['to']) for c in TL['cues'] if c['type'] in ('riser', 'fill')]
 
@@ -176,7 +176,7 @@ def energy(beat):
     if beat < intro['end']: return 'full'
     if beat < title['end']: return 'groove'
     if beat < ex['end']: return 'light'
-    if beat < meet['end']: return 'groove'
+    if beat < srt['end']: return 'groove'
     if beat < cta['start']: return 'full'
     return 'soft'
 

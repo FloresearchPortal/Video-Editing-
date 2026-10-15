@@ -99,3 +99,15 @@ export const mixHex = (a: string, b: string, t: number) => {
   const pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16));
   return '#' + pa.map((v, i) => Math.round(mix(v, pb[i], Math.min(1, Math.max(0, t)))).toString(16).padStart(2, '0')).join('');
 };
+
+// kinetic push between screens (always bottom -> top): the old screen whips up and out with motion
+// blur, then the new one rises in and sharpens. Sequential, so two screens never share the frame.
+export const pushStyle = (f: number, enter: number, exit = Infinity): React.CSSProperties => {
+  const i = ramp(f, enter, enter + 10, E.out);
+  const o = exit === Infinity ? 0 : ramp(f, exit, exit + 7, E.in);
+  return {
+    opacity: Math.min(1, i * 1.6) * (1 - o),
+    transform: `translateY(${(1 - i) * 220 - o * 260}px)`,
+    filter: `blur(${(1 - i) * 10 + o * 12}px)`,
+  };
+};
