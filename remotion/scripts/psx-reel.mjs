@@ -28,7 +28,7 @@ if (mode === 'stills') {
   const t = Date.now();
   await renderMedia({
     serveUrl, composition, outputLocation: out, scale, codec: 'h264', pixelFormat: 'yuv420p', crf: 8,
-    imageFormat: 'jpeg', jpegQuality: 95, muted: true, overwrite: true, chromiumOptions, concurrency: 4, timeoutInMilliseconds: 300000,
+    imageFormat: 'jpeg', jpegQuality: 95, muted: true, overwrite: true, chromiumOptions, concurrency: 3, timeoutInMilliseconds: 300000,
     onProgress: ({ progress }) => { const p = Math.round(progress * 100); if (p % 10 === 0 && p !== globalThis.__p) { globalThis.__p = p; console.log(`  ${p}%  ${((Date.now() - t) / 1000).toFixed(0)}s`); } },
   });
   console.log('->', out, `${((Date.now() - t) / 1000).toFixed(0)}s`);

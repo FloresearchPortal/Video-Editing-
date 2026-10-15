@@ -152,10 +152,11 @@ const canvasTex = (w: number, h: number, draw: (g: CanvasRenderingContext2D) => 
 };
 function useFontTextures<T>(build: () => T): T | null {
   const [value, setValue] = useState<T | null>(null);
-  const [handle] = useState(() => delayRender('poppins canvas textures'));
+  const [handle] = useState(() => delayRender('poppins canvas textures', { timeoutInMilliseconds: 120000 }));
   const advance = useThree((st) => st.advance);
   useEffect(() => {
-    Promise.all(['900 italic 80px Poppins', '800 60px Poppins', '600 40px Poppins'].map((q) => document.fonts.load(q)))
+    const wait = new Promise((r) => setTimeout(r, 30000));
+    Promise.race([Promise.all(['900 italic 80px Poppins', '800 60px Poppins', '600 40px Poppins'].map((q) => document.fonts.load(q))), wait])
       .catch(() => null).then(() => setValue(build()));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

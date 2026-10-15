@@ -35,12 +35,17 @@ const FACES: [string, string, string][] = [
   ['Poppins-Medium.ttf', '500', 'normal'], ['Poppins-MediumItalic.ttf', '500', 'italic'],
   ['Poppins-Regular.ttf', '400', 'normal'], ['Poppins-Italic.ttf', '400', 'italic'],
 ];
+// Load every face; a face that has not loaded within 12 s is retried once (heavy WebGL renders can
+// starve the local font fetch), and the render is never held longer than ~40 s by fonts.
+const loadFace = ([file, weight, style]: [string, string, string]) => {
+  const once = () => new FontFace(FONT, `url('${staticFile(`series/flostocks/fonts/${file}`)}')`, { weight, style }).load();
+  const timeout = (ms: number) => new Promise<never>((_, rej) => setTimeout(() => rej(new Error('font timeout')), ms));
+  return Promise.race([once(), timeout(12000)]).catch(() => Promise.race([once(), timeout(25000)]))
+    .then((f) => { (document.fonts as any).add(f); }).catch((e) => console.error('font', file, e));
+};
 if (typeof document !== 'undefined') {
-  const handle = delayRender('flostocks fonts');
-  Promise.all(FACES.map(([file, weight, style]) => {
-    const face = new FontFace(FONT, `url('${staticFile(`series/flostocks/fonts/${file}`)}')`, { weight, style });
-    return face.load().then((f) => (document.fonts as any).add(f));
-  })).then(() => continueRender(handle)).catch((e) => { console.error(e); continueRender(handle); });
+  const handle = delayRender('flostocks fonts', { timeoutInMilliseconds: 120000 });
+  Promise.all(FACES.map(loadFace)).then(() => continueRender(handle));
 }
 export const seriesAsset = (p: string) => staticFile(`series/flostocks/${p}`);
 
