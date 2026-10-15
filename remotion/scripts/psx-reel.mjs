@@ -12,6 +12,10 @@ const [mode, out, id, ...rest] = process.argv.slice(2);
 const scale = Number((rest.find((a) => a.startsWith('--scale=')) || '--scale=1').split('=')[1]);
 const gl = (rest.find((a) => a.startsWith('--gl=')) || '--gl=angle').split('=')[1];
 const frames = rest.filter((a) => !a.startsWith('--')).map(Number);
+// --range=a-b renders only those frames (build.py runs several processes in parallel, one browser each:
+// several software-WebGL contexts in ONE browser can deadlock, separate processes cannot)
+const rangeArg = (rest.find((a) => a.startsWith('--range=')) || '').split('=')[1];
+const frameRange = rangeArg ? rangeArg.split('-').map(Number) : undefined;
 const chromiumOptions = { gl };
 
 await import('./gen-font-data.mjs');
@@ -29,7 +33,7 @@ if (mode === 'stills') {
   const t = Date.now();
   await renderMedia({
     serveUrl, composition, outputLocation: out, scale, codec: 'h264', pixelFormat: 'yuv420p', crf: 8,
-    imageFormat: 'jpeg', jpegQuality: 95, muted: true, overwrite: true, chromiumOptions, concurrency: 3, timeoutInMilliseconds: 300000,
+    imageFormat: 'jpeg', jpegQuality: 95, muted: true, overwrite: true, chromiumOptions, concurrency: 1, frameRange, timeoutInMilliseconds: 300000,
     onProgress: ({ progress }) => { const p = Math.round(progress * 100); if (p % 10 === 0 && p !== globalThis.__p) { globalThis.__p = p; console.log(`  ${p}%  ${((Date.now() - t) / 1000).toFixed(0)}s`); } },
   });
   console.log('->', out, `${((Date.now() - t) / 1000).toFixed(0)}s`);

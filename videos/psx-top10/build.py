@@ -110,6 +110,24 @@ def contact_sheet(src: Path, out: Path, cols=8):
     print('contact sheet ->', out.relative_to(ROOT))
 
 
+def render_reel(silent: Path, scale: str, parts: int = 3):
+    """Render the 3D reel as `parts` parallel processes (one browser + one WebGL context each), then join."""
+    edges = [round(i * END / parts) for i in range(parts + 1)]
+    procs, files = [], []
+    for i in range(parts):
+        part = OUT / f'reel_part{i}.mp4'
+        files.append(part)
+        cmd = ['node', 'scripts/psx-reel.mjs', 'video', str(part), 'PsxReel', f'--scale={scale}', '--gl=swangle', f'--range={edges[i]}-{edges[i + 1] - 1}']
+        print('$', ' '.join(cmd))
+        procs.append(subprocess.Popen(cmd, cwd=REM, stdout=open(OUT / f'reel_part{i}.log', 'w'), stderr=subprocess.STDOUT))
+    codes = [p.wait() for p in procs]
+    if any(codes):
+        raise SystemExit(f'reel part render failed: {codes} (see output/reel_part*.log)')
+    lst = OUT / 'reel_parts.txt'
+    lst.write_text(''.join(f"file '{f.name}'\n" for f in files))
+    sh(['ffmpeg', '-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', str(lst), '-c', 'copy', str(silent)])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--preview', action='store_true')
@@ -126,7 +144,7 @@ def main():
         if not a.skip_render:
             sh([sys.executable, str(HERE / 'music/make_music.py'), '-o', str(OUT / 'music.wav')])
             if REEL:
-                sh(['node', 'scripts/psx-reel.mjs', 'video', str(silent), 'PsxReel', f'--scale={scale}', '--gl=swangle'], cwd=REM)
+                render_reel(silent, scale)
             else:
                 sh(['node', 'scripts/psx-top10.mjs', 'video', str(silent), f'--scale={scale}'], cwd=REM)
             sh(['ffmpeg', '-v', 'error', '-y', '-i', str(silent), '-i', str(OUT / 'music.wav'), '-map', '0:v', '-map', '1:a',
