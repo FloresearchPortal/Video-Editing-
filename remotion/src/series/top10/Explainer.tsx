@@ -1,5 +1,6 @@
 // The basis of the ranking, as one simple formula: A (op) B = RESULT, with a worked example.
 // Cards slide in on the beat, values land on split-flap tiles, then the one-line takeaway.
+// 192 frames (16 beats): A 16, op 38, B 44, = 76, result 82, example 98, takeaway 112, full hold from ~125.
 import React from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { Backdrop } from '../flostocks/Backdrop';
@@ -51,7 +52,7 @@ const Card: React.FC<{ term: Term; at: number; top: number; h: number; result?: 
       {!result && <div style={{ position: 'absolute', left: 0, top: 36, width: 10, height: h - 72, borderRadius: 5, background: T.lime }} />}
       <div style={{ position: 'absolute', left: 52, top: 40, fontFamily: FONT, fontWeight: 800, fontSize: 38, letterSpacing: '0.06em', color: result ? '#FFFFFF' : T.ink }}>{term.label}</div>
       <div style={{ position: 'absolute', left: 52, top: 96, width: noteW, fontFamily: FONT, fontWeight: 500, fontSize: 26, lineHeight: '34px', color: result ? 'rgba(255,255,255,0.88)' : T.grey }}>{term.note}</div>
-      {term.visual && <div style={{ position: 'absolute', left: 56, bottom: 30 }}><Chips n={term.visual === 'one' ? 1 : 26} at={at + 6} dur={22} /></div>}
+      {term.visual && <div style={{ position: 'absolute', left: 56, bottom: 30 }}><Chips n={term.visual === 'one' ? 1 : 26} at={at + 6} dur={30} /></div>}
       <div style={{ position: 'absolute', right: 44, top: 0, height: term.visual ? h - 64 : h, display: 'flex', alignItems: 'center' }}>
         <FlapValue term={term} at={at + 4} dark={result} h={vh} />
       </div>
@@ -88,14 +89,14 @@ export const Explainer: React.FC<{ ex: Ex }> = ({ ex }) => {
           </MBlur>
         );
       })}
-      <Card term={ex.a} at={14} top={590} h={196} />
-      <Op ch={ex.op} at={30} top={800} />
-      <Card term={ex.b} at={34} top={890} h={216} />
-      <Op ch="=" at={58} top={1120} />
-      <Card term={ex.result} at={62} top={1210} h={196} result />
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 1424, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: 25, color: T.grey, opacity: ramp(f, 76, 84) }}>{ex.example}</div>
+      <Card term={ex.a} at={16} top={590} h={196} />
+      <Op ch={ex.op} at={38} top={800} />
+      <Card term={ex.b} at={44} top={890} h={216} />
+      <Op ch="=" at={76} top={1120} />
+      <Card term={ex.result} at={82} top={1210} h={196} result />
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 1424, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: 25, color: T.grey, opacity: ramp(f, 98, 106) }}>{ex.example}</div>
       {ex.takeaway.map((q, i) => {
-        const at = 88 + i * 4, t = whip(f, at, 9);
+        const at = 112 + i * 5, t = whip(f, at, 9);
         return (
           <div key={i} style={{ position: 'absolute', left: 0, right: 0, top: 1478 + i * ts[0] * 1.1, transform: `translateY(${(1 - t) * 40}px)`, opacity: t }}>
             <KLine segs={q} size={ts[i]} />

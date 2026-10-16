@@ -2,8 +2,8 @@
 export type Ink = 'ink' | 'green' | 'white' | 'grey';
 export type Seg = { t: string; c?: Ink };
 
-// Topic title: stacked kinetic lines. `band` lines sit on a full-bleed green band.
-export type TitleLine = { segs: Seg[]; max: number; band?: boolean };
+// Topic title, built as the logo lockup: 2-3 lines (one colour each, ink first then green) + pill label.
+export type Title = { lines: { t: string; c: Ink }[]; pill: string };
 
 // Explainer: one simple formula  A (op) B = RESULT, shown with a worked example.
 export type Term = {
@@ -33,7 +33,7 @@ export type Rankings = {
   source: string;
 };
 
-export type Episode = { ep: string; title: TitleLine[]; explainer: Explainer; rankings: Rankings };
+export type Episode = { ep: string; title: Title; explainer: Explainer; rankings: Rankings };
 
 // Timeline (beats; shared with the music generator). Section starts are fixed by the series format.
 export type Timeline = {

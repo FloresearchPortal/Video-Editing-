@@ -15,13 +15,10 @@ export const TIMELINE = tl as unknown as Timeline;
 
 export const EPISODE: Episode = {
   ep: 'EP 01',
-  title: [
-    { segs: [{ t: 'TOP ', c: 'ink' }, { t: '10', c: 'green' }], max: 250 },
-    { segs: [{ t: 'COMPANIES BY', c: 'ink' }], max: 104 },
-    { segs: [{ t: 'MARKET', c: 'white' }], max: 150, band: true },
-    { segs: [{ t: 'CAPITALIZATION', c: 'white' }], max: 150, band: true },
-    { segs: [{ t: 'IN ', c: 'ink' }, { t: 'PSX', c: 'green' }], max: 120 },
-  ],
+  title: {
+    lines: [{ t: 'TOP 10 COMPANIES', c: 'ink' }, { t: 'BY MARKET', c: 'green' }, { t: 'CAPITALIZATION', c: 'green' }],
+    pill: 'IN PSX',
+  },
   explainer: {
     kicker: 'HOW THEY ARE RANKED',
     question: [[{ t: 'WHAT IS', c: 'ink' }], [{ t: 'MARKET CAP?', c: 'green' }]],

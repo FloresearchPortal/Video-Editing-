@@ -45,11 +45,11 @@ def key_frames_reel():
 
 def key_frames_series():
     """Stills through every section: intro beats, each title line, explainer steps, every ranking row, CTA."""
-    fr = [3, 10, 20, 30, 38, 46, 56, 62, 66, 72, 84, 100, 112]
+    fr = [3, 10, 20, 30, 40, 52, 62, 66, 70]
     b = lambda k: round(bf(S[k]['start']))
-    fr += [b('title') + x for x in (4, 12, 24, 60)]
-    fr += [b('explain') + x for x in (6, 22, 40, 66, 96, 130)]
-    fr += [b('rank') + x for x in (6, 30, 64, 100, 126, 140, 190)]
+    fr += [b('title') + x for x in (4, 14, 24, 34, 46, 70)]
+    fr += [b('explain') + x for x in (8, 30, 50, 90, 120, 180)]
+    fr += [b('rank') + x for x in (6, 30, 64, 100, 126, 140, 185)]
     fr += [b('cta') + x for x in (4, 10)]
     return sorted({int(min(END - 1, max(0, x))) for x in fr} | {CTA_STATIC, int(END - 1)})
 

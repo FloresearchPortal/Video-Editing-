@@ -1,6 +1,6 @@
-// One PSX TOP 10 episode = intro (fixed) -> topic title -> explainer -> rankings -> CTA, on the beat grid
-// of the episode's timeline.json (150 BPM = 12 frames per beat). Transitions alternate between the
-// FloStocks bar wipe, the ticker-band shutter and the slant band wipe; each covers the cut exactly.
+// One PSX TOP 10 episode = intro (fixed) -> topic lockup -> explainer -> rankings -> CTA, on the beat grid
+// of the episode's timeline.json (150 BPM = 12 frames per beat). The intro zooms through into the topic
+// lockup; then the ticker-band shutter, the FloStocks bar wipe and the slant band wipe, each covering its cut.
 import React from 'react';
 import { AbsoluteFill, Sequence, useCurrentFrame } from 'remotion';
 import { BrandWipe, SWAP } from '../flostocks/BrandWipe';
@@ -43,12 +43,11 @@ export const Top10Episode: React.FC<{ episode: Episode; tl: Timeline }> = ({ epi
   return (
     <AbsoluteFill style={{ background: '#FFFFFF' }}>
       <Sequence durationInFrames={F.title}><SeriesIntro /></Sequence>
-      <Sequence from={F.title} durationInFrames={F.explain - F.title}><TopicTitle lines={episode.title} /></Sequence>
+      <Sequence from={F.title} durationInFrames={F.explain - F.title}><TopicTitle title={episode.title} /></Sequence>
       <Sequence from={F.explain} durationInFrames={F.rank - F.explain}><Explainer ex={episode.explainer} /></Sequence>
       <Sequence from={F.rank} durationInFrames={F.cta - F.rank}><Rankings r={episode.rankings} /></Sequence>
-      <Sequence from={F.title} durationInFrames={F.cta - F.title}><Header ep={episode.ep} from={0} /></Sequence>
+      <Sequence from={F.explain} durationInFrames={F.cta - F.explain}><Header ep={episode.ep} from={0} /></Sequence>
       <Sequence from={F.cta}><CtaCard disclaimer={DISCLAIMER} /></Sequence>
-      <BrandWipe at={F.title - SWAP} />
       <BandShutter at={F.explain - SHUTTER_SWAP} />
       <BrandWipe at={F.rank - SWAP} />
       <SlantWipe at={slantAt} />
