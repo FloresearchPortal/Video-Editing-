@@ -16,7 +16,7 @@ const fmt = (v: number, d: number) => v.toLocaleString('en-US', { minimumFractio
 export const Rankings: React.FC<{ r: R }> = ({ r }) => {
   const f = useCurrentFrame();
   const items = [...r.items].sort((a, b) => a.rank - b.rank);
-  const max = items[0].value;
+  const max = Math.max(...items.map((c) => c.value)); // longest bar = largest value (also for 'lowest is best' rankings)
   const hasLogo = items.some((c) => c.logo);
   const tickX = 170 + (hasLogo ? 68 : 0);
   const tickW = Math.max(...items.map((c) => textW(c.ticker, 44, '900i')));
@@ -69,13 +69,13 @@ export const Rankings: React.FC<{ r: R }> = ({ r }) => {
           </React.Fragment>
         );
       })}
-      <div style={{ position: 'absolute', left: 0, right: 0, top: TOP + PITCH * 10 + 12, display: 'flex', justifyContent: 'center', transform: `scale(${Math.max(0, pop(f, totalAt, 10, 1.8))})` }}>
+      {r.total && <div style={{ position: 'absolute', left: 0, right: 0, top: TOP + PITCH * 10 + 12, display: 'flex', justifyContent: 'center', transform: `scale(${Math.max(0, pop(f, totalAt, 10, 1.8))})` }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18, height: 72, padding: '0 34px', borderRadius: 36, background: T.ink }}>
           <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 26, letterSpacing: '0.12em', color: T.fog }}>{r.total.label}</span>
           <span style={{ fontFamily: FONT, fontWeight: 900, fontStyle: 'italic', fontSize: 38, color: T.lime }}>{r.total.value}</span>
         </div>
-      </div>
-      <div style={{ position: 'absolute', left: 0, right: 0, top: TOP + PITCH * 10 + 98, textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: 22, color: T.grey, opacity: ramp(f, totalAt + 4, totalAt + 12) }}>{r.source}</div>
+      </div>}
+      <div style={{ position: 'absolute', left: 0, right: 0, top: TOP + PITCH * 10 + (r.total ? 98 : 24), textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: 22, color: T.grey, opacity: ramp(f, totalAt + 4, totalAt + 12) }}>{r.source}</div>
     </AbsoluteFill>
   );
 };

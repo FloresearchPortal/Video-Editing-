@@ -1,5 +1,5 @@
 {
- "_doc": "PSX TOP 10 \u00b7 EP 01 (market cap). 150 BPM = 12 frames per beat @ 30 fps. Series format: intro 0-6 (fixed: ticker wall + TOP 10 flap board, zoom-through), title 6-13 (topic lockup), explain 13-29, rank 29-45 (rows #10 -> #1 on beats 30.33..39.33), cta 45 (static from 46.5). The music generator reads `sections` (energy) and `cues`.",
+ "_doc": "PSX TOP 10 series beat grid \u2014 LOCKED, the same for every episode. 150 BPM = 12 frames per beat @ 30 fps. intro 0-6 (ticker wall + TOP 10 flap board, zoom-through), title 6-13 (topic lockup), explain 13-29 (formula), rank 29-45 (rows #10 -> #1 on beats 30.33..39.33), cta 45 (static from 46.5, 1.2 s hold) = 19.8 s. The music generator reads `sections` (energy) and `cues`.",
  "bpm": 150,
  "fps": 30,
  "width": 1080,

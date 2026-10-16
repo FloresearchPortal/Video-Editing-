@@ -3,8 +3,6 @@
   .venv/bin/python videos/psx-top10/build.py            # full 1080x1920 -> output/psx-top10.mp4
   .venv/bin/python videos/psx-top10/build.py --preview  # half size      -> output/psx-top10_preview.mp4
   .venv/bin/python videos/psx-top10/build.py --stills-only
-  .venv/bin/python videos/psx-top10/build.py --series[=top10-mcap] [--preview]  # PSX TOP 10 series episode
-                                                     # -> output/<episode folder>.mp4
 
 QA (printed + output/qa.json): format, duration <= 20 s, CTA hold perfectly still, loudness
 -14 LUFS / TP <= -1.5 dBTP on the delivered AAC, no black frames.
@@ -13,16 +11,15 @@ import argparse, json, os, re, subprocess, sys
 from pathlib import Path
 import numpy as np
 
-# --reel builds the 3D showreel cut (remotion/src/projects/psx-reel) instead of the series 2D cut;
-# --series builds the PSX TOP 10 series episode (remotion/src/projects/top10-mcap, kit in src/series/top10)
+# --reel builds the 3D showreel cut (remotion/src/projects/psx-reel) instead of the series 2D cut.
+# PSX TOP 10 series episodes are built by videos/top10/make_episode.py (the episode bot), not here.
 REEL = '--reel' in sys.argv
-SERIES = next((a.split('=', 1)[1] if '=' in a else 'top10-mcap' for a in sys.argv if a.startswith('--series')), None)
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 REM = ROOT / 'remotion'
 OUT = HERE / 'output'
-PROJ = 'psx-reel' if REEL else SERIES if SERIES else 'psx-top10'
+PROJ = 'psx-reel' if REEL else 'psx-top10'
 os.environ['PSX_TIMELINE'] = f'remotion/src/projects/{PROJ}/timeline.json'
 TL = json.loads((REM / f'src/projects/{PROJ}/timeline.json').read_text())
 DATA = json.loads((REM / f'src/projects/{PROJ}/data.json').read_text())
@@ -41,17 +38,6 @@ def sh(cmd, **kw):
 def key_frames_reel():
     beats = [0.2, 1.5, 3.5, 6, 7.5, 10, 12.5, 13.8, 15, 16.6, 17.6, 18.8, 20.2, 21.5, 22.8, 24.5, 26.5, 28.5, 30.5, 32.2, 33.4, 34.6, 36, 38, 39.6, 40.8, 41.6, 42.4, 43]
     return sorted({min(END - 1, max(0, round(bf(x)))) for x in beats} | {CTA_STATIC, END - 1})
-
-
-def key_frames_series():
-    """Stills through every section: intro beats, each title line, explainer steps, every ranking row, CTA."""
-    fr = [3, 10, 20, 30, 40, 52, 62, 66, 70]
-    b = lambda k: round(bf(S[k]['start']))
-    fr += [b('title') + x for x in (4, 14, 24, 34, 46, 70)]
-    fr += [b('explain') + x for x in (8, 30, 50, 90, 120, 180)]
-    fr += [b('rank') + x for x in (6, 30, 64, 100, 126, 140, 185)]
-    fr += [b('cta') + x for x in (4, 10)]
-    return sorted({int(min(END - 1, max(0, x))) for x in fr} | {CTA_STATIC, int(END - 1)})
 
 
 def key_frames():
@@ -149,23 +135,19 @@ def main():
     ap.add_argument('--stills-only', action='store_true')
     ap.add_argument('--skip-render', action='store_true')
     ap.add_argument('--reel', action='store_true')
-    ap.add_argument('--series', nargs='?', const='top10-mcap')
     a = ap.parse_args()
     OUT.mkdir(exist_ok=True)
     scale = '0.5' if a.preview else '1'
-    kind = '_reel' if REEL else '_series' if SERIES else ''
+    kind = '_reel' if REEL else ''
     stills = OUT / ('stills' + kind + ('_preview' if a.preview else ''))
     if not a.stills_only:
         tag = kind + ('_preview' if a.preview else '')
         silent = OUT / f'video{tag}_silent.mp4'
-        name = (SERIES + ('_preview' if a.preview else '')) if SERIES else f'psx-top10{tag}'
-        final = OUT / f'{name}.mp4'
+        final = OUT / f'psx-top10{tag}.mp4'
         if not a.skip_render:
             sh([sys.executable, str(HERE / 'music/make_music.py'), '-o', str(OUT / 'music.wav')])
             if REEL:
                 render_reel(silent, scale)
-            elif SERIES:
-                sh(['node', 'scripts/top10.mjs', 'video', str(silent), PROJ, f'--scale={scale}'], cwd=REM)
             else:
                 sh(['node', 'scripts/psx-top10.mjs', 'video', str(silent), f'--scale={scale}'], cwd=REM)
             sh(['ffmpeg', '-v', 'error', '-y', '-i', str(silent), '-i', str(OUT / 'music.wav'), '-map', '0:v', '-map', '1:a',
@@ -179,9 +161,7 @@ def main():
         print(json.dumps({k: v for k, v in rep.items() if k != 'data'}, indent=1))
         print('QA', 'PASSED' if rep['passed'] else f"FAILED: {rep['fails']}")
     import shutil; shutil.rmtree(stills, ignore_errors=True)  # never mix in stills from an older timeline
-    if SERIES:
-        sh(['node', 'scripts/top10.mjs', 'stills', str(stills), PROJ, f'--scale={scale}', *map(str, key_frames_series())], cwd=REM)
-    elif REEL:
+    if REEL:
         sh(['node', 'scripts/psx-reel.mjs', 'stills', str(stills), 'PsxReel', f'--scale={scale}', '--gl=swangle', *map(str, key_frames_reel())], cwd=REM)
     else:
         sh(['node', 'scripts/psx-top10.mjs', 'stills', str(stills), f'--scale={scale}', *map(str, key_frames())], cwd=REM)

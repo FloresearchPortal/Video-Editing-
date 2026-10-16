@@ -17,6 +17,7 @@ on the branded end card. Finance content: never promise returns; keep the market
 |---|---|
 | edit a video / make a reel / "like the reference" — timeline, captions, zoom-ins, camera tracking, transitions, music | **`/reel-editor`** (default, 100% free: `reelkit/`) |
 | test / QA / polish / "is it ready" — and ALWAYS before handing over a final MP4 | **`/quality-gate`** (`reelkit.refine`: test → auto-fix → re-render → deliver) |
+| a new **PSX TOP 10** episode / "make another one like this" / a top-10 rankings reel (locked FloStocks series style; user sends the brief in `videos/top10/BRIEF.md`) | **`/psx-top10`** (`videos/top10/make_episode.py`) |
 | cut long raw talking-head footage, remove fillers, cut-editor UI | `/clean-cut` (local Whisper, free) |
 | conversational multi-take editing, colour grade, burned subtitles | `/video-use` (use its *free mode* note) |
 | colour grade like the reference / make a LUT / DaVinci Resolve | **`/davinci-resolve-grade`** (`reelkit.grade_match`; Resolve free gets a .cube — Resolve automation needs paid Studio, don't use it) |

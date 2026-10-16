@@ -15,19 +15,16 @@ Poppins only, white brand theme, 1080×1920 @ 30 fps, under 20 s, 150 BPM (12 fr
 Transitions (always the same): zoom-through → ticker-band shutter → FloStocks bar wipe → slant band wipe.
 The series header (logo + `PSX TOP 10 · EP xx`) sits on every content scene.
 
-## New episode
-1. Copy `remotion/src/projects/top10-mcap/` to `remotion/src/projects/top10-<topic>/`.
-2. Replace `data.json` with the new data (keep numbers sourced; finance rules: no return promises).
-3. Edit `episode.ts`: `ep`, the title lines + pill label, the explainer formula (labels, notes, worked example,
-   takeaway), the ranking heading, value format (`pre`/`post`/`decimals`), total and source line.
-   Copy is auto-sized to fit (Poppins metrics in `metrics.json`), so long titles never overflow.
-4. Keep `timeline.json` (series beat grid + music cues); only change cues if a section's motion changes.
-5. Company logos: put the official files under `media/` and map `TICKER -> path` in `logos.json`.
-   Never redraw or fake a logo; a missing logo simply has no logo slot.
-6. Build, review the contact sheet, then run `/quality-gate` before delivery.
+## New episode — the bot (`/psx-top10`)
+**The style is locked: an episode is only a brief.** Nothing in this folder changes per episode.
 
-```
-.venv/bin/python videos/psx-top10/build.py --series=top10-mcap --preview   # half size, with music + QA
-.venv/bin/python videos/psx-top10/build.py --series=top10-mcap             # 1080x1920 delivery
-```
-(`--series=top10-<topic>` builds another episode folder; output: `videos/psx-top10/output/<folder>.mp4`.)
+1. Fill a brief: what to send is in `videos/top10/BRIEF.md`; EP 01's is `videos/top10/ep01-market-cap/brief.json`.
+2. `.venv/bin/python videos/top10/make_episode.py videos/top10/<slug>/brief.json --check` validates it
+   (line lengths fitted from the Poppins metrics, 10 rows, units, source, finance wording).
+3. `... make_episode.py <brief> --preview`, then `... make_episode.py <brief>` renders 1080x1920, runs QA and
+   writes `videos/top10/<slug>/edit/final_approved.mp4` (or `final_review.mp4` + `qa/summary.md`).
+
+The brief reaches the one generic entry (`src/projects/top10`) as input props (`scripts/top10.mjs --brief=`),
+`brief.ts` maps it onto the components, and `timeline.json` here is the locked beat grid the music is
+synthesised from (cached once in `videos/top10/_music/`). Company logos: official files only, in
+`media/library/logos/psx/<TICKER>.png|svg`; picked up automatically, a missing logo has no slot.

@@ -29,7 +29,7 @@ export type Rankings = {
   subtitle: string; // Rs bn · PSX close 14 Oct 2026
   pre: string; post: string; decimals: number; // value label: `${pre}${value}${post}`, e.g. Rs 1,289.16 bn
   items: RankItem[]; // rank 1..10
-  total: { label: string; value: string };
+  total?: { label: string; value: string }; // optional summary pill under the chart
   source: string;
 };
 

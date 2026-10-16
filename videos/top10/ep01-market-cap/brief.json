@@ -1,0 +1,123 @@
+{
+ "episode": "EP 01",
+ "slug": "ep01-market-cap",
+ "title": [
+  "TOP 10 COMPANIES",
+  "BY MARKET",
+  "CAPITALIZATION"
+ ],
+ "pill": "IN PSX",
+ "explainer": {
+  "kicker": "HOW THEY ARE RANKED",
+  "question": [
+   "WHAT IS",
+   "MARKET CAP?"
+  ],
+  "a": {
+   "label": "SHARE PRICE",
+   "note": "the price of one share",
+   "pre": "Rs",
+   "value": "299.74",
+   "visual": "one"
+  },
+  "op": "×",
+  "b": {
+   "label": "TOTAL SHARES",
+   "note": "all the shares the company has",
+   "value": "4.30",
+   "post": "bn",
+   "visual": "many"
+  },
+  "result": {
+   "label": "MARKET CAP",
+   "note": "what the whole company is worth",
+   "pre": "Rs",
+   "value": "1,289",
+   "post": "bn"
+  },
+  "example": "e.g. OGDC · PSX close 14 Oct 2026",
+  "takeaway": [
+   "BIGGER MARKET CAP",
+   "= HIGHER RANK"
+  ]
+ },
+ "rankings": {
+  "heading": [
+   "TOP 10 BY",
+   "MARKET CAP"
+  ],
+  "subtitle": "Rs billion · PSX close 14 Oct 2026",
+  "value_format": {
+   "pre": "Rs ",
+   "post": " bn",
+   "decimals": 2
+  },
+  "items": [
+   {
+    "rank": 1,
+    "ticker": "OGDC",
+    "name": "Oil & Gas Development Company",
+    "value": 1289.16
+   },
+   {
+    "rank": 2,
+    "ticker": "UBL",
+    "name": "United Bank",
+    "value": 1025.71
+   },
+   {
+    "rank": 3,
+    "ticker": "MEBL",
+    "name": "Meezan Bank",
+    "value": 985.54
+   },
+   {
+    "rank": 4,
+    "ticker": "FFC",
+    "name": "Fauji Fertilizer Company",
+    "value": 770.44
+   },
+   {
+    "rank": 5,
+    "ticker": "MARI",
+    "name": "Mari Energies",
+    "value": 762.34
+   },
+   {
+    "rank": 6,
+    "ticker": "PPL",
+    "name": "Pakistan Petroleum",
+    "value": 591.73
+   },
+   {
+    "rank": 7,
+    "ticker": "LUCK",
+    "name": "Lucky Cement",
+    "value": 587.32
+   },
+   {
+    "rank": 8,
+    "ticker": "MCB",
+    "name": "MCB Bank",
+    "value": 438.53
+   },
+   {
+    "rank": 9,
+    "ticker": "HBL",
+    "name": "Habib Bank",
+    "value": 421.37
+   },
+   {
+    "rank": 10,
+    "ticker": "PAKT",
+    "name": "Pakistan Tobacco Company",
+    "value": 357.9
+   }
+  ],
+  "total": {
+   "label": "TOP 10 TOTAL",
+   "value": "Rs 7.23 trillion"
+  },
+  "source": "Source: PSX Data Portal · market cap = close × shares outstanding"
+ }
+}
