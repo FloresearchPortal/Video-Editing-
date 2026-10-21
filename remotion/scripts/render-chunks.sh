@@ -37,9 +37,15 @@ while [ "$start" -lt "$TOTAL" ]; do
     [ "$ok" = 1 ] || { echo "chunk $n failed 3 times — giving up"; exit 1; }
   fi
   echo "file '$part'" >> "$WORK/list.txt"
+  echo "duration $(ffprobe -v error -select_streams v -show_entries stream=duration -of default=nw=1:nk=1 "$part")" >> "$WORK/list.txt"
   start=$(( end + 1 ))
   n=$(( n + 1 ))
 done
 
-ffmpeg -v error -y -f concat -safe 0 -i "$WORK/list.txt" -c copy "$ROOT/out/$ID.mp4"
+# each chunk's silent AAC track runs ~43 ms past its video and concat offsets files by
+# container duration, which would open a gap at every seam (drifting picture off the
+# beat) — so pin each entry to its video duration, stitch video only, add fresh silence
+ffmpeg -v error -y -f concat -safe 0 -i "$WORK/list.txt" -map 0:v -c copy "$WORK/video.mp4"
+ffmpeg -v error -y -i "$WORK/video.mp4" -f lavfi -i anullsrc=r=48000:cl=stereo \
+  -map 0:v -map 1:a -c:v copy -c:a aac -shortest "$ROOT/out/$ID.mp4"
 echo "stitched $n chunks -> out/$ID.mp4 ($(ffprobe -v error -show_entries format=duration -of csv=p=0 "$ROOT/out/$ID.mp4")s)"

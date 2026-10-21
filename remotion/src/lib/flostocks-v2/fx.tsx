@@ -25,7 +25,7 @@ export const sp = (t: number, delay = 0, config: SpringCfg = {}) =>
   t < delay ? 0 : spring({ frame: t - delay, fps: FPS, config: { damping: 13, stiffness: 170, mass: 0.7, ...config } });
 
 // snappy spring for slams
-export const SNAP: SpringCfg = { damping: 12, stiffness: 280, mass: 0.55 };
+export const SNAP: SpringCfg = { damping: 16, stiffness: 280, mass: 0.55 };
 // soft spring for floating UI
 export const SOFT: SpringCfg = { damping: 18, stiffness: 110, mass: 0.9 };
 
