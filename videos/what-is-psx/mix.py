@@ -14,7 +14,7 @@ VO = HERE / "raw/vo.mp3"
 BED = HERE / "music/bed.wav"
 OUT = HERE / "output/what-is-psx-final.mp4"
 GEN = ROOT / "media/library/sfx/generated"
-SFX = {n: GEN / f"{n}.wav" for n in ["whoosh", "swoosh_short", "impact", "riser", "pop", "tick", "glitch", "click", "bass_drop", "sparkle"]}
+SFX = {n: GEN / f"{n}.wav" for n in ["whoosh", "swoosh_short", "impact", "riser", "pop", "tick", "glitch", "click", "bass_drop", "sparkle", "shimmer"]}
 SFX["coin"] = HERE / "music/coin.wav"
 SFX["crowd"] = HERE / "music/crowd.wav"
 
