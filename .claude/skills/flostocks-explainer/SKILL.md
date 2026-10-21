@@ -31,9 +31,9 @@ Look & brand
 - **No subtitles and no ticker strip.** On-screen kinetic titles carry the key words; the VO carries the rest.
 
 Opening & ending
-- **The PSX logo builds itself first** (approved kinetic sting, `K.psxLogo`, 0–2.25 s: bars rise like a bar chart →
-  P·S·X slide up → gold ring draws from the bottom → name rises letter by letter → glint), then it docks top and a
-  live KSE-100 card builds (`K.psxHook`). Preview: https://claude.ai/artifact/VayARyMmzESjsTff1tN8RJ The **one candlestick chart moves with the VO** — sideways, rally on "upar", sell-off on
+- **Frame 0 = the PSX logo alone** (instant hook), then it docks top and a live KSE-100 card builds
+  (`K.psxHook`). The kinetic PSX logo build (`K.psxLogo`, preview https://claude.ai/artifact/VayARyMmzESjsTff1tN8RJ)
+  was made for "What is PSX" ONLY — the client said not to use it for other videos; use it only if asked again. The **one candlestick chart moves with the VO** — sideways, rally on "upar", sell-off on
   "neeche". Do not add a separate line chart over it.
 - **Ending = FloStocks icon alone → glides into the full logo** as the wordmark unrolls (`K.ctaLogo`), then
   "FOLLOW FLOSTOCKS", then the **disclaimer underneath** (verbatim, `K.DISCLAIMER`). No abstract bars/lines.
@@ -110,7 +110,7 @@ One paused GSAP timeline `K.tl`; all times are absolute seconds. Seek-safe: no `
 | need | call |
 |---|---|
 | scene layer (then `K.linkScenes()` once at the end) | `const s = scene(t0, t1, { push: 1.03 })` |
-| PSX hook (kinetic logo build → docks → KSE-100 card, candles follow VO) | `psxHook(s, { tDock: 2.35, tUp, tDown })` → `{logo, card, idx, chip, cd}`; the build alone: `psxLogo(parent, css, t0)` (needs `psxlogo.js`) |
+| PSX hook (logo alone → KSE-100 card, candles follow VO) | `psxHook(s, { tDock, tUp, tDown })` → `{logo, card, idx, chip, cd}` (the "What is PSX"-only kinetic build `psxLogo(parent, css, t0)` exists but is not the default — client asks only) |
 | kinetic title (`*word*` = green accent, `|` = line break) | `kin(s, "MARKET *UPAR*", { y, size, accent, color, x, w })` + `charsIn.rise/slam/flip/drop/words(box, t)` / `charsOut.*` |
 | candlesticks (grid + price axis, print in VO-timed ranges) | `candles(p, { x, y, w, h, n, start, grid: true, axis: [...top→bottom], trend: (p, r) => Δ })` → `.grow(t)` / `.growRange(t, i0, i1, stagger)` |
 | line chart (natural path, area, tracking dot) | `line(p, [[x,y]...0–1], { x, y, w, h, color, grid, axis })` → `.draw(t, dur)` |

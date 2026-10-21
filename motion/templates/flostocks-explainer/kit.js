@@ -444,7 +444,8 @@
     return band;
   }
 
-  // psxLogo(parent, css, t0): the approved kinetic PSX logo build (vector-traced layers), 2.25 s from t0:
+  // psxLogo(parent, css, t0): OPTIONAL kinetic PSX logo build — made for "What is PSX" only; use it in another
+  // video only if the client asks for it again. The approved kinetic PSX logo build (vector-traced layers), 2.25 s from t0:
   // bars rise like a bar chart → P·S·X slide up → gold ring draws from the bottom → name rises letter by letter → glint
   function psxLogo(parent, css, t0 = 0) {
     const box = el(parent, css, window.PSX_LOGO_SVG || "");
@@ -469,18 +470,18 @@
       .set(e, { textContent: text }, t + 0.12)
       .fromTo(e, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: "power2.out", immediateRender: false }, t + 0.12);
   }
-  // psxHook(scene, o): the PSX logo builds kinetically from frame 0 (psxLogo); on o.tDock it docks top and a live KSE-100 card builds.
+  // psxHook(scene, o): frame 0 = PSX logo alone; on o.tDock it docks top and a live KSE-100 card builds.
   // The ONE candlestick chart tells the VO: sideways, rally on o.tUp, sell-off on o.tDown (no extra line).
   // returns { logo, card, idx, chip, cd } — tag logo/card with data-ov for the overlap audit
   function psxHook(sc, o = {}) {
     const M = window.MARKET || {}, K100 = M.kse100 || { level: 165298.5, change_pct: 0.11, change_points: 174.09 };
     const f = (v) => v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const tDock = o.tDock ?? 2.35, tUp = o.tUp, tDown = o.tDown;     // build runs 0–2.25 s, dock after the glint
-    const logo = psxLogo(sc, { left: 290, top: 560, width: 500, height: 598 }, 0);
-    tl.fromTo(logo, { scale: 1.05 }, { scale: 1, duration: 2.3, ease: "power2.out" }, 0);
+    const tDock = o.tDock ?? 1.5, tUp = o.tUp, tDown = o.tDown;
+    const logo = el(sc, { left: 290, top: 560, width: 500, height: 598 }, `<img src="assets/psx/psx-logo.png" style="width:100%;height:100%;object-fit:contain">`);
+    tl.fromTo(logo, { scale: 1.14 }, { scale: 1, duration: 1.4, ease: "power2.out" }, 0);
     tl.to(logo, { y: -585, scale: 0.36, duration: 0.7, ease: "power3.inOut" }, tDock);
     const card = el(sc, { left: 50, top: 400, width: 980, height: 820, borderRadius: 36, background: "#fff", border: "2px solid #E3E9E5", boxShadow: "0 30px 60px rgba(20,40,20,.10)" });
-    tl.fromTo(card, { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, tDock + 0.35);
+    tl.fromTo(card, { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, tDock + 0.5);
     el(card, { left: 44, top: 38, font: "800 34px Manrope", color: C.mute, letterSpacing: ".04em" }, "KSE-100 INDEX");
     el(card, { left: 790, top: 34, width: 150, height: 46, borderRadius: 23, background: "#EAF7E3", color: C.gt, font: "800 24px/46px Manrope", textAlign: "center" }, "● LIVE");
     const idx = el(card, { left: 44, top: 88, font: "700 96px/1 'IBM Plex Mono'", color: C.text, letterSpacing: "-.03em" }, f(K100.level));
@@ -489,7 +490,7 @@
     const lv = K100.level, ax = [1, 0.5, 0, -0.5, -1].map((k) => Math.round(lv / 100 + k * 6) * 100).map((v) => v.toLocaleString("en-US"));
     const cd = candles(card, { x: 44, y: 300, w: 780, h: 470, n: 26, start: 0.36, grid: true, axis: ax,
       trend: (p, r) => (p < 0.42 ? (r() - 0.5) * 0.06 : p < 0.74 ? 0.04 + r() * 0.03 : -(0.055 + r() * 0.03)) });
-    cd.growRange(tDock + 0.5, 0, 11, 0.025);
+    cd.growRange(tDock + 0.7, 0, 11, 0.035);
     if (tUp != null) {
       cd.growRange(tUp, 11, 19, 0.1);
       swap(idx, f(lv + 820.4), tUp); tl.set(chip, { textContent: `▲ ${f(K100.change_points + 820.4)} (0.61%)` }, tUp + 0.05);
