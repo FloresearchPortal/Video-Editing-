@@ -6,11 +6,13 @@ import { AbsoluteFill, interpolate } from 'remotion';
 import { FS, FS_BODY, FS_EASE } from '../flostocks';
 import { Blobs, Confetti, Particles, lerp, sp, SOFT } from './fx';
 
+// iOS light mode
 const UI = {
-  recv: '#3b3b3d',
+  recv: '#e9e9eb',
   sent: '#0a84ff',
   muted: '#8e8e93',
-  line: 'rgba(84,84,88,0.65)',
+  line: 'rgba(60,60,67,0.22)',
+  text: '#000000',
 } as const;
 
 const FONT = `${FS_BODY}, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif`;
@@ -103,7 +105,7 @@ const Bubble: React.FC<{ m: Msg; t: number }> = ({ m, t }) => {
             fontWeight: m.big ? 800 : 400,
             fontSize: m.big ? 52 : 40,
             lineHeight: 1.22,
-            color: m.big && morph > 0.5 ? FS.ink : '#ffffff',
+            color: m.me ? '#ffffff' : m.big && morph > 0.5 ? FS.ink : UI.text,
           }}
         >
           {m.text}
@@ -118,8 +120,8 @@ const Bubble: React.FC<{ m: Msg; t: number }> = ({ m, t }) => {
             width: 84,
             height: 84,
             borderRadius: 42,
-            backgroundColor: '#2c2c2e',
-            border: '4px solid #000',
+            backgroundColor: UI.recv,
+            border: '4px solid #fff',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -138,16 +140,16 @@ const Bubble: React.FC<{ m: Msg; t: number }> = ({ m, t }) => {
 const Screen: React.FC<{ t: number }> = ({ t }) => {
   const typing = CHAT.find((m) => m.typing && t >= m.typing[0] && t < m.typing[1]);
   return (
-    <AbsoluteFill style={{ backgroundColor: '#000', borderRadius: 96, overflow: 'hidden' }}>
+    <AbsoluteFill style={{ backgroundColor: '#ffffff', borderRadius: 96, overflow: 'hidden' }}>
       {/* status bar */}
       <div style={{ position: 'absolute', top: 30, left: 76, right: 70, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 34, color: '#fff' }}>9:41</span>
+        <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 34, color: UI.text }}>9:41</span>
         <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} style={{ width: 8, height: 10 + i * 5, borderRadius: 2, backgroundColor: '#fff' }} />
+            <div key={i} style={{ width: 8, height: 10 + i * 5, borderRadius: 2, backgroundColor: UI.text }} />
           ))}
-          <div style={{ width: 46, height: 22, borderRadius: 7, border: '2.5px solid rgba(255,255,255,0.5)', marginLeft: 12, padding: 2 }}>
-            <div style={{ width: '78%', height: '100%', borderRadius: 4, backgroundColor: '#fff' }} />
+          <div style={{ width: 46, height: 22, borderRadius: 7, border: '2.5px solid rgba(0,0,0,0.35)', marginLeft: 12, padding: 2 }}>
+            <div style={{ width: '78%', height: '100%', borderRadius: 4, backgroundColor: UI.text }} />
           </div>
         </div>
       </div>
@@ -169,7 +171,7 @@ const Screen: React.FC<{ t: number }> = ({ t }) => {
         >
           <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 46, color: '#fff' }}>H</span>
         </div>
-        <span style={{ fontFamily: FONT, fontSize: 28, color: '#fff', marginTop: 8 }}>Hamza ›</span>
+        <span style={{ fontFamily: FONT, fontSize: 28, color: UI.text, marginTop: 8 }}>Hamza ›</span>
       </div>
       <div style={{ position: 'absolute', top: 290, left: 0, right: 0, height: 2, backgroundColor: UI.line, opacity: 0.6 }} />
       {/* thread */}
@@ -184,7 +186,7 @@ const Screen: React.FC<{ t: number }> = ({ t }) => {
       </div>
       {/* input bar */}
       <div style={{ position: 'absolute', left: 30, right: 30, bottom: 60, height: 84, display: 'flex', alignItems: 'center', gap: 18 }}>
-        <div style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: '#1c1c1e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 80, height: 80, borderRadius: 40, backgroundColor: UI.recv, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span style={{ color: UI.muted, fontSize: 48, fontFamily: FONT, marginTop: -6 }}>+</span>
         </div>
         <div style={{ flex: 1, height: 80, borderRadius: 40, border: `2.5px solid ${UI.line}`, display: 'flex', alignItems: 'center', padding: '0 30px' }}>
@@ -210,11 +212,11 @@ export const ChatScene: React.FC<{ t: number }> = ({ t }) => {
 
   return (
     <AbsoluteFill style={{ overflow: 'hidden' }}>
-      <Blobs t={t} base={FS.ink} colors={['rgba(56,209,0,0.55)', 'rgba(10,132,255,0.45)', 'rgba(126,220,168,0.35)']} opacity={0.6} />
-      <Particles t={t} color={FS.mint} />
+      <Blobs t={t} base={FS.paper} colors={['rgba(56,209,0,0.32)', 'rgba(10,132,255,0.16)', 'rgba(126,220,168,0.4)']} opacity={0.7} />
+      <Particles t={t} color={FS.green} />
       <AbsoluteFill
         style={{
-          background: `radial-gradient(700px 900px at 50% 60%, rgba(56,209,0,${0.15 + glowPulse * 0.35}), transparent 70%)`,
+          background: `radial-gradient(700px 900px at 50% 60%, rgba(56,209,0,${0.1 + glowPulse * 0.3}), transparent 70%)`,
         }}
       />
       <AbsoluteFill style={{ perspective: 2400, transform: `scale(${push * dive})`, transformOrigin: '42% 70%' }}>
@@ -229,7 +231,7 @@ export const ChatScene: React.FC<{ t: number }> = ({ t }) => {
             borderRadius: 120,
             padding: 22,
             background: 'linear-gradient(145deg, #3a3d3a 0%, #121412 45%, #2a2d2a 100%)',
-            boxShadow: `0 60px 140px rgba(0,0,0,0.7), 0 0 0 3px #4a4d4a inset, 0 0 ${80 * glowPulse}px rgba(56,209,0,${0.5 * glowPulse})`,
+            boxShadow: `0 60px 120px rgba(10,14,10,0.28), 0 0 0 3px #4a4d4a inset, 0 0 ${80 * glowPulse}px rgba(56,209,0,${0.5 * glowPulse})`,
           }}
         >
           <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -240,7 +242,7 @@ export const ChatScene: React.FC<{ t: number }> = ({ t }) => {
                 position: 'absolute',
                 inset: 0,
                 borderRadius: 96,
-                background: `linear-gradient(${115 + rotY * 3}deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.07) 45%, rgba(255,255,255,0) 60%)`,
+                background: `linear-gradient(${115 + rotY * 3}deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.18) 45%, rgba(255,255,255,0) 60%)`,
                 pointerEvents: 'none',
               }}
             />

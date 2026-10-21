@@ -22,9 +22,9 @@ export const CtaScene: React.FC<{ t: number }> = ({ t }) => {
 
   return (
     <AbsoluteFill style={{ overflow: 'hidden' }}>
-      <Blobs t={t + 1500} base={FS.green} colors={['rgba(255,255,255,0.45)', 'rgba(69,224,31,0.9)', 'rgba(31,122,0,0.4)']} opacity={0.7} />
-      <Stripes t={t} color="rgba(255,255,255,0.07)" />
-      <Particles t={t} color="#ffffff" speed={1.3} />
+      <Blobs t={t + 1500} base={FS.paper} colors={['rgba(56,209,0,0.34)', 'rgba(126,220,168,0.4)', 'rgba(69,224,31,0.2)']} opacity={0.75} />
+      <Stripes t={t} color="rgba(56,209,0,0.05)" />
+      <Particles t={t} color={FS.green} speed={1.3} />
 
       {/* logo tile */}
       <div
@@ -36,7 +36,7 @@ export const CtaScene: React.FC<{ t: number }> = ({ t }) => {
           height: 230,
           borderRadius: 56,
           backgroundColor: FS.paper,
-          boxShadow: '0 26px 60px rgba(10,14,10,0.3)',
+          boxShadow: '0 26px 60px rgba(10,14,10,0.16)', border: '1.5px solid rgba(10,14,10,0.06)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -51,7 +51,7 @@ export const CtaScene: React.FC<{ t: number }> = ({ t }) => {
           <h1 style={{ ...fsHeadline(124, FS.ink) }}>Your gateway</h1>
         </Slam>
         <Slam t={t} at={16} rot={8}>
-          <h1 style={{ ...fsHeadline(124, FS.paper), textShadow: '6px 6px 0 rgba(10,14,10,0.25)' }}>to the PSX</h1>
+          <h1 style={{ ...fsHeadline(124, FS.green) }}>to the PSX</h1>
         </Slam>
       </div>
 
@@ -64,8 +64,8 @@ export const CtaScene: React.FC<{ t: number }> = ({ t }) => {
           top: 960,
           height: 140,
           borderRadius: 70,
-          backgroundColor: FS.ink,
-          boxShadow: '0 26px 70px rgba(10,14,10,0.4)',
+          backgroundColor: FS.green,
+          boxShadow: '0 26px 70px rgba(31,122,0,0.35)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -74,20 +74,20 @@ export const CtaScene: React.FC<{ t: number }> = ({ t }) => {
           opacity: Math.min(1, btn * 2),
         }}
       >
-        <span style={{ fontFamily: FS_BODY, fontWeight: 700, fontSize: 52, color: FS.paper }}>Open your PSX account</span>
+        <span style={{ fontFamily: FS_BODY, fontWeight: 700, fontSize: 52, color: FS.ink }}>Open your PSX account</span>
         <svg width="50" height="50" viewBox="0 0 46 46" style={{ transform: `translateX(${Math.sin(t / 5) * 5}px)` }}>
-          <path d="M8 23 H38 M26 9 L38 23 L26 37" fill="none" stroke={FS.green} strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M8 23 H38 M26 9 L38 23 L26 37" fill="none" stroke={FS.ink} strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
-      <Ripple t={t} at={CLICK} x={720} y={1030} color={FS.paper} />
-      <Confetti t={t} at={CLICK} x={540} y={1000} colors={[FS.paper, FS.ink, FS.mint]} />
+      <Ripple t={t} at={CLICK} x={720} y={1030} color={FS.green} />
+      <Confetti t={t} at={CLICK} x={540} y={1000} colors={[FS.green, FS.ink, FS.mint]} />
       {t >= 40 && t < 112 && <Cursor x={cx} y={cy} pressed={pressed} opacity={lerp(t, 98, 112, 1, 0)} />}
 
       {/* typed URL */}
       <div style={{ position: 'absolute', top: 1190, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
         <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 600, fontSize: 64, color: FS.ink, letterSpacing: '0.04em' }}>
           {URL.slice(0, typed)}
-          <span style={{ opacity: t >= 80 && caret ? 1 : 0, color: FS.paper }}>|</span>
+          <span style={{ opacity: t >= 80 && caret ? 1 : 0, color: FS.green }}>|</span>
         </p>
       </div>
       <p
@@ -101,8 +101,8 @@ export const CtaScene: React.FC<{ t: number }> = ({ t }) => {
           fontFamily: FS_BODY,
           fontWeight: 600,
           fontSize: 38,
-          color: FS.ink,
-          opacity: lerp(t, 106, 118, 0, 0.85),
+          color: FS.gray,
+          opacity: lerp(t, 106, 118, 0, 1),
         }}
       >
         @floretcapitals

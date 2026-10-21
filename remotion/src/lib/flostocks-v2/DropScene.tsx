@@ -10,10 +10,10 @@ import { OutlineMarquee, Slam, lerp, pulse, seeded, sp, SNAP } from './fx';
 type Word = { at: number; end: number; bg: string; fg: string; lines: string[]; size: number; rot: number; outline: string };
 
 const WORDS: Word[] = [
-  { at: 0, end: 24, bg: FS.green, fg: FS.ink, lines: ['FLORET'], size: 230, rot: -12, outline: FS.ink },
-  { at: 24, end: 48, bg: FS.ink, fg: FS.green, lines: ['CAPITALS'], size: 196, rot: 10, outline: FS.green },
-  { at: 48, end: 72, bg: FS.paper, fg: FS.ink, lines: ["PMEX'S", 'TOP BROKER'], size: 150, rot: -8, outline: FS.ink },
-  { at: 72, end: 96, bg: FS.ink, fg: FS.paper, lines: ['IS NOW'], size: 230, rot: 8, outline: FS.paper },
+  { at: 0, end: 24, bg: FS.paper, fg: FS.ink, lines: ['FLORET'], size: 230, rot: -12, outline: FS.ink },
+  { at: 24, end: 48, bg: FS.paper, fg: FS.green, lines: ['CAPITALS'], size: 196, rot: 10, outline: FS.green },
+  { at: 48, end: 72, bg: FS.mist, fg: FS.ink, lines: ["PMEX'S", 'TOP BROKER'], size: 150, rot: -8, outline: FS.green },
+  { at: 72, end: 96, bg: FS.green, fg: FS.paper, lines: ['IS NOW'], size: 230, rot: 8, outline: FS.paper },
 ];
 
 const STOCKS_AT = 96;
@@ -36,7 +36,7 @@ const Tape: React.FC<{ t: number; top: number; rot: number; dir: 1 | -1 }> = ({ 
       right: -200,
       top,
       height: 96,
-      backgroundColor: FS.ink,
+      backgroundColor: FS.green,
       transform: `rotate(${rot}deg)`,
       overflow: 'hidden',
       display: 'flex',
@@ -50,7 +50,7 @@ const Tape: React.FC<{ t: number; top: number; rot: number; dir: 1 | -1 }> = ({ 
         fontFamily: FS_MONO,
         fontWeight: 600,
         fontSize: 44,
-        color: FS.green,
+        color: FS.ink,
         transform: `translateX(${dir * ((t * 16) % 1500) - 1500}px)`,
       }}
     >
@@ -62,7 +62,7 @@ const Tape: React.FC<{ t: number; top: number; rot: number; dir: 1 | -1 }> = ({ 
 export const DropScene: React.FC<{ t: number }> = ({ t }) => {
   if (t < STOCKS_AT) {
     const w = WORDS.find((x) => t < x.end) ?? WORDS[0];
-    const flash = lerp(t, w.at, w.at + 6, 0.55, 0);
+    const flash = lerp(t, w.at, w.at + 6, 0.3, 0);
     const drift = lerp(t, w.at + 4, w.end, 1, 1.1, (n) => n);
     return (
       <AbsoluteFill style={{ backgroundColor: w.bg, overflow: 'hidden' }}>
@@ -74,7 +74,7 @@ export const DropScene: React.FC<{ t: number }> = ({ t }) => {
             </Slam>
           ))}
         </AbsoluteFill>
-        <AbsoluteFill style={{ backgroundColor: '#fff', opacity: flash }} />
+        <AbsoluteFill style={{ backgroundColor: FS.green, opacity: flash }} />
       </AbsoluteFill>
     );
   }
@@ -87,21 +87,21 @@ export const DropScene: React.FC<{ t: number }> = ({ t }) => {
   const flash = lerp(u, 0, 8, 0.8, 0);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: FS.green, overflow: 'hidden' }}>
-      <AbsoluteFill style={{ background: 'radial-gradient(900px 900px at 50% 45%, rgba(255,255,255,0.35), transparent 70%)' }} />
+    <AbsoluteFill style={{ backgroundColor: FS.paper, overflow: 'hidden' }}>
+      <AbsoluteFill style={{ background: 'radial-gradient(900px 900px at 50% 45%, rgba(56,209,0,0.16), transparent 70%)' }} />
       {/* candles */}
       <div style={{ position: 'absolute', left: 30, right: 30, bottom: 0, height: 1500, display: 'flex', alignItems: 'flex-end', gap: 22 }}>
         {CANDLES.map((c, i) => {
           const s = sp(u, 2 + i * 2, { damping: 11, stiffness: 200, mass: 0.6 });
           return (
-            <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.32 }}>
-              <div style={{ width: 6, height: c.wick * s, backgroundColor: FS.ink }} />
+            <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.22 }}>
+              <div style={{ width: 6, height: c.wick * s, backgroundColor: c.up ? FS.green : FS.ink }} />
               <div
                 style={{
                   width: '100%',
                   height: c.h * s,
                   borderRadius: 8,
-                  backgroundColor: c.up ? FS.ink : FS.paper,
+                  backgroundColor: c.up ? FS.green : FS.ink,
                 }}
               />
             </div>
@@ -113,16 +113,16 @@ export const DropScene: React.FC<{ t: number }> = ({ t }) => {
         <path
           d={TREND}
           fill="none"
-          stroke={FS.paper}
+          stroke={FS.green}
           strokeWidth={18}
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={strokeDasharray}
           strokeDashoffset={strokeDashoffset}
-          style={{ filter: 'drop-shadow(0 8px 0 rgba(10,14,10,0.35))' }}
+          style={{ filter: 'drop-shadow(0 10px 14px rgba(56,209,0,0.35))' }}
         />
         <g transform={`translate(1040 600) rotate(-58) scale(${arrow})`}>
-          <path d="M -46 -40 L 34 0 L -46 40 Z" fill={FS.paper} />
+          <path d="M -46 -40 L 34 0 L -46 40 Z" fill={FS.green} />
         </g>
       </svg>
       <Tape t={u} top={210} rot={-5} dir={-1} />
@@ -141,10 +141,10 @@ export const DropScene: React.FC<{ t: number }> = ({ t }) => {
           <h1 style={{ ...fsHeadline(180, FS.ink) }}>IN</h1>
         </Slam>
         <Slam t={u} at={6} from={3.4} rot={12}>
-          <h1 style={{ ...fsHeadline(196, FS.ink), textShadow: '10px 10px 0 rgba(255,255,255,0.85)' }}>STOCKS.</h1>
+          <h1 style={{ ...fsHeadline(196, FS.ink), textShadow: '10px 10px 0 rgba(56,209,0,0.45)' }}>STOCKS.</h1>
         </Slam>
       </AbsoluteFill>
-      <AbsoluteFill style={{ backgroundColor: '#fff', opacity: flash }} />
+      <AbsoluteFill style={{ backgroundColor: FS.green, opacity: flash * 0.5 }} />
     </AbsoluteFill>
   );
 };

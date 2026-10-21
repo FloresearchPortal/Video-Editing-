@@ -14,7 +14,7 @@
       "out": 40
     },
     {
-      "src": "../../brand/endcard.png",
+      "src": "../../brand/endcard-light.png",
       "dur": 2.5,
       "zoom": "pull",
       "transition": {

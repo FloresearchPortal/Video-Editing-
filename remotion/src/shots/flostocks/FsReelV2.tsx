@@ -40,7 +40,7 @@ const SCENES: Scene[] = [
   { C: CtaScene, start: 1056, end: 1200, tin: 'zoom', tout: 'none' },
 ];
 
-// white flashes on the big hits
+// brand-green flashes on the big hits
 const FLASHES = [DROP, 336, 432, 1056];
 
 const Wrap: React.FC<{ s: Scene; lead: number; dur: number }> = ({ s, lead, dur }) => {
@@ -94,10 +94,10 @@ const FsReelV2: React.FC = () => {
   const bar = frame >= DROP ? pulse(frame, DROP, 48) : 0;
   const shakeX = Math.sin(frame * 3.1) * bar * 7;
   const shakeY = Math.cos(frame * 2.3) * bar * 5;
-  const flash = Math.max(0, ...FLASHES.map((f) => (frame >= f - 2 && frame < f + 10 ? lerp(frame, f - 2, f + 10, 0.7, 0) : 0)));
+  const flash = Math.max(0, ...FLASHES.map((f) => (frame >= f - 2 && frame < f + 10 ? lerp(frame, f - 2, f + 10, 0.45, 0) : 0)));
 
   return (
-    <AbsoluteFill style={{ backgroundColor: FS.ink, overflow: 'hidden' }}>
+    <AbsoluteFill style={{ backgroundColor: FS.paper, overflow: 'hidden' }}>
       <AbsoluteFill style={{ transform: `translate(${shakeX}px, ${shakeY}px) scale(${1 + bump * 0.012})` }}>
         {SCENES.map((s, i) => {
           const lead = i === 0 ? 0 : T;
@@ -109,10 +109,10 @@ const FsReelV2: React.FC = () => {
           );
         })}
       </AbsoluteFill>
-      <AbsoluteFill style={{ backgroundColor: '#ffffff', opacity: flash, pointerEvents: 'none' }} />
+      <AbsoluteFill style={{ backgroundColor: FS.green, opacity: flash, pointerEvents: 'none' }} />
       <AbsoluteFill
         style={{
-          background: 'radial-gradient(ellipse at center, transparent 62%, rgba(0,0,0,0.28) 100%)',
+          background: 'radial-gradient(ellipse at center, transparent 66%, rgba(10,14,10,0.07) 100%)',
           pointerEvents: 'none',
         }}
       />

@@ -16,6 +16,11 @@ const stillMode = args.includes('--still');
 const scaleArg = args.find((a) => a.startsWith('--scale='));
 const SCALE = scaleArg ? Number(scaleArg.split('=')[1]) : 2;
 const onlyIds = args.filter((a) => !a.startsWith('--'));
+// --frames=0-120 renders a sub-range (quick checks); --concurrency=N caps parallel tabs
+const framesArg = args.find((a) => a.startsWith('--frames='));
+const FRAME_RANGE = framesArg ? framesArg.split('=')[1].split('-').map(Number) : null;
+const concArg = args.find((a) => a.startsWith('--concurrency='));
+const CONCURRENCY = concArg ? Number(concArg.split('=')[1]) : null;
 
 const manifest = JSON.parse(readFileSync(path.join(root, 'src', 'shots.manifest.json'), 'utf8'));
 const outDir = path.join(root, 'out');
@@ -48,6 +53,8 @@ for (const shot of manifest) {
     await renderMedia({
       serveUrl, composition, outputLocation: out, scale: SCALE, overwrite: true, browserExecutable: BROWSER,
       timeoutInMilliseconds: 120000, // heavy frames (blur/backdrop filters) can starve font loads on small machines
+      ...(FRAME_RANGE ? { frameRange: FRAME_RANGE } : {}),
+      ...(CONCURRENCY ? { concurrency: CONCURRENCY } : {}),
       codec: transparent ? 'prores' : 'h264',
       proResProfile: transparent ? '4444' : undefined,
       pixelFormat: transparent ? 'yuva444p10le' : 'yuv420p',

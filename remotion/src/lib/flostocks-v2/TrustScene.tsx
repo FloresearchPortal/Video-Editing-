@@ -29,9 +29,9 @@ export const TrustScene: React.FC<{ t: number }> = ({ t }) => {
   const shield = sp(t, 0, { damping: 12, stiffness: 120, mass: 0.9 });
   return (
     <AbsoluteFill style={{ overflow: 'hidden' }}>
-      <Blobs t={t + 1200} base={FS.ink} colors={['rgba(56,209,0,0.42)', 'rgba(126,220,168,0.25)']} />
-      <Rays t={t * 1.5} color={FS.green} opacity={0.07} cy="30%" />
-      <Particles t={t} color={FS.mint} speed={1.4} />
+      <Blobs t={t + 1200} base={FS.paper} colors={['rgba(56,209,0,0.28)', 'rgba(126,220,168,0.38)']} />
+      <Rays t={t * 1.5} color={FS.green} opacity={0.06} cy="30%" />
+      <Particles t={t} color={FS.green} speed={1.4} />
       <div
         style={{
           position: 'absolute',
@@ -46,7 +46,7 @@ export const TrustScene: React.FC<{ t: number }> = ({ t }) => {
 
       <div style={{ position: 'absolute', top: 330, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Slam t={t} at={0} rot={-8}>
-          <h1 style={{ ...fsHeadline(108, FS.paper) }}>Built on trust.</h1>
+          <h1 style={{ ...fsHeadline(108, FS.ink) }}>Built on trust.</h1>
         </Slam>
         <Slam t={t} at={8} rot={8}>
           <h1 style={{ ...fsHeadline(108, FS.green) }}>Backed by</h1>
@@ -70,15 +70,15 @@ export const TrustScene: React.FC<{ t: number }> = ({ t }) => {
                 gap: 30,
                 padding: '24px 40px',
                 borderRadius: 999,
-                border: '2px solid rgba(126,220,168,0.45)',
-                backgroundColor: 'rgba(56,209,0,0.1)',
-                boxShadow: `0 0 ${30 * pulse(t, at, 48)}px rgba(56,209,0,0.45)`,
+                border: '2px solid rgba(56,209,0,0.4)',
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                boxShadow: `0 14px 40px rgba(10,14,10,0.08), 0 0 ${30 * pulse(t, at, 48)}px rgba(56,209,0,0.45)`,
                 transform: `translateX(${dir * (1 - s) * 900}px) scale(${0.8 + s * 0.2})`,
                 opacity: Math.min(1, s * 2),
               }}
             >
               <Tick p={lerp(t, at + 5, at + 15, 0, 1)} />
-              <p style={{ margin: 0, fontFamily: FS_BODY, fontWeight: 600, fontSize: 46, color: FS.paper }}>{b}</p>
+              <p style={{ margin: 0, fontFamily: FS_BODY, fontWeight: 600, fontSize: 46, color: FS.ink }}>{b}</p>
             </div>
           );
         })}
@@ -86,13 +86,13 @@ export const TrustScene: React.FC<{ t: number }> = ({ t }) => {
 
       <div style={{ position: 'absolute', top: 1480, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
         <Reveal t={t} at={66}>
-          <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 500, fontSize: 32, letterSpacing: '0.22em', color: FS.mint }}>
+          <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 500, fontSize: 32, letterSpacing: '0.22em', color: FS.greenDeep }}>
             FORMERLY FLORET COMMODITIES
           </p>
         </Reveal>
       </div>
 
-      <FsWatermark width={1080} />
+      <FsWatermark width={1080} onLight />
     </AbsoluteFill>
   );
 };

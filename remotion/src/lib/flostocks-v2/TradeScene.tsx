@@ -47,14 +47,14 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
 
   return (
     <AbsoluteFill style={{ overflow: 'hidden' }}>
-      <Blobs t={t + 600} base={FS.ink} colors={['rgba(56,209,0,0.38)', 'rgba(126,220,168,0.22)']} />
-      <GridFloor t={t} />
-      <Particles t={t} color={FS.mint} speed={1.2} />
+      <Blobs t={t + 600} base={FS.paper} colors={['rgba(56,209,0,0.26)', 'rgba(126,220,168,0.32)']} />
+      <GridFloor t={t} color="rgba(56,209,0,0.3)" />
+      <Particles t={t} color={FS.green} speed={1.2} />
 
       {/* headline */}
       <div style={{ position: 'absolute', top: 150, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Slam t={t} at={0} rot={-6}>
-          <h1 style={{ ...fsHeadline(90, FS.paper) }}>Trade the</h1>
+          <h1 style={{ ...fsHeadline(90, FS.ink) }}>Trade the</h1>
         </Slam>
         <Slam t={t} at={5} rot={6}>
           <h1 style={{ ...fsHeadline(90, FS.green) }}>Pakistan Stock</h1>
@@ -70,7 +70,7 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
           {/* chart card */}
           <div
             style={{
-              ...glass(true),
+              ...glass(false),
               position: 'absolute',
               left: 70,
               top: 520,
@@ -82,10 +82,10 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 600, fontSize: 38, color: FS.paper }}>KSE-100</p>
+              <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 600, fontSize: 38, color: FS.ink }}>KSE-100</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 16, height: 16, borderRadius: 8, backgroundColor: FS.green, boxShadow: `0 0 ${18 * live}px ${FS.green}` }} />
-                <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 600, fontSize: 32, color: FS.mint }}>PSX · LIVE</p>
+                <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 600, fontSize: 32, color: FS.greenDeep }}>PSX · LIVE</p>
               </div>
             </div>
             <svg width="852" height="320" viewBox="-6 30 852 290" style={{ display: 'block', marginTop: 22, overflow: 'visible' }}>
@@ -119,7 +119,7 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
           {/* watchlist */}
           <div
             style={{
-              ...glass(true),
+              ...glass(false),
               position: 'absolute',
               left: 70,
               top: 1010,
@@ -140,16 +140,16 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
                     display: 'flex',
                     alignItems: 'center',
                     padding: '20px 0',
-                    borderBottom: i < WATCH.length - 1 ? '1px solid rgba(126,220,168,0.14)' : undefined,
+                    borderBottom: i < WATCH.length - 1 ? '1px solid rgba(10,14,10,0.07)' : undefined,
                     transform: `translateX(${(1 - s) * 260}px)`,
                     opacity: s,
                   }}
                 >
                   <div style={{ flex: 1 }}>
-                    <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 600, fontSize: 40, color: FS.paper }}>{w.sym}</p>
-                    <p style={{ margin: '2px 0 0', fontFamily: FS_BODY, fontWeight: 300, fontSize: 26, color: '#9aa59d' }}>{w.name}</p>
+                    <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 600, fontSize: 40, color: FS.ink }}>{w.sym}</p>
+                    <p style={{ margin: '2px 0 0', fontFamily: FS_BODY, fontWeight: 300, fontSize: 26, color: FS.gray }}>{w.name}</p>
                   </div>
-                  <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 500, fontSize: 38, color: FS.paper, width: 260, textAlign: 'right' }}>
+                  <p style={{ margin: 0, fontFamily: FS_MONO, fontWeight: 500, fontSize: 38, color: FS.ink, width: 260, textAlign: 'right' }}>
                     {fmt(w.price * roll)}
                   </p>
                   <div
@@ -159,10 +159,10 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
                       padding: '10px 0',
                       borderRadius: 16,
                       textAlign: 'center',
-                      backgroundColor: w.up ? 'rgba(56,209,0,0.18)' : 'rgba(226,59,46,0.18)',
+                      backgroundColor: w.up ? 'rgba(56,209,0,0.14)' : 'rgba(226,59,46,0.12)',
                     }}
                   >
-                    <span style={{ fontFamily: FS_MONO, fontWeight: 600, fontSize: 34, color: w.up ? FS.green : FS.fall }}>{w.chg}</span>
+                    <span style={{ fontFamily: FS_MONO, fontWeight: 600, fontSize: 34, color: w.up ? FS.rise : FS.fall }}>{w.chg}</span>
                   </div>
                 </div>
               );
@@ -175,6 +175,8 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
       <div
         style={{
           ...glass(false),
+          border: `3px solid ${FS.green}`,
+          boxShadow: '0 30px 80px rgba(31,122,0,0.28)',
           position: 'absolute',
           left: 300,
           top: 1290,
@@ -221,14 +223,14 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
           top: 44,
           transform: `translateY(${(1 - toast) * -320}px) scale(${0.9 + toast * 0.1})`,
           opacity: Math.min(1, toast * 2),
-          backgroundColor: 'rgba(36,40,36,0.92)',
+          backgroundColor: 'rgba(255,255,255,0.94)',
           borderRadius: 48,
           padding: '28px 34px',
           display: 'flex',
           alignItems: 'center',
           gap: 26,
-          boxShadow: '0 30px 80px rgba(0,0,0,0.55)',
-          border: '1.5px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 30px 80px rgba(10,14,10,0.22)',
+          border: '1.5px solid rgba(10,14,10,0.06)',
           zIndex: 30,
         }}
       >
@@ -237,14 +239,14 @@ export const TradeScene: React.FC<{ t: number }> = ({ t }) => {
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ fontFamily: FS_BODY, fontWeight: 700, fontSize: 36, color: '#fff' }}>Order placed</span>
-            <span style={{ fontFamily: FS_BODY, fontSize: 28, color: '#9aa59d' }}>now</span>
+            <span style={{ fontFamily: FS_BODY, fontWeight: 700, fontSize: 36, color: FS.ink }}>Order placed</span>
+            <span style={{ fontFamily: FS_BODY, fontSize: 28, color: FS.gray }}>now</span>
           </div>
-          <span style={{ fontFamily: FS_BODY, fontSize: 32, color: '#d6dcd8' }}>OGDC × 100 · Pakistan Stock Exchange</span>
+          <span style={{ fontFamily: FS_BODY, fontSize: 32, color: FS.gray }}>OGDC × 100 · Pakistan Stock Exchange</span>
         </div>
       </div>
 
-      {t < TOAST && <FsWatermark width={1080} />}
+      {t < TOAST && <FsWatermark width={1080} onLight />}
     </AbsoluteFill>
   );
 };
