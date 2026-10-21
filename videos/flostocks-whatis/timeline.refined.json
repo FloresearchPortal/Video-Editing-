@@ -10,7 +10,7 @@
       "src": "../../remotion/out/FsChatIntro.mp4",
       "track": false,
       "zoom": "none",
-      "in": 28.18,
+      "in": 0,
       "out": 17
     },
     {
@@ -38,7 +38,7 @@
       "src": "../../remotion/out/FsFeatures.mp4",
       "track": false,
       "zoom": "none",
-      "in": 20.0,
+      "in": 0,
       "out": 8
     },
     {
@@ -72,7 +72,7 @@
   },
   "music": {
     "src": "edit/music_bed.wav",
-    "volume": 0.02,
+    "volume": 0.9,
     "duck": false,
     "lufs": -14
   },
@@ -167,8 +167,5 @@
       "src": "../../media/library/sfx/generated/shimmer.wav",
       "gain": 0.4
     }
-  ],
-  "grade_extra": [
-    "hue=s=0.88"
   ]
 }
