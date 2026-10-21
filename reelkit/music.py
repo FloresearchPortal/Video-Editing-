@@ -35,10 +35,11 @@ def main() -> None:
              f"volume={a.volume},afade=t=in:d={a.fade_in},afade=t=out:st={fo_st:.3f}:d={a.fade_out}[m]")
     parts = [music]
     if has_audio(a.video):
-        parts.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,asplit=3[v][sc][vstem]")
-        if a.no_duck:
+        if a.no_duck:  # no sidechain tap, or its [sc] output would be left unconnected
+            parts.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,asplit=2[v][vstem]")
             parts.append("[m]anull[md0]")
         else:
+            parts.append("[0:a]aformat=sample_rates=48000:channel_layouts=stereo,asplit=3[v][sc][vstem]")
             parts.append("[m][sc]sidechaincompress=threshold=0.03:ratio=8:attack=20:release=350:makeup=1[md0]")
         parts.append("[md0]asplit=2[md][mstem]")   # stems let the QA gate measure voice vs music exactly
         mix = ["[v]", "[md]"]
