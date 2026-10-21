@@ -24,17 +24,20 @@ mkdirSync(outDir, { recursive: true });
 console.log('bundling...');
 // publicDir must be passed explicitly: remotion.config.ts only applies to the CLI,
 // not the programmatic bundle() API. core/media is the public root (see MIGRATION.md).
+// Optional browser override (e.g. a system Chromium that trusts a corporate/egress proxy CA).
+const BROWSER = process.env.REMOTION_BROWSER_EXECUTABLE || undefined;
+
 const serveUrl = await bundle({ entryPoint: path.join(root, 'src', 'index.ts'), publicDir: path.join(root, '..', 'media') });
 
 let n = 0;
 for (const shot of manifest) {
   if (onlyIds.length && !onlyIds.includes(shot.id)) continue;
-  const composition = await selectComposition({ serveUrl, id: shot.id });
+  const composition = await selectComposition({ serveUrl, id: shot.id, browserExecutable: BROWSER });
 
   if (stillMode) {
     const out = path.join(outDir, `${shot.id}.png`);
     await renderStill({
-      serveUrl, composition, output: out, scale: SCALE, overwrite: true,
+      serveUrl, composition, output: out, scale: SCALE, overwrite: true, browserExecutable: BROWSER,
       frame: Math.floor(composition.durationInFrames * 0.6),
       imageFormat: shot.transparent ? 'png' : 'jpeg',
     });
@@ -43,7 +46,7 @@ for (const shot of manifest) {
     const transparent = !!shot.transparent;
     const out = path.join(outDir, `${shot.id}.${transparent ? 'mov' : 'mp4'}`);
     await renderMedia({
-      serveUrl, composition, outputLocation: out, scale: SCALE, overwrite: true,
+      serveUrl, composition, outputLocation: out, scale: SCALE, overwrite: true, browserExecutable: BROWSER,
       codec: transparent ? 'prores' : 'h264',
       proResProfile: transparent ? '4444' : undefined,
       pixelFormat: transparent ? 'yuva444p10le' : 'yuv420p',

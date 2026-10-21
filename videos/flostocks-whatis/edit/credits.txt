@@ -1,0 +1,17 @@
+Audio credits — videos/flostocks-whatis
+
+Music
+  edit/music_bed.wav — synthesized locally by work/gen_music.py (deterministic numpy/ffmpeg
+  synthesis, same approach as reelkit.sfx_gen). No samples, no third-party rights; the repo
+  owns the output. Licence: n/a (original work generated in-repo).
+
+SFX
+  media/library/sfx/generated/{pop,swoosh_short,whoosh,impact,riser,shimmer}.wav —
+  synthesized locally by reelkit.sfx_gen (ffmpeg lavfi synthesis). No samples, no
+  third-party rights. Licence: n/a (original work generated in-repo).
+
+Fonts (burned into the Remotion shots)
+  Manrope, Inter, IBM Plex Mono — SIL Open Font License 1.1 (see assets/fonts/OFL-*.txt).
+
+Logos / brand
+  FloStocks / Floret Capitals brand assets from brand/ — the channel's own marks.
