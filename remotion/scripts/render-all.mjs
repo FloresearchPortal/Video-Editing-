@@ -47,6 +47,7 @@ for (const shot of manifest) {
     const out = path.join(outDir, `${shot.id}.${transparent ? 'mov' : 'mp4'}`);
     await renderMedia({
       serveUrl, composition, outputLocation: out, scale: SCALE, overwrite: true, browserExecutable: BROWSER,
+      timeoutInMilliseconds: 120000, // heavy frames (blur/backdrop filters) can starve font loads on small machines
       codec: transparent ? 'prores' : 'h264',
       proResProfile: transparent ? '4444' : undefined,
       pixelFormat: transparent ? 'yuva444p10le' : 'yuv420p',

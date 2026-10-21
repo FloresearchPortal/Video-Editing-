@@ -1,6 +1,8 @@
 Audio credits — videos/flostocks-whatis
 
 Music
+  edit/music_bed_v2.wav (v2, current) — synthesized locally by work/gen_music_v2.py (numpy/scipy
+  synthesis, 150 BPM). No samples, no third-party rights. Licence: n/a (original in-repo work).
   edit/music_bed.wav — synthesized locally by work/gen_music.py (deterministic numpy/ffmpeg
   synthesis, same approach as reelkit.sfx_gen). No samples, no third-party rights; the repo
   owns the output. Licence: n/a (original work generated in-repo).
