@@ -22,7 +22,7 @@
 
   // ═══ S1 HOOK: PSX logo alone on frame 0 → live KSE-100 card; candles follow the VO ═══
   const s1 = scene(0, BEAT.s2, { push: 1.03 });
-  const hook = psxHook(s1, { tDock: BEAT.psx + 0.3, tUp: BEAT.up, tDown: BEAT.down });
+  const hook = psxHook(s1, { tDock: 2.35, tUp: BEAT.up, tDown: BEAT.down });   // logo builds 0–2.25 s, then docks
   const up = kin(s1, "MARKET *UPAR* ▲", { y: 1250, size: 96, accent: C.gt });
   tl.fromTo(up.chars, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.02 }, BEAT.up);
   tl.to(up, { opacity: 0, duration: 0.2 }, BEAT.down - 0.18);

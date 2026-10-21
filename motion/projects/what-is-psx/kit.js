@@ -441,6 +441,25 @@
     return band;
   }
 
+
+  // psxLogo(parent, css, t0): the approved kinetic PSX logo build (vector-traced layers), 2.25 s from t0:
+  // bars rise like a bar chart → P·S·X slide up → gold ring draws from the bottom → name rises letter by letter → glint
+  function psxLogo(parent, css, t0 = 0) {
+    const box = el(parent, css, window.PSX_LOGO_SVG || "");
+    const sv = box.querySelector("svg"); if (!sv) return box;
+    Object.assign(sv.style, { width: "100%", height: "100%", overflow: "visible", display: "block" });
+    const q = (s) => box.querySelectorAll(s);
+    gsap.set(q(".bar"), { transformOrigin: "50% 100%" });
+    tl.fromTo(q(".bar"), { scaleY: 0 }, { scaleY: 1, duration: 0.55, ease: "expo.out", stagger: 0.07 }, t0 + 0.05)
+      .fromTo(q(".ltr"), { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.08 }, t0 + 0.40)
+      .fromTo(q(".rm"), { strokeDasharray: 100, strokeDashoffset: 100 }, { strokeDashoffset: 0, duration: 0.75, ease: "power2.inOut" }, t0 + 0.55)
+      .fromTo(q(".ln0 .gl"), { y: 9, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out", stagger: 0.025 }, t0 + 0.95)
+      .fromTo(q(".ln1 .gl"), { y: 9, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out", stagger: 0.02 }, t0 + 1.05)
+      .fromTo(q(".ln2 .gl"), { y: 9, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out", stagger: 0.025 }, t0 + 1.15)
+      .fromTo(q("#glint"), { x: 0 }, { x: 330, duration: 0.8, ease: "power2.inOut" }, t0 + 1.45);
+    return box;
+  }
+
   window.K = { C, tl, stage, cam, fx, el, scene, kin, charsIn, charsOut, scramble, bar, roller, roll, who, sym, react, pose, talk, life, enter, linkScenes,
-               tape, candles, line, gauge, tickerBand, wipe, slices, whip, zoomThrough, glitch, flash, shake, punch, camReset, rnd, pick };
+               tape, candles, line, gauge, tickerBand, wipe, slices, whip, zoomThrough, glitch, flash, shake, punch, camReset, rnd, pick, psxLogo };
 })();

@@ -28,8 +28,8 @@ svg = f'''<svg id="psx" viewBox="0 0 {data["w"]} {data["h"]}" role="img" aria-la
   <defs>
     <clipPath id="markClip">{clip}</clipPath>
     <mask id="ringMask" maskUnits="userSpaceOnUse" x="-20" y="-20" width="{data["w"] + 40}" height="{data["h"] + 40}">
-      <path class="rm" d="{arcL}" pathLength="100" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round"/>
-      <path class="rm" d="{arcR}" pathLength="100" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="round"/>
+      <path class="rm" d="{arcL}" pathLength="100" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="butt"/>
+      <path class="rm" d="{arcR}" pathLength="100" stroke="#fff" stroke-width="16" fill="none" stroke-linecap="butt"/>
     </mask>
     <linearGradient id="glintGrad" x1="0" x2="1" y1="0" y2="0">
       <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".85"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>

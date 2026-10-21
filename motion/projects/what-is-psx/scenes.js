@@ -19,27 +19,27 @@
   const s1 = scene(0, 5.35, { push: 1.03 });
   const K100 = (M && M.kse100) || { level: 165298.5, change_pct: 0.11, change_points: 174.09 };
   const fIdx = (v) => v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  // frame 0: nothing but the PSX logo — clean, instantly readable, settling in
-  const logo = el(s1, { left: 290, top: 560, width: 500, height: 598 }, `<img src="assets/psx/psx-logo.png" style="width:100%;height:100%;object-fit:contain">`);
+  // the PSX logo builds itself (approved kinetic sting): bars → P·S·X → gold ring → name → glint, 0–2.25 s
+  const logo = K.psxLogo(s1, { left: 290, top: 560, width: 500, height: 598 }, 0);
   const halo = el(s1, { left: 190, top: 510, width: 700, height: 700, borderRadius: "50%", background: "radial-gradient(circle, rgba(56,209,0,.16), rgba(56,209,0,0) 62%)" });
   s1.insertBefore(halo, logo);
-  tl.fromTo(logo, { scale: 1.14 }, { scale: 1, duration: 1.4, ease: "power2.out" }, 0);
-  tl.fromTo(halo, { scale: 0.7, opacity: 0.4 }, { scale: 1.15, opacity: 1, duration: 1.4, ease: "power2.out" }, 0).to(halo, { opacity: 0, duration: 0.4 }, 1.6);
-  // "PSX" (1.2) → the logo docks at the top and the trading screen builds underneath
-  tl.to(logo, { y: -585, scale: 0.36, duration: 0.7, ease: "power3.inOut" }, 1.5);
+  tl.fromTo(logo, { scale: 1.05 }, { scale: 1, duration: 2.3, ease: "power2.out" }, 0);
+  tl.fromTo(halo, { scale: 0.7, opacity: 0 }, { scale: 1.1, opacity: 1, duration: 1.6, ease: "power2.out" }, 0).to(halo, { opacity: 0, duration: 0.4 }, 2.3);
+  // after the glint the logo docks at the top and the trading screen builds underneath (before "market upar" 3.28)
+  tl.to(logo, { y: -585, scale: 0.36, duration: 0.65, ease: "power3.inOut" }, 2.35);
   const card = el(s1, { left: 50, top: 400, width: 980, height: 820, borderRadius: 36, background: "#fff", border: "2px solid #E3E9E5", boxShadow: "0 30px 60px rgba(20,40,20,.10)" });
-  tl.fromTo(card, { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }, 2.0);
+  tl.fromTo(card, { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 2.7);
   el(card, { left: 44, top: 38, font: "800 34px Manrope", color: C.mute, letterSpacing: ".04em" }, "KSE-100 INDEX");
   el(card, { left: 790, top: 34, width: 150, height: 46, borderRadius: 23, background: "#EAF7E3", color: C.gt, font: "800 24px/46px Manrope", textAlign: "center" }, "● LIVE");
   const idx = el(card, { left: 44, top: 88, font: "700 96px/1 'IBM Plex Mono'", color: C.text, letterSpacing: "-.03em" }, fIdx(K100.level - 400));
   const chip = el(card, { left: 48, top: 200, height: 50, padding: "0 20px", borderRadius: 12, background: "#EAF7E3", color: C.gt, font: "700 30px/50px 'IBM Plex Mono'" },
     `▲ ${fIdx(K100.change_points)} (${K100.change_pct.toFixed(2)}%)`);
-  numTo(idx, K100.level - 400, K100.level, 2.1, 1.0, fIdx);
+  numTo(idx, K100.level - 400, K100.level, 2.85, 1.0, fIdx);
   const AX = ["166,400", "165,800", "165,200", "164,600", "164,000"];
   // one candlestick chart that tells the VO: sideways (11), rally on "upar" (8), sell-off on "neeche" (7)
   const cd = candles(card, { x: 44, y: 300, w: 780, h: 470, n: 26, start: 0.36, grid: true, axis: AX,
     trend: (p, r) => (p < 0.42 ? (r() - 0.5) * 0.06 : p < 0.74 ? 0.04 + r() * 0.03 : -(0.055 + r() * 0.03)) });
-  cd.growRange(2.2, 0, 11, 0.035);
+  cd.growRange(2.8, 0, 11, 0.025);
   // market UPAR (3.28): green candles rally, index ticks up
   cd.growRange(3.28, 11, 19, 0.1);
   numTo(idx, K100.level, K100.level + 820.4, 3.28, 0.9, fIdx);

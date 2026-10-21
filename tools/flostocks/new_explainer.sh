@@ -15,7 +15,7 @@ DUR=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$V/raw/vo.$ext
 # composition = VO + ~6 s tail for the logo + disclaimer hold, rounded up
 COMP=$(python3 -c "import math;print(math.ceil(float('$DUR')+6))")
 mkdir -p "$P/assets"
-cp "$T"/{kit.js,cast.js,icons.js,app.js,avatars.js,make_avatars.cjs,hyperframes.json,scenes.js} "$P/"
+cp "$T"/{kit.js,cast.js,icons.js,app.js,avatars.js,make_avatars.cjs,hyperframes.json,scenes.js,psxlogo.js} "$P/"
 sed "s/__DUR__/$COMP/g" "$T/index.html" > "$P/index.html"
 ln -s ../../../brands/flostocks "$P/assets/brand"
 ln -s ../../../../media/library/logos "$P/assets/logos"

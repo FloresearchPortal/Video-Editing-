@@ -20,7 +20,7 @@ SFX["crowd"] = HERE / "music/crowd.wav"
 
 # (time s, sfx, gain) — only the big visual hits; voice always wins
 CUES = [
-    (1.5, "whoosh", .1), (3.28, "swoosh_short", .14), (4.30, "bass_drop", .2), (5.10, "whoosh", .12),
+    (1.45, "shimmer", .08), (2.35, "whoosh", .1), (3.28, "swoosh_short", .14), (4.30, "bass_drop", .2), (5.10, "whoosh", .12),
     (8.08, "whoosh", .12), (14.42, "whoosh", .12), (17.72, "swoosh_short", .13), (25.25, "pop", .14),
     (32.30, "coin", .12), (42.95, "click", .2), (43.92, "tick", .1), (44.30, "click", .2), (44.90, "whoosh", .12),
     (53.40, "coin", .2), (61.40, "crowd", .2), (67.20, "click", .18), (73.45, "swoosh_short", .13), (75.75, "bass_drop", .17),
