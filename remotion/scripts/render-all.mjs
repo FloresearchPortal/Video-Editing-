@@ -21,6 +21,7 @@ const framesArg = args.find((a) => a.startsWith('--frames='));
 const FRAME_RANGE = framesArg ? framesArg.split('=')[1].split('-').map(Number) : null;
 const concArg = args.find((a) => a.startsWith('--concurrency='));
 const CONCURRENCY = concArg ? Number(concArg.split('=')[1]) : null;
+const VERBOSE = args.includes('--verbose'); // Remotion verbose logs + browser console, for diagnosing hangs
 
 const manifest = JSON.parse(readFileSync(path.join(root, 'src', 'shots.manifest.json'), 'utf8'));
 const outDir = path.join(root, 'out');
@@ -55,6 +56,7 @@ for (const shot of manifest) {
       timeoutInMilliseconds: 120000, // heavy frames (blur/backdrop filters) can starve font loads on small machines
       ...(FRAME_RANGE ? { frameRange: FRAME_RANGE } : {}),
       ...(CONCURRENCY ? { concurrency: CONCURRENCY } : {}),
+      ...(VERBOSE ? { logLevel: 'verbose', onBrowserLog: (l) => console.log(`[browser:${l.type}] ${l.text}`) } : {}),
       codec: transparent ? 'prores' : 'h264',
       proResProfile: transparent ? '4444' : undefined,
       pixelFormat: transparent ? 'yuva444p10le' : 'yuv420p',
