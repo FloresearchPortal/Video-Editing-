@@ -223,8 +223,8 @@ export const LineChart: React.FC<{
   );
 };
 
-export const Candle: React.FC<{ x: number; y: number; w: number; body: number; wick: number; up: boolean; opacity?: number }> = ({ x, y, w, body, wick, up, opacity = 1 }) => {
-  const col = up ? A.green : A.red;
+export const Candle: React.FC<{ x: number; y: number; w: number; body: number; wick: number; up: boolean; opacity?: number; color?: string }> = ({ x, y, w, body, wick, up, opacity = 1, color }) => {
+  const col = color ?? (up ? A.green : A.red);
   return (
     <g opacity={opacity}>
       <line x1={x} x2={x} y1={y - wick / 2} y2={y + wick / 2} stroke={col} strokeWidth={Math.max(2, w * 0.14)} strokeLinecap="round" />

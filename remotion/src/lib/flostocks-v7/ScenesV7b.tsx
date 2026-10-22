@@ -171,7 +171,7 @@ const TileGfx: React.FC<{ g: Tile['g']; w: number; h: number; on: number; t: num
           const up = seeded(i + 400) > 0.3;
           const y = h * 0.62 - i * (h * 0.045) + (seeded(i + 410) - 0.5) * 30;
           const k = ap(t, 4 + i * 1.5, 10);
-          return <Candle key={i} x={30 + i * ((w - 60) / 8)} y={y} w={30} body={(40 + seeded(i + 420) * 50) * k} wick={(90 + seeded(i + 430) * 40) * k} up={up} />;
+          return <Candle key={i} x={30 + i * ((w - 60) / 8)} y={y} w={30} body={(40 + seeded(i + 420) * 50) * k} wick={(90 + seeded(i + 430) * 40) * k} up={up} color={on > 0.5 ? (up ? '#fff' : 'rgba(255,255,255,0.55)') : undefined} />;
         })}
       </svg>
     );
