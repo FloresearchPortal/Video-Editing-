@@ -245,7 +245,7 @@ export const Tools: React.FC<{ t: number }> = ({ t }) => {
         <MBlur id="tlb" vy={vel(pos, t)} style={{ transform: `translateY(${pos(t)}px)` }}>
           {SLOTS.map((w) => (
             <div key={w} style={{ height: H, display: 'flex', alignItems: 'center' }}>
-              <span style={{ ...disp(Math.min(210, 1700 / w.length), C.ink, w.length > 6 ? 78 : 112, 900), display: 'flex', alignItems: 'flex-end' }}>
+              <span style={{ ...disp(Math.min(210, 1450 / w.length), C.ink, w.length > 6 ? 74 : 112, 900), display: 'flex', alignItems: 'flex-end' }}>
                 {w}
                 <Dot size={34} color={C.green} />
               </span>
@@ -361,7 +361,7 @@ export const Hype: React.FC<{ t: number }> = ({ t }) => {
     return (
       <Field color={bg}>
         <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <p style={{ ...disp(420 + q * 40, fg, 62 + q * 21, 900), transform: `translateX(${(q % 2 ? -1 : 1) * 14}px) skewX(${q % 2 ? -6 : 6}deg)` }}>PSX</p>
+          <p style={{ ...disp(400 + q * 20, fg, 62 + q * 12, 900), transform: `translateX(${(q % 2 ? -1 : 1) * 14}px) skewX(${q % 2 ? -6 : 6}deg)` }}>PSX</p>
         </div>
         <div style={{ position: 'absolute', top: 1280, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
           <span style={{ ...disp(120, fg, 100, 900) }}>{'▲'.repeat(q + 1)}</span>
@@ -375,8 +375,8 @@ export const Hype: React.FC<{ t: number }> = ({ t }) => {
   const bg = inv ? h.fg : h.bg;
   const fg = inv ? h.bg : h.fg;
   const s = sp(u, 0, { damping: 14, stiffness: 420, mass: 0.45 });
-  const size = Math.min(340, 2050 / Math.max(3, h.w.length));
-  const wdth = interpolate(s, [0, 1], [125, h.w.length > 5 ? 74 : 100]);
+  const size = Math.min(320, 1500 / Math.max(3, h.w.length));
+  const wdth = interpolate(s, [0, 1], [h.w.length > 5 ? 100 : 125, h.w.length > 5 ? 70 : 100]);
   const arrowY = (tt: number) => interpolate(tt - b(idx), [0, BEATF], [1500, -700], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   return (
     <Field color={bg}>
@@ -395,7 +395,7 @@ export const Hype: React.FC<{ t: number }> = ({ t }) => {
         </svg>
       </MBlur>
       <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 34 }}>
-        <p style={{ ...disp(size, fg, wdth, 900), transform: `scale(${interpolate(s, [0, 1], [1.45, 1])})` }}>{h.w}</p>
+        <p style={{ ...disp(size, fg, wdth, 900), textTransform: 'none', transform: `scale(${interpolate(s, [0, 1], [1.45, 1])})` }}>{h.w}</p>
         <span style={{ ...mono(30, fg, 0.9), transform: `translateY(${(1 - s) * 60}px)` }}>{h.sub}</span>
       </div>
       <span style={{ ...mono(26, fg, 0.8), position: 'absolute', left: 70, top: 300 }}>0{idx + 1}/06</span>

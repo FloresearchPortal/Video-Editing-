@@ -18,7 +18,7 @@ ffmpeg -v error -y -i "$SRC" -i "$OUT/mix_preview.wav" -map 0:v -map 1:a -c:v co
 # name  start_frame  end_frame   (30 fps; bars on the 128 BPM grid from DROP=314)
 while read -r name a b; do
   ss=$(python3 -c "print($a/30)"); to=$(python3 -c "print($b/30)")
-  ffmpeg -v error -y -ss "$ss" -to "$to" -i "$OUT/full_preview.mp4" -c:v libx264 -crf 18 -preset veryfast -pix_fmt yuv420p -c:a aac -b:a 192k "$OUT/$name.mp4"
+  ffmpeg -nostdin -v error -y -ss "$ss" -to "$to" -i "$OUT/full_preview.mp4" -c:v libx264 -crf 18 -preset veryfast -pix_fmt yuv420p -c:a aac -b:a 192k "$OUT/$name.mp4"
   echo "$name  $ss-$to s"
 done <<'LIST'
 1_chat_intro            0    344
