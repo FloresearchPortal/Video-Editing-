@@ -38,6 +38,7 @@ def main():
     chain = ",".join([
         f"aselect='{sel}'", "asetpts=N/SR/TB",
         "highpass=f=80", "arnndn=m=tools/models/rnnoise/sh.rnnn:mix=0.9",        # broadband noise / room hiss
+        "dynaudnorm=f=120:g=7:p=0.85:m=14:r=0.5",                                   # lift trailing-off phrase ends (0:19 "milti hain")
         "equalizer=f=220:t=q:w=1.0:g=-2.5",                                        # phone-mic mud
         "equalizer=f=3300:t=q:w=1.2:g=3",                                          # presence / clarity
         "highshelf=f=9500:g=2.5",                                                  # air

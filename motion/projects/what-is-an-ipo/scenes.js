@@ -18,7 +18,7 @@
   el(hdr, { left: 26, top: 42, font: "400 46px/1 Inter", color: "#fff" }, "‹");
   el(hdr, { left: 76, top: 30, width: 72, height: 72, borderRadius: 36, background: "#DFE5E7", overflow: "hidden" },
     `<svg viewBox="0 0 72 72" width="72" height="72"><circle cx="36" cy="28" r="13" fill="#fff"/><path d="M12,66 a24,22 0 0 1 48,0Z" fill="#fff"/></svg>`);
-  txt(hdr, { left: 168, top: 30, font: "700 36px Inter", color: "#fff" }, "Investing Doston 📈");
+  txt(hdr, { left: 168, top: 30, font: "700 36px Inter", color: "#fff" }, "Bakwas Committee 🤪");
   txt(hdr, { left: 168, top: 76, font: "500 24px Inter", color: "#D6EFE9" }, "Bilal, Sana, Usman, Zara, You");
   el(hdr, { left: 700, top: 44, font: "700 34px Inter", color: "#fff", letterSpacing: ".3em" }, "⋮");
   const day = el(chat, { left: 340, top: 160, padding: "8px 18px", borderRadius: 12, background: "#fff", font: "600 22px Inter", color: "#54656F", boxShadow: "0 1px 1px rgba(0,0,0,.08)" }, "Today");
@@ -28,7 +28,7 @@
       [side === "in" ? "left" : "right"]: 28 }, html + `<span style="position:absolute;right:16px;bottom:8px;font:500 20px Inter;color:#667781">${extra}</span>`);
     fadeUp(b, t, 0.3, 18); return b; };
   bub("in", `<div style="font:700 26px Inter;color:#C2185B;margin-bottom:4px">Bilal</div>Yaar, IPO aa raha hai, apply kiya? 👀`, 230, 1.62, "3:02 PM");
-  bub("out", `Haan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`, 430, 4.26, `3:03 PM <span style="color:#53BDEB;font-weight:700">✓✓</span>`);
+  bub("out", `Haan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`, 430, 4.26, `3:03 PM <svg viewBox="0 0 16 11" width="30" height="21" style="vertical-align:-4px;margin-left:4px"><path fill="#53BDEB" d="M11.07.65 10.43.15a.46.46 0 0 0-.65.08L4.86 6.6 2.5 4.38a.46.46 0 0 0-.65.02l-.5.53a.46.46 0 0 0 .02.65l3.2 3.07c.18.17.47.16.64-.04l5.93-7.3a.46.46 0 0 0-.07-.66Zm4 0L14.43.15a.46.46 0 0 0-.65.08L8.86 6.6l-.62-.6-.98 1.2 1.42 1.37c.18.17.47.16.64-.04l5.93-7.3a.46.46 0 0 0-.07-.66Z"/></svg>`);
   const typing = bub("in", `<div style="font:700 26px Inter;color:#1F7A00;margin-bottom:4px">Sana</div><span style="letter-spacing:.2em">•••</span>`, 560, 5.2, "");
   const bar = el(chat, { left: 20, top: 806, width: 800, height: 76 });
   el(bar, { left: 0, top: 0, width: 700, height: 76, borderRadius: 38, background: "#fff", font: "500 30px/76px Inter", color: "#8696A0", paddingLeft: "30px" }, "Message");
@@ -51,18 +51,18 @@
   // ═══ S3 13.02–19.84: a new phone launch — pre-booking gets the launch price ═══
   const s3 = scene(13.02, 19.84);
   const h3 = kin(s3, "NAYA *PHONE* LAUNCH", { y: 190, size: 96 }); charsIn.rise(h3, 14.0, 0.02);
-  // iPhone 18 Pro (front): titanium frame, Dynamic Island, launch screen
+  // iPhone 18 (front): aluminium frame, Dynamic Island, launch screen
   const ph = el(s3, { left: 110, top: 350, width: 380, height: 780 },
     `<svg viewBox="0 0 380 780" width="380" height="780">
-      <defs><linearGradient id="ti" x1="0" x2="1"><stop offset="0" stop-color="#8E8A84"/><stop offset=".5" stop-color="#D9D5CF"/><stop offset="1" stop-color="#7E7A74"/></linearGradient>
+      <defs><linearGradient id="ti" x1="0" x2="1"><stop offset="0" stop-color="#9DB0C2"/><stop offset=".5" stop-color="#E1E9F1"/><stop offset="1" stop-color="#93A6B8"/></linearGradient>
       <linearGradient id="scr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1C2A1F"/><stop offset="1" stop-color="#0B0F14"/></linearGradient></defs>
       <rect x="4" y="4" width="372" height="772" rx="62" fill="url(#ti)"/><rect x="14" y="14" width="352" height="752" rx="54" fill="#0B0F14"/>
       <rect x="22" y="22" width="336" height="736" rx="48" fill="url(#scr)"/>
       <rect x="140" y="42" width="100" height="30" rx="15" fill="#000"/>
-      <rect x="-2" y="190" width="6" height="70" rx="3" fill="#7E7A74"/><rect x="376" y="230" width="6" height="110" rx="3" fill="#7E7A74"/></svg>`);
+      <rect x="-2" y="190" width="6" height="70" rx="3" fill="#93A6B8"/><rect x="376" y="230" width="6" height="110" rx="3" fill="#93A6B8"/></svg>`);
   fadeUp(ph, 13.3, 0.5, 60);
   el(ph, { left: 0, top: 150, width: 380, textAlign: "center", font: "600 26px Inter", color: "#9FB7A4", letterSpacing: ".2em" }, "NEW");
-  txt(ph, { left: 0, top: 190, width: 380, textAlign: "center", font: "800 52px Manrope", color: "#fff" }, "iPhone 18 Pro");
+  txt(ph, { left: 0, top: 190, width: 380, textAlign: "center", font: "800 52px Manrope", color: "#fff" }, "iPhone 18");
   el(ph, { left: 90, top: 290, width: 200, height: 260, borderRadius: 36, background: "radial-gradient(circle at 35% 30%, #5A6B5E, #22302A 70%)", boxShadow: "inset 0 0 0 3px #3A4A3E" },
     `<div style="position:absolute;left:24px;top:24px;width:92px;height:92px;border-radius:26px;background:#2B3A30"></div>`);
   const pre = el(ph, { left: 60, top: 620, width: 260, height: 74, borderRadius: 37, background: C.g2, color: "#fff", font: "800 30px/74px Manrope", textAlign: "center" }, "PRE-BOOK");
@@ -71,9 +71,9 @@
   const open = el(s3, { left: 540, top: 400, padding: "16px 26px", borderRadius: 999, border: `4px solid ${C.g}`, background: "#fff", font: "800 34px Manrope", color: C.text, whiteSpace: "nowrap" }, "PRE-BOOKING OPEN");
   fadeUp(open, 15.56, 0.4, 20);
   const lp = card(s3, { left: 540, top: 540, width: 480, height: 250 });
-  txt(lp, { left: 36, top: 172, font: "600 22px Inter", color: C.mute }, "iPhone 18 Pro 256GB · PK launch");
+  txt(lp, { left: 36, top: 172, font: "600 22px Inter", color: C.mute }, "iPhone 18 256GB · expected PK price");
   txt(lp, { left: 36, top: 34, font: "800 28px Manrope", color: C.mute, letterSpacing: ".06em" }, "LAUNCH PRICE");
-  txt(lp, { left: 36, top: 84, font: "700 64px 'IBM Plex Mono'" }, "Rs 563,999");
+  txt(lp, { left: 36, top: 84, font: "700 64px 'IBM Plex Mono'" }, "Rs 379,999");
   fadeUp(lp, 18.66, 0.45, 30);
   const early = ["zara", "usman", "ayesha"].map((n, i) => {
     const w = who(s3, n, 520 + i * 170, 900, 200, { expr: "smile" });
@@ -161,17 +161,18 @@
   const r14 = txt(s6, { left: PX(14) - 70, top: 800, width: 140, textAlign: "center", font: "700 44px 'IBM Plex Mono'", color: C.gt }, "Rs 14");
   fadeUp(r10, 34.1, 0.3, 14); fadeUp(r14, 34.36, 0.3, 14);
   // big investors: Rehan (suited) + institutions — banks, mutual funds, insurance
-  const rehan = who(s6, "rehan", 20, 1120, 330, { expr: "smile", gesture: "crossed" });   // arms crossed: confidence fadeUp(rehan, 35.5, 0.45, 30); life(rehan, 35.5, 37.7, "smile", 6);
-  const inst = ["BANKS", "MUTUAL FUNDS", "INSURANCE"].map((lab, i) => {
+  const rehan = who(s6, "rehan", 20, 1120, 330, { expr: "smile", gesture: "none" });   // no arms/hands (client note)
+  fadeUp(rehan, 35.6, 0.4, 30); life(rehan, 35.6, 37.7, "smile", 6);   // arrives with the institutions
+  const inst = ["BANKS", "MUTUAL FUNDS", "INSURANCE<br>COMPANY"].map((lab, i) => {
     const b = el(s6, { left: 380 + i * 225, top: 1180, width: 200, height: 260 },
       `<svg viewBox="0 0 200 200" width="200" height="200"><path d="M14,64 L100,18 L186,64Z" fill="#fff" stroke="#0B0F14" stroke-width="8" stroke-linejoin="round"/>
        ${[38, 76, 114, 152].map((x) => `<rect x="${x - 8}" y="74" width="16" height="86" fill="#fff" stroke="#0B0F14" stroke-width="6"/>`).join("")}
        <rect x="14" y="160" width="172" height="26" fill="${C.g}" stroke="#0B0F14" stroke-width="8"/></svg>
-       <div style="position:absolute;left:-10px;top:200px;width:220px;text-align:center;font:800 26px Manrope;color:${C.text};white-space:nowrap">${lab}</div>`);
+       <div style="position:absolute;left:-10px;top:200px;width:220px;text-align:center;font:800 26px/1.1 Manrope;color:${C.text};white-space:nowrap">${lab}</div>`);
     b.style.filter = "drop-shadow(0 14px 18px rgba(20,40,20,.16))";
     fadeUp(b, 35.6 + i * 0.1, 0.4, 30); return b; });
-  const big = el(s6, { left: 40, top: 1470, padding: "8px 20px", borderRadius: 12, background: C.ink, color: "#fff", font: "800 28px Manrope", whiteSpace: "nowrap" }, "BADE INVESTORS");
-  fadeUp(big, 35.88, 0.3, 14);
+  const big = el(s6, { left: 40, top: 1470, padding: "8px 20px", borderRadius: 12, background: C.ink, color: "#fff", font: "800 28px Manrope", whiteSpace: "nowrap" }, "BARAY INVESTOR");
+  fadeUp(big, 35.9, 0.3, 14);
   [[12, inst[0]], [13, inst[1]], [13.5, rehan]].forEach(([rs, src], k) => {
     const bid = el(s6, { left: PX(rs) - 70, top: 600 + k * 64, width: 140, height: 52, borderRadius: 26, background: "#fff", border: `3px solid ${C.ink}`, font: "800 24px/46px Manrope", textAlign: "center", color: C.text }, `BID ${rs}`);
     fadeUp(bid, 36.84 + k * 0.16, 0.35, 30);

@@ -63,10 +63,13 @@ Characters (Notionists, `cast.js` + `avatars.js`)
 - Hands: only when they say something (cup of chai on "chai kamaal hai", pointing on BUY). **No hands** on
   sellers, or on darr/umeed/bharosa-type emotion beats (`{ gesture: "none" }`). No "…" think bubble there.
 - A character "in" a place is already there when the scene opens (Ahmed is in his dhaaba, not walking in).
-- **Rehan** (navy suit + tie) = institutional / wealthy investor; always arms crossed (`gesture: "crossed"`) for confidence. Pair him with
-  institution icons (banks, mutual funds, insurance) for "bade investors".
+- **Rehan** (navy suit + tie) = institutional / wealthy investor; **no arms or hands** (`gesture: "none"`). He enters
+  together with the institution icons (banks, mutual funds, "insurance company"), labelled **"BARAY INVESTOR"**. Put every
+  entrance call on its own line: a `fadeUp` hidden behind a `//` comment leaves a character stuck on screen.
 - Real-world props must be realistic: group chats look like WhatsApp (teal header, beige wallpaper, white/green bubbles,
-  time + blue ticks, input bar); named products are the real current model with its **Pakistan market price** (research it, cite it).
+  time + WhatsApp's real double-check SVG in #53BDEB, not "✓✓" text, input bar);
+  friends' group names are funny and NOT about investing (e.g. "Bakwas Committee 🤪"); named products are the real current model with its **Pakistan market price** (research it, cite it).
+  Use the exact model the client names; if it isn't on sale in Pakistan yet, show an "expected PK price" and say so.
 - Groups of "the public" = 6 people.
 - **Show a character/reaction sheet for approval before using new characters or new acting** (§4).
 
