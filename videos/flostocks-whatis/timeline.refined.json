@@ -1,5 +1,5 @@
 {
-  "note": "What is FloStocks? v2 \u2014 high-energy cut. One Remotion composition (remotion/src/shots/flostocks/FsReelV2.tsx, scenes in src/lib/flostocks-v2/) beat-locked to a 150 BPM bed (12 frames per beat): floating-phone iMessage open -> drop -> logo -> trading UI -> features -> trust -> CTA, then the branded end card. Pure motion graphic, no voice.",
+  "note": "What is FloStocks? v3 \u2014 realistic full-screen iMessage open (light mode, typing on the iOS keyboard) that punches into 'THEY ARE NOW IN STOCKS TOO!' on the music drop, then a 23-bar beat-locked showreel of FloStocks strengths from flostocks.com. Composition: remotion/src/shots/flostocks/FsReelV3.tsx (scenes in src/lib/flostocks-v3/). Music: Mixkit 'What About Action?' (121 BPM) started at 56.2237 s so its drop lands on frame 224. Audio files are git-ignored (Mixkit licence) \u2014 restore with work/fetch_audio_v3.sh, rebuild SFX with work/build_sfx_v3.py.",
   "brand": true,
   "grade": "none",
   "output": {
@@ -7,11 +7,11 @@
   },
   "clips": [
     {
-      "src": "../../remotion/out/FsReelV2.mp4",
+      "src": "../../remotion/out/FsReelV3.mp4",
       "track": false,
       "zoom": "none",
       "in": 0,
-      "out": 40
+      "out": 53.1
     },
     {
       "src": "../../brand/endcard-light.png",
@@ -29,221 +29,17 @@
     "language": "en"
   },
   "music": {
-    "src": "edit/music_bed_v2.wav",
-    "volume": 1.0,
+    "src": "edit/audio/music_what_about_action.mp3",
+    "start": 56.2237,
+    "volume": 0.85,
     "duck": false,
     "lufs": -14
   },
   "sfx": [
     {
-      "t": 0.733,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 1.533,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 2.733,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 3.533,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 4.533,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 5.133,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 6.2,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.6
-    },
-    {
-      "t": 6.533,
-      "src": "../../media/library/sfx/generated/shimmer.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 7.45,
-      "src": "../../media/library/sfx/generated/whoosh.wav",
-      "gain": 0.5
-    },
-    {
-      "t": 8.0,
-      "src": "../../media/library/sfx/generated/impact.wav",
-      "gain": 0.85
-    },
-    {
-      "t": 8.8,
-      "src": "../../media/library/sfx/generated/swoosh_short.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 9.6,
-      "src": "../../media/library/sfx/generated/swoosh_short.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 10.4,
-      "src": "../../media/library/sfx/generated/swoosh_short.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 11.2,
-      "src": "../../media/library/sfx/generated/impact.wav",
-      "gain": 0.7
-    },
-    {
-      "t": 14.1,
-      "src": "../../media/library/sfx/generated/whoosh.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 14.4,
-      "src": "../../media/library/sfx/generated/impact.wav",
-      "gain": 0.6
-    },
-    {
-      "t": 14.8,
-      "src": "../../media/library/sfx/generated/shimmer.wav",
-      "gain": 0.35
-    },
-    {
-      "t": 17.35,
-      "src": "../../media/library/sfx/generated/whoosh.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 22.6,
-      "src": "../../media/library/sfx/generated/tick.wav",
-      "gain": 0.6
-    },
-    {
-      "t": 22.933,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.55
-    },
-    {
-      "t": 25.35,
-      "src": "../../media/library/sfx/generated/whoosh.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 26.533,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 27.267,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 28.0,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 28.733,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 29.467,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 30.467,
-      "src": "../../media/library/sfx/generated/impact.wav",
-      "gain": 0.6
-    },
-    {
-      "t": 31.75,
-      "src": "../../media/library/sfx/generated/whoosh.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 32.733,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 33.067,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 33.4,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 33.733,
-      "src": "../../media/library/sfx/generated/pop.wav",
-      "gain": 0.4
-    },
-    {
-      "t": 34.9,
-      "src": "../../media/library/sfx/generated/whoosh.wav",
-      "gain": 0.45
-    },
-    {
-      "t": 35.2,
-      "src": "../../media/library/sfx/generated/impact.wav",
-      "gain": 0.65
-    },
-    {
-      "t": 37.667,
-      "src": "../../media/library/sfx/generated/tick.wav",
-      "gain": 0.6
-    },
-    {
-      "t": 37.7,
-      "src": "../../media/library/sfx/generated/shimmer.wav",
-      "gain": 0.35
-    },
-    {
-      "t": 38.0,
-      "src": "../../media/library/sfx/generated/tick.wav",
-      "gain": 0.3
-    },
-    {
-      "t": 38.15,
-      "src": "../../media/library/sfx/generated/tick.wav",
-      "gain": 0.3
-    },
-    {
-      "t": 38.3,
-      "src": "../../media/library/sfx/generated/tick.wav",
-      "gain": 0.3
-    },
-    {
-      "t": 38.45,
-      "src": "../../media/library/sfx/generated/tick.wav",
-      "gain": 0.3
-    },
-    {
-      "t": 38.6,
-      "src": "../../media/library/sfx/generated/tick.wav",
-      "gain": 0.3
-    },
-    {
-      "t": 39.75,
-      "src": "../../media/library/sfx/generated/whoosh.wav",
-      "gain": 0.4
+      "t": 0,
+      "src": "edit/audio/sfx_v3.wav",
+      "gain": 0.9
     }
   ]
 }
