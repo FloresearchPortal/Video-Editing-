@@ -31,9 +31,11 @@ Look & brand
 - **No subtitles and no ticker strip.** On-screen kinetic titles carry the key words; the VO carries the rest.
 
 Opening & ending
-- **Frame 0 = the PSX logo alone** (instant hook), then it docks top and a live KSE-100 card builds
-  (`K.psxHook`). The kinetic PSX logo build (`K.psxLogo`, preview https://claude.ai/artifact/VayARyMmzESjsTff1tN8RJ)
-  was made for "What is PSX" ONLY — the client said not to use it for other videos; use it only if asked again. The **one candlestick chart moves with the VO** — sideways, rally on "upar", sell-off on
+- **No PSX logo intro** — the client turned it off for all videos until they ask for it again (`K.psxHook` /
+  `K.psxLogo` stay in the kit for that day). Open straight on the story hook.
+- **60 Seconds Investor reels: the series card is the approved stopwatch** — `K.seriesCard(scene, t, { tSweep, tTitle,
+  tSeries, tTag, tEp, ep: "EP 0N · TOPIC" })`, timed to "Welcome to our 60 Seconds Investor series…".
+- When a PSX/KSE chart is the subject, The **one candlestick chart moves with the VO** — sideways, rally on "upar", sell-off on
   "neeche". Do not add a separate line chart over it.
 - **Ending = FloStocks icon alone → glides into the full logo** as the wordmark unrolls (`K.ctaLogo`), then
   "FOLLOW FLOSTOCKS", then the **disclaimer underneath** (verbatim, `K.DISCLAIMER`). No abstract bars/lines.
@@ -61,6 +63,11 @@ Characters (Notionists, `cast.js` + `avatars.js`)
 - Hands: only when they say something (cup of chai on "chai kamaal hai", pointing on BUY). **No hands** on
   sellers, or on darr/umeed/bharosa-type emotion beats (`{ gesture: "none" }`). No "…" think bubble there.
 - A character "in" a place is already there when the scene opens (Ahmed is in his dhaaba, not walking in).
+- **Rehan** (navy suit + tie) = institutional / wealthy investor; always arms crossed (`gesture: "crossed"`) for confidence. Pair him with
+  institution icons (banks, mutual funds, insurance) for "bade investors".
+- Real-world props must be realistic: group chats look like WhatsApp (teal header, beige wallpaper, white/green bubbles,
+  time + blue ticks, input bar); named products are the real current model with its **Pakistan market price** (research it, cite it).
+- Groups of "the public" = 6 people.
 - **Show a character/reaction sheet for approval before using new characters or new acting** (§4).
 
 Sound

@@ -5,10 +5,11 @@
 (function () {
   const D = window.AVDATA;
   const EXPRS = ["neutral", "smile", "happy", "grin", "talk", "wow", "worried", "shocked", "think", "blink", "delight"];
-  const GESTS = ["none", "hand", "handPhone", "point", "pointLongArm", "ok", "okLongArm", "waveLongArm", "waveOkLongArms", "shrug", "cup"];
+  const GESTS = ["none", "hand", "handPhone", "point", "pointLongArm", "ok", "okLongArm", "waveLongArm", "waveOkLongArms", "shrug", "cup", "crossed"];
   // extra poses built from the Notionists arms: both open palms up (helpless shrug), and a hand holding a chai cup
+  const CROSSED = '<g class="crossed"><path d="M360,1350 L1180,1500" stroke="#0B0F14" stroke-width="150" stroke-linecap="round"/><path d="M360,1350 L1180,1500" stroke="#1B2A44" stroke-width="122" stroke-linecap="round"/><path d="M1384,1350 L564,1500" stroke="#0B0F14" stroke-width="150" stroke-linecap="round"/><path d="M1384,1350 L564,1500" stroke="#1B2A44" stroke-width="122" stroke-linecap="round"/><ellipse cx="1200" cy="1480" rx="62" ry="52" fill="#fff" stroke="#0B0F14" stroke-width="14"/><ellipse cx="544" cy="1480" rx="62" ry="52" fill="#fff" stroke="#0B0F14" stroke-width="14"/><path d="M500,1440 L640,1450 M1104,1450 L1244,1440" stroke="#fff" stroke-width="18"/></g>';
   const CUP = '<g class="cup"><path d="M1192,1232 h196 l-20,170 q-3,20 -24,20 h-108 q-21,0 -24,-20 Z" fill="#fff" stroke="#0B0F14" stroke-width="14" stroke-linejoin="round"/><path d="M1199,1290 h182 l-5,42 h-172 Z" fill="#38D100"/><path d="M1388,1262 q58,0 54,52 q-4,46 -64,50" fill="none" stroke="#0B0F14" stroke-width="14" stroke-linecap="round"/><path d="M1250,1200 q-16,-30 0,-60 q16,-30 0,-60 M1320,1200 q-16,-30 0,-60 q16,-30 0,-60" fill="none" stroke="#C9D3CD" stroke-width="12" stroke-linecap="round"/></g>';
-  const extraGesture = (d, g) => g === "shrug" ? d.gesture.waveLongArm + `<g transform="matrix(-1 0 0 1 1744 0)">${d.gesture.waveLongArm}</g>` : g === "cup" ? d.gesture.hand + CUP : null;
+  const extraGesture = (d, g) => g === "shrug" ? d.gesture.waveLongArm + `<g transform="matrix(-1 0 0 1 1744 0)">${d.gesture.waveLongArm}</g>` : g === "cup" ? d.gesture.hand + CUP : g === "crossed" ? CROSSED : null;
 
   let mounted = 0;
   function mount(el, name, o = {}) {

@@ -201,7 +201,7 @@
   // arms pivot where they enter the frame. Acting = anticipation → action → follow-through → settle.
   const NECK = "860 1130", HIPS = "860 1760";
   const ARM_O = { hand: "1290 1760", handPhone: "1300 1760", point: "1290 1760", ok: "1270 1760",
-                  pointLongArm: "1520 1760", okLongArm: "1520 1760", waveLongArm: "1520 1760", waveOkLongArms: "872 1760", shrug: "872 1760", cup: "1290 1760" };
+                  pointLongArm: "1520 1760", okLongArm: "1520 1760", waveLongArm: "1520 1760", waveOkLongArms: "872 1760", shrug: "872 1760", cup: "1290 1760", crossed: "872 1760" };
   // pose(w, t, {h:[rot, x, y], b:[scaleY, scaleX], a:[rot, scaleY], g:gesture}, dur, ease) — the head rides
   // on the shoulders, so a shrug (b scaleY > 1) lifts the head by the same amount
   function pose(w, t, p, d = 0.25, ease = "power2.out") {
@@ -525,6 +525,39 @@
     return { fl, fol, disc };
   }
 
+  // seriesCard(scene, t, o): the approved "60 Seconds Investor" stopwatch card (client pick, Variation A):
+  // a stopwatch sweeps a full green minute, SECONDS INVESTOR rises, SERIES pill, tagline, episode chip.
+  // o = { tSweep, tTitle, tSeries, tTag, tEp, ep: "EP 01 · WHAT IS AN IPO", tag: "PSX ke terms, simple tareeqe se" }
+  function seriesCard(sc, t, o = {}) {
+    const T = (k, d) => o[k] ?? t + d;
+    const watch = el(sc, { left: 260, top: 190, width: 560, height: 616 },
+      `<svg viewBox="0 0 300 330" width="560" height="616" style="overflow:visible">
+        <rect x="128" y="0" width="44" height="26" rx="8" fill="#0B0F14"/><rect x="141" y="22" width="18" height="18" fill="#0B0F14"/>
+        <rect x="236" y="40" width="30" height="16" rx="6" fill="#0B0F14" transform="rotate(42 251 48)"/>
+        <circle cx="150" cy="185" r="138" fill="#fff" stroke="#0B0F14" stroke-width="10"/>
+        <circle cx="150" cy="185" r="112" fill="none" stroke="#E3E9E5" stroke-width="20"/>
+        <circle class="arc" cx="150" cy="185" r="112" fill="none" stroke="${C.g}" stroke-width="20" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" transform="rotate(-90 150 185)"/>
+        <g class="hand"><line x1="150" y1="185" x2="150" y2="96" stroke="#0B0F14" stroke-width="7" stroke-linecap="round"/></g><circle cx="150" cy="185" r="10" fill="#0B0F14"/>
+        <text x="150" y="250" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="62" fill="#0B0F14">60</text>
+        <text x="150" y="276" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="16" letter-spacing="3" fill="#6B7570">SEC</text></svg>`);
+    tl.fromTo(watch, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, t);
+    const ts = T("tSweep", 0.35);
+    tl.fromTo(watch.querySelector(".arc"), { attr: { "stroke-dashoffset": 100 } }, { attr: { "stroke-dashoffset": 0 }, duration: 1.4, ease: "power2.inOut", immediateRender: false }, ts)
+      .fromTo(watch.querySelector(".hand"), { rotation: 0, svgOrigin: "150 185" }, { rotation: 360, svgOrigin: "150 185", duration: 1.4, ease: "power2.inOut", immediateRender: false }, ts);
+    const up = (e, tt, y = 20) => tl.fromTo(e, { y, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, tt);
+    const t1 = el(sc, { left: 0, top: 860, width: 1080, textAlign: "center", font: "800 96px/1 Manrope", color: C.text, whiteSpace: "nowrap", letterSpacing: "-.02em" }, `SECONDS <span style="color:${C.gt}">INVESTOR</span>`);
+    up(t1, T("tTitle", 0.9), 26);
+    const t2 = el(sc, { left: 425, top: 990, width: 230, height: 66, borderRadius: 33, background: C.ink, color: "#fff", font: "800 30px/66px Manrope", textAlign: "center", letterSpacing: ".2em" }, "SERIES");
+    up(t2, T("tSeries", 1.2));
+    const t3 = el(sc, { left: 0, top: 1110, width: 1080, textAlign: "center", font: "700 46px Manrope", color: C.mute, whiteSpace: "nowrap" }, o.tag || "PSX ke terms, simple tareeqe se");
+    up(t3, T("tTag", 1.5));
+    let ep = null;
+    if (o.ep) { ep = el(sc, { left: 0, top: 1196, width: 1080, textAlign: "center" },
+      `<span style="display:inline-block;border:5px solid ${C.g};background:#fff;font:800 36px Manrope;padding:18px 40px;border-radius:999px;color:${C.text}">${o.ep}</span>`);
+      up(ep, T("tEp", 1.8)); }
+    return { watch, t1, t2, t3, ep };
+  }
+
   window.K = { C, tl, stage, cam, fx, el, scene, kin, charsIn, charsOut, scramble, bar, roller, roll, who, sym, react, pose, talk, life, enter, linkScenes,
-               tape, candles, line, gauge, tickerBand, wipe, slices, whip, zoomThrough, glitch, flash, shake, punch, camReset, rnd, pick, psxLogo, swap, psxHook, ctaLogo, DISCLAIMER, DUR };
+               tape, candles, line, gauge, tickerBand, wipe, slices, whip, zoomThrough, glitch, flash, shake, punch, camReset, rnd, pick, psxLogo, seriesCard, swap, psxHook, ctaLogo, DISCLAIMER, DUR };
 })();

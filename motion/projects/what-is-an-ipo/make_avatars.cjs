@@ -2,8 +2,8 @@
 // green accents. Each character is stored as its SVG layer groups plus swappable alternatives for
 // the face parts (expressions) and the hand gesture, so the timeline can change them per frame.
 // Run: node make_avatars.cjs
-const { createAvatar } = require('@dicebear/core');
-const notionists = require('@dicebear/notionists');
+const { createAvatar } = require('../../node_modules/@dicebear/core');
+const notionists = require('../../node_modules/@dicebear/notionists');
 
 const G = '#38D100', G2 = '#2AA300', G3 = '#1F7A00', WASH = '#CFF2BF';
 const v = (n) => 'variant' + String(n).padStart(2, '0');
@@ -26,6 +26,7 @@ const CAST = {
   ayesha: { hair: 39, body: 14, shirt: SH[5] },
   usman:  { hair: 54, beard: 8, body: 7, shirt: SH[6] },
   zara:   { hair: 48, body: 12, shirt: SH[7] },
+  rehan:  { hair: 1, beard: 12, body: 20, shirt: '#1B2A44' },   // suited institutional investor (navy suit, tie)
 };
 
 // split the top-level layer groups inside <g mask=...>
