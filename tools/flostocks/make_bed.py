@@ -104,7 +104,9 @@ for s in range(int(FIN / STEP) + 1):
         note = m[ARP[(st // 2) % 8] % 3] + 24 + (12 if ARP[(st // 2) % 8] == 3 else 0)
         p = .5 + .35 * (1 if (st // 2) % 2 else -1); put(mix, bell(mid(note)), t, .05 * ga * (1 - p) * 2, .05 * ga * p * 2)
 for b in range(int(FIN / BAR) + 1):                  # pads, per bar
-    t0 = b * BAR; gp = G[section(t0)][6]; d = min(t0 + BAR, FIN) - t0
+    t0 = b * BAR
+    if t0 >= FIN: break
+    gp = G[section(t0)][6]; d = min(t0 + BAR, FIN) - t0
     if d <= 0 or not gp: continue
     for n in CH[chord(b)][:3]:
         put(pads, pad(mid(n), d, det=.998), t0, .06 * gp, 0); put(pads, pad(mid(n), d, det=1.002), t0, 0, .06 * gp)
