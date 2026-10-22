@@ -66,8 +66,9 @@ cues.append((228, "msg_receive.mp3", 0.8))
 for f in (52, 112):
     cues.append((f, "msg_send.mp3", 0.55))
 cues.append((272, "ui_select.mp3", 0.3))              # green + lift, on a beat of the build
-cues.append((DROP, "zoom_impact.mp3", 0.6))           # logo animation cuts in on the drop
-cues.append((DROP, "logo_impact.mp3", 0.35))
+cues.append((DROP, "zoom_impact.mp3", 0.75))          # logo SLAMS in on the drop
+cues.append((DROP, "logo_impact.mp3", 0.6))
+cues.append((DROP + 1, "whoosh_fast.mp3", 0.3))       # shockwave + ticks flying out
 
 # ---- drop A: one bar per idea ---------------------------------------------------------
 cues.append((beat_f(0, 1) + 4, "whoosh_fast2.mp3", 0.28))

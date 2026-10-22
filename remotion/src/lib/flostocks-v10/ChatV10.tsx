@@ -286,7 +286,8 @@ export const ChatV10: React.FC<{ f: number }> = ({ f }) => {
           {dots && <Dots f={f} at={dots.dots![0]} />}
         </div>
         <Header />
-        <div style={{ position: 'absolute', bottom: 8 * PT, left: '50%', marginLeft: -67 * PT, width: 134 * PT, height: 5 * PT, borderRadius: 3 * PT, backgroundColor: '#000' }} />
+        {/* home indicator: hidden once the thread frosts — blurred, it read as a grey box in the bottom half */}
+        {!focused && <div style={{ position: 'absolute', bottom: 8 * PT, left: '50%', marginLeft: -67 * PT, width: 134 * PT, height: 5 * PT, borderRadius: 3 * PT, backgroundColor: '#000' }} />}
       </AbsoluteFill>
       {/* frosted veil, like an iOS context-menu / macOS vibrancy backdrop */}
       <AbsoluteFill style={{ backgroundColor: `rgba(246,247,244,${0.5 * k})` }} />

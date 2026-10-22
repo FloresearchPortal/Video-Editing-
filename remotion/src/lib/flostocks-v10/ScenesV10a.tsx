@@ -1,7 +1,7 @@
 // v9 showreel, drop A — one bar (or half a bar) per idea, every move on a beat/8th (124 BPM).
 // Premium Apple-style UI × dynamic fintech motion — see videos/flostocks-whatis/BRIEF.md.
 import React from 'react';
-import { Img, interpolate } from 'remotion';
+import { AbsoluteFill, Easing, Img, interpolate } from 'remotion';
 import { LOGO } from '../flostocks';
 import { A, Canvas, Card, Check, Chip, LineChart, Pill, Reveal, ap, enter, mixN, sf, walk } from './kit';
 import { MARK, MARK_X, MARK_Y } from './ChatV10';
@@ -30,36 +30,83 @@ const Lockup: React.FC<{ wipe: number; lift: number }> = ({ wipe, lift }) => (
 );
 
 // =============================================================================
-// 01 BRAND (bar 0) — the mark lands on the drop, snaps into the lockup on beat 1, the
-// wordmark wipes on the "and" of 1.
+// 01 BRAND (bar 0) — the logo SLAMS in on the drop: it lands from 1.7x in 4 frames with a
+// motion blur, a green flash bursts from behind it, two shockwave rings and a ring of
+// price ticks shoot out, and the frame shakes for a few frames. Then on beat 1 the mark
+// snaps into the lockup and the wordmark wipes on the "and" of 1.
 // =============================================================================
+const SPOKES = Array.from({ length: 18 }, (_, i) => ({ a: (i / 18) * Math.PI * 2 + (i % 2) * 0.09, len: 70 + (i % 3) * 40, up: i % 4 !== 1 }));
 export const Brand: React.FC<{ t: number }> = ({ t }) => {
   const move = ap(t, b(1), FAST);
   const wipe = ap(t, b(1.5), FAST + 2);
-  const pop = ap(t, 0, 5); // the mark pops in on the drop frame itself
-  const ms = mixN(MARK, ICON_M, move) * mixN(0.8, 1, pop); // visible at full opacity on the drop frame, settles in 5 frames
-  const halo = Math.min(1, t / 18);
+  const slam = interpolate(t, [0, 4], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic) });
+  const settle = t >= 4 && t < 14 ? Math.exp(-(t - 4) * 0.45) * Math.cos((t - 4) * 1.1) * 0.05 : 0; // one small rebound, then still
+  const ms = mixN(MARK, ICON_M, move) * (mixN(1.7, 1, slam) - settle);
+  const shake = t < 12 ? Math.exp(-t * 0.35) * 16 : 0;
+  const flash = Math.max(0, 1 - t / 9);
   return (
     <Canvas>
-      {t < 18 && (
-        <div
+      {/* green burst behind the mark */}
+      <AbsoluteFill style={{ background: `radial-gradient(circle at ${MARK_X}px ${MARK_Y}px, rgba(56,209,0,${0.55 * flash}) 0px, rgba(56,209,0,${0.18 * flash}) 360px, rgba(56,209,0,0) 820px)` }} />
+      <AbsoluteFill style={{ transform: `translate(${shake * Math.sin(t * 2.9)}px, ${shake * Math.cos(t * 3.4)}px)` }}>
+        {/* shockwave rings */}
+        {[0, 3].map((d, k) => {
+          const h = t - d;
+          if (h < 0 || h > 18) return null;
+          const r = 150 + (1 - Math.pow(1 - h / 18, 3)) * (520 + k * 220);
+          return (
+            <div
+              key={k}
+              style={{
+                position: 'absolute',
+                left: MARK_X - r,
+                top: MARK_Y - r,
+                width: r * 2,
+                height: r * 2,
+                borderRadius: '50%',
+                border: `${Math.max(2, (k ? 6 : 16) * (1 - h / 18))}px solid ${k ? A.ink : A.green}`,
+                opacity: (1 - h / 18) * (k ? 0.35 : 0.9),
+              }}
+            />
+          );
+        })}
+        {/* price ticks shooting out */}
+        {t < 14 && (
+          <svg width={1080} height={1920} style={{ position: 'absolute', inset: 0 }}>
+            {SPOKES.map((s, i) => {
+              const k = 1 - Math.pow(1 - t / 14, 3);
+              const r0 = 170 + k * 420;
+              const r1 = r0 + s.len * (1 - k * 0.6);
+              return (
+                <line
+                  key={i}
+                  x1={MARK_X + Math.cos(s.a) * r0}
+                  y1={MARK_Y + Math.sin(s.a) * r0}
+                  x2={MARK_X + Math.cos(s.a) * r1}
+                  y2={MARK_Y + Math.sin(s.a) * r1}
+                  stroke={s.up ? A.green : A.ink}
+                  strokeWidth={10}
+                  strokeLinecap="round"
+                  opacity={1 - t / 14}
+                />
+              );
+            })}
+          </svg>
+        )}
+        {wipe > 0 && <Lockup wipe={wipe} lift={0} />}
+        <Img
+          src={LOGO.iconOnLight}
           style={{
             position: 'absolute',
-            left: MARK_X - 140 - halo * 260,
-            top: MARK_Y - 140 - halo * 260,
-            width: 280 + halo * 520,
-            height: 280 + halo * 520,
-            borderRadius: '50%',
-            border: `3px solid ${A.green}`,
-            opacity: 0.5 * (1 - halo),
+            left: mixN(MARK_X, ICON_CX, move) - ms / 2,
+            top: mixN(MARK_Y, ICON_CY, move) - ms / 2,
+            width: ms,
+            height: ms,
+            opacity: 1 - ap(t, b(1.5) + 3, 5),
+            filter: slam < 1 ? `blur(${(1 - slam) * 10}px)` : undefined,
           }}
         />
-      )}
-      {wipe > 0 && <Lockup wipe={wipe} lift={0} />}
-      <Img
-        src={LOGO.iconOnLight}
-        style={{ position: 'absolute', left: mixN(MARK_X, ICON_CX, move) - ms / 2, top: mixN(MARK_Y, ICON_CY, move) - ms / 2, width: ms, height: ms, opacity: 1 - ap(t, b(1.5) + 3, 5) }}
-      />
+      </AbsoluteFill>
     </Canvas>
   );
 };
@@ -256,7 +303,7 @@ export const Learn: React.FC<{ t: number }> = ({ t }) => {
       <p style={{ ...sf(26, 600, A.sub), position: 'absolute', left: 110, top: 572, letterSpacing: '0.06em', opacity: ap(t, b(0.5), FAST) }}>FREE LEARNING</p>
       <Card x={70} y={620} w={940} h={3 * 190} r={36} style={enter(t, b(0.5), FAST, 60).style}>
         {LEARN.map((r, i) => {
-          const e = enter(t, b(1 + i * 0.5), 6, 24);
+          const e = enter(t, b(0.5 + i * 0.5), 6, 24); // first row arrives with the card (no empty box)
           const hi = i === 0 ? sel * (1 - 0) : 0;
           return (
             <div key={r.h} style={{ position: 'absolute', left: 0, right: 0, top: i * 190, height: 190, backgroundColor: hi > 0 ? `rgba(56,209,0,${0.08 * hi})` : undefined, ...e.style }}>
