@@ -11,6 +11,10 @@ EDM, 124 BPM, D major) — Mixkit Stock Music Free License. Built to the reel's 
     bars 11–17  DROP B (the same big drop again)
     bars 17–20  the track's own decaying outro (CTA + disclaimer hold)
 
+The client wants NO vocals, so the edit is cut from the track's instrumental stem: Demucs
+(htdemucs, two-stem, run locally — free) removes the vocal chops; the beat grid is unchanged,
+so the picture stays in sync. The stop beats were vocal-only, so they become true silence.
+
 Every splice is on the measured beat grid (124.000 BPM, phase 0.459 s, zero drift), 10 ms
 before the transient, with a 12 ms crossfade.
 
@@ -19,13 +23,15 @@ before the transient, with a 12 ms crossfade.
 from __future__ import annotations
 
 import subprocess
+import sys
 from pathlib import Path
 
 import numpy as np
 
 SR = 48000
 ROOT = Path(__file__).resolve().parent.parent
-SRC = ROOT / "edit" / "audio" / "mixkit" / "1012.mp3"
+MP3 = ROOT / "edit" / "audio" / "mixkit" / "1012.mp3"
+SRC = ROOT / "edit" / "audio" / "mixkit" / "1012_instrumental.wav"  # vocals removed
 OUT = ROOT / "edit" / "audio" / "music_v7.wav"
 URL = "https://assets.mixkit.co/music/1012/1012.mp3"
 
@@ -42,9 +48,13 @@ def t(k: float) -> float:
 
 
 def load() -> np.ndarray:
-    if not SRC.exists():
-        SRC.parent.mkdir(parents=True, exist_ok=True)
-        subprocess.run(["curl", "-fsSL", "-A", "Mozilla/5.0", "-o", str(SRC), URL], check=True)
+    if not MP3.exists():
+        MP3.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["curl", "-fsSL", "-A", "Mozilla/5.0", "-o", str(MP3), URL], check=True)
+    if not SRC.exists():  # instrumental stem (needs `pip install demucs` in the venv)
+        tmp = SRC.parent / "_sep"
+        subprocess.run([sys.executable, "-m", "demucs", "--two-stems=vocals", "-n", "htdemucs", "-o", str(tmp), str(MP3)], check=True)
+        (tmp / "htdemucs" / MP3.stem / "no_vocals.wav").rename(SRC)
     raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(SRC), "-ac", "2", "-ar", str(SR), "-f", "f32le", "-"],
                          capture_output=True, check=True).stdout
     return np.frombuffer(raw, np.float32).reshape(-1, 2)

@@ -1,5 +1,5 @@
 {
-  "note": "What is FloStocks? v4 \u2014 motion-design showreel in the style of the prompt-motion reference (flat colour fields, HUD frame, Archivo variable-width kinetic type, directional motion blur, market glyphs). Natural-pace iMessage chat (no keyboard); the punchline bubble turns FloStocks green and floods the screen into the music drop at frame 372; 16 bars on a 121 BPM grid. Composition: remotion/src/shots/flostocks/FsReelV4.tsx (scenes in src/lib/flostocks-v4/). Music: Mixkit 'What About Action?' from 51.2904 s. Audio is git-ignored (Mixkit licence) \u2014 restore with work/fetch_audio_v3.sh, rebuild SFX with work/build_sfx_v4.py.",
+  "note": "What is FloStocks? v7 \u2014 premium Apple-style UI x dynamic fintech motion (BRIEF.md). Natural-pace iMessage chat (silent, message sounds only); the punchline bubble lifts, turns green and opens like an app launch straight into FloStocks on the music drop (frame 314); 20 bars on a 124 BPM grid. Composition: remotion/src/shots/flostocks/FsReelV7.tsx (scenes in src/lib/flostocks-v7/). Music: instrumental (vocals removed with Demucs) launch edit of Mixkit 'Take this Higher' built by work/music_v7.py, aligned from 0 s. SFX: work/build_sfx_v7.py. The reel ends on its own branded CTA + lockup + market-risk disclaimer (client asked to end on 'Open your PSX account' with the disclaimer), so no separate end card is appended. Audio is git-ignored (Mixkit licence).",
   "brand": true,
   "grade": "none",
   "output": {
@@ -7,20 +7,11 @@
   },
   "clips": [
     {
-      "src": "../../remotion/out/FsReelV4.mp4",
+      "src": "../../remotion/out/FsReelV7.mp4",
       "track": false,
       "zoom": "none",
       "in": 0,
-      "out": 44.1333
-    },
-    {
-      "src": "../../brand/endcard-light.png",
-      "dur": 2.5,
-      "zoom": "pull",
-      "transition": {
-        "type": "dip",
-        "dur": 0.3
-      }
+      "out": 49.6667
     }
   ],
   "captions": {
@@ -29,17 +20,17 @@
     "language": "en"
   },
   "music": {
-    "src": "edit/audio/music_what_about_action.mp3",
-    "start": 51.2904,
-    "volume": 0.85,
+    "src": "edit/audio/music_v7.wav",
+    "start": 0,
+    "volume": 0.9,
     "duck": false,
     "lufs": -14
   },
   "sfx": [
     {
       "t": 0,
-      "src": "edit/audio/sfx_v4.wav",
-      "gain": 0.9
+      "src": "edit/audio/sfx_v7.wav",
+      "gain": 0.8
     }
   ]
 }

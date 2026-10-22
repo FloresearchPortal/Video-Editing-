@@ -59,7 +59,8 @@ export const Research: React.FC<{ t: number }> = ({ t }) => {
 // 06 TOOLS (break riser) — a calculator card whose segmented tabs step on every beat;
 // the slider and bars re-settle each time. No outcome figures (no promised returns).
 // =============================================================================
-const TABS = ['Commission', 'SIP', 'CGT', 'Dividends'];
+const TABS = ['Commission', 'SIP', 'CGT', 'Returns'];
+const TITLES = ['Commission calculator', 'SIP calculator', 'CGT calculator', 'Investment return calculator'];
 export const Tools: React.FC<{ t: number }> = ({ t }) => {
   const card = enter(t, 2, 16);
   let seg = 0;
@@ -82,7 +83,7 @@ export const Tools: React.FC<{ t: number }> = ({ t }) => {
             </span>
           ))}
         </div>
-        <p style={{ ...sf(64, 800), position: 'absolute', left: 50, top: 190 }}>{TABS[cur]} calculator</p>
+        <p style={{ ...sf(cur === 3 ? 54 : 64, 800), position: 'absolute', left: 50, top: cur === 3 ? 198 : 190 }}>{TITLES[cur]}</p>
         <p style={{ ...sf(30, 500, A.sub), position: 'absolute', left: 50, top: 276 }}>Know the numbers before you trade.</p>
         {/* slider */}
         <div style={{ position: 'absolute', left: 50, right: 50, top: 400, height: 10, borderRadius: 5, backgroundColor: A.mist }}>
