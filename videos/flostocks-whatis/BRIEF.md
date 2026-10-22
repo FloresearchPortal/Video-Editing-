@@ -25,8 +25,10 @@
 - The punchline holds on screen, turns green exactly on a beat, then transitions to the logo.
 - Learn section is a list (Apple grouped-list style), not a carousel. No SIP in the feature montage.
 - Music: launch-video style track with beat drops; the motion is cut and keyed to its drops,
-  stops and downbeats. Intro is silent (message sounds only); music fades in gently from "yes they are" as a filtered build with no hits; the beat drops at exactly 0:11 ON THE FLOSTOCKS LOGO (the logo appears on the drop frame), never on the green message.
-- The CTA ending is fast (everything lands inside one bar) and short.
+  stops and downbeats. Intro is silent (message sounds only); the music builds slowly from "Wo tou pmex ke top broker nai?" (the last three messages get more time), is clearly loud when the punchline turns green, and the beat drops at exactly 0:11 ON THE FLOSTOCKS LOGO — the green bubble opens straight into the logo, no empty white screen.
+- Before the ending, a build section: "Why just look abroad when the opportunity is right at home?"
+- CTA: "Open your PSX account today." on a drop, fast; when the logo + licence + disclaimer appear the beat goes silent.
+- Say "Relationship manager", never "RM".
 - No heartbeat / per-beat pulsing animations anywhere.
 - Text never overlaps other text or crosses graphics.
 - Deliver per-section previews for approval before compiling the final video.

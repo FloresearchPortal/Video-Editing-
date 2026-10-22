@@ -14,16 +14,16 @@
       "type": "spacing",
       "text": " ",
       "start": 29.66,
-      "end": 42.76,
+      "end": 39.92,
       "speaker_id": "speaker_0"
     },
     {
       "type": "word",
       "text": "You",
-      "start": 42.76,
-      "end": 44.16,
+      "start": 39.92,
+      "end": 41.32,
       "speaker_id": "speaker_0",
-      "logprob": 0.036
+      "logprob": 0.026
     }
   ],
   "engine": "faster-whisper (local)"
