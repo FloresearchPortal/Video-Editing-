@@ -18,7 +18,7 @@
   el(hdr, { left: 26, top: 42, font: "400 46px/1 Inter", color: "#fff" }, "‹");
   el(hdr, { left: 76, top: 30, width: 72, height: 72, borderRadius: 36, background: "#DFE5E7", overflow: "hidden" },
     `<svg viewBox="0 0 72 72" width="72" height="72"><circle cx="36" cy="28" r="13" fill="#fff"/><path d="M12,66 a24,22 0 0 1 48,0Z" fill="#fff"/></svg>`);
-  txt(hdr, { left: 168, top: 30, font: "700 36px Inter", color: "#fff" }, "Bakwas Committee 🤪");
+  txt(hdr, { left: 168, top: 30, font: "700 36px Inter", color: "#fff" }, "Bacha Party 🎉");
   txt(hdr, { left: 168, top: 76, font: "500 24px Inter", color: "#D6EFE9" }, "Bilal, Sana, Usman, Zara, You");
   el(hdr, { left: 700, top: 44, font: "700 34px Inter", color: "#fff", letterSpacing: ".3em" }, "⋮");
   const day = el(chat, { left: 340, top: 160, padding: "8px 18px", borderRadius: 12, background: "#fff", font: "600 22px Inter", color: "#54656F", boxShadow: "0 1px 1px rgba(0,0,0,.08)" }, "Today");
@@ -61,10 +61,8 @@
       <rect x="140" y="42" width="100" height="30" rx="15" fill="#000"/>
       <rect x="-2" y="190" width="6" height="70" rx="3" fill="#93A6B8"/><rect x="376" y="230" width="6" height="110" rx="3" fill="#93A6B8"/></svg>`);
   fadeUp(ph, 13.3, 0.5, 60);
-  el(ph, { left: 0, top: 150, width: 380, textAlign: "center", font: "600 26px Inter", color: "#9FB7A4", letterSpacing: ".2em" }, "NEW");
-  txt(ph, { left: 0, top: 190, width: 380, textAlign: "center", font: "800 52px Manrope", color: "#fff" }, "iPhone 18");
-  el(ph, { left: 90, top: 290, width: 200, height: 260, borderRadius: 36, background: "radial-gradient(circle at 35% 30%, #5A6B5E, #22302A 70%)", boxShadow: "inset 0 0 0 3px #3A4A3E" },
-    `<div style="position:absolute;left:24px;top:24px;width:92px;height:92px;border-radius:26px;background:#2B3A30"></div>`);
+  el(ph, { left: 0, top: 300, width: 380, textAlign: "center", font: "600 26px Inter", color: "#9FB7A4", letterSpacing: ".2em" }, "NEW");
+  txt(ph, { left: 0, top: 340, width: 380, textAlign: "center", font: "800 60px Manrope", color: "#fff" }, "iPhone 18");
   const pre = el(ph, { left: 60, top: 620, width: 260, height: 74, borderRadius: 37, background: C.g2, color: "#fff", font: "800 30px/74px Manrope", textAlign: "center" }, "PRE-BOOK");
   fadeUp(pre, 16.12, 0.35, 16);
   tl.to(pre, { scale: 0.94, duration: 0.1, yoyo: true, repeat: 1, ease: "power1.inOut" }, 17.82);
@@ -78,7 +76,7 @@
   const early = ["zara", "usman", "ayesha"].map((n, i) => {
     const w = who(s3, n, 520 + i * 170, 900, 200, { expr: "smile" });
     fadeUp(w, 17.22 + i * 0.12, 0.4, 30); return w; });
-  const bk = el(early[0], { left: 60, top: -6, padding: "6px 16px", borderRadius: 14, background: C.g, color: C.ink, font: "800 26px Manrope", whiteSpace: "nowrap" }, "PEHLE BOOK ✓");
+  const bk = el(early[0], { left: 0, top: -62, width: 200, boxSizing: "border-box", textAlign: "center", padding: "6px 0", borderRadius: 14, background: C.g, color: C.ink, font: "800 26px Manrope", whiteSpace: "nowrap" }, "PEHLE BOOK ✓");
   fadeUp(bk, 17.82, 0.35, 16); react.joy(early[0], 18.94);
   OV.push(ph, lp);
 

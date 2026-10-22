@@ -68,7 +68,7 @@ Characters (Notionists, `cast.js` + `avatars.js`)
   entrance call on its own line: a `fadeUp` hidden behind a `//` comment leaves a character stuck on screen.
 - Real-world props must be realistic: group chats look like WhatsApp (teal header, beige wallpaper, white/green bubbles,
   time + WhatsApp's real double-check SVG in #53BDEB, not "✓✓" text, input bar);
-  friends' group names are funny and NOT about investing (e.g. "Bakwas Committee 🤪"); named products are the real current model with its **Pakistan market price** (research it, cite it).
+  friends' group names are funny and NOT about investing (e.g. "Bacha Party 🎉"); named products are the real current model with its **Pakistan market price** (research it, cite it).
   Use the exact model the client names; if it isn't on sale in Pakistan yet, show an "expected PK price" and say so.
 - Groups of "the public" = 6 people.
 - **Show a character/reaction sheet for approval before using new characters or new acting** (§4).
