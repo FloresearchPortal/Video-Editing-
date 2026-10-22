@@ -246,7 +246,7 @@ export const ChatV8: React.FC<{ f: number }> = ({ f }) => {
   // app-launch hand-off: message text out, card turns white, the FloStocks mark resolves in
   const msgOut = interpolate(f, [ZOOM, ZOOM + 5], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   const toWhite = interpolate(z, [0.25, 0.8], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-  const markIn = interpolate(f, [ZOOM + 5, DROP], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: APPLE });
+  const markIn = 0; // the card opens to clean white; the FloStocks mark pops in exactly on the drop (Brand scene)
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#fff', overflow: 'hidden' }}>

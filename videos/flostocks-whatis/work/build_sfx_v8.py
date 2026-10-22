@@ -65,7 +65,7 @@ for f in (36, 112, 186, 207):
 cues.append((228, "msg_receive.mp3", 0.8))
 for f in (74, 150):
     cues.append((f, "msg_send.mp3", 0.55))
-cues.append((272, "ui_select.mp3", 0.45))             # green + lift, on the music's hit
+cues.append((272, "ui_select.mp3", 0.22))             # green + lift, on a beat of the build
 cues.append((DROP - 2, "whoosh_fast.mp3", 0.6))       # app-launch zoom in the silence
 cues.append((DROP, "zoom_impact.mp3", 0.55))          # logo lands with the drop
 

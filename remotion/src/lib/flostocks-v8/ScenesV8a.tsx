@@ -36,7 +36,8 @@ const Lockup: React.FC<{ wipe: number; lift: number }> = ({ wipe, lift }) => (
 export const Brand: React.FC<{ t: number }> = ({ t }) => {
   const move = ap(t, b(1), FAST);
   const wipe = ap(t, b(1.5), FAST + 2);
-  const ms = mixN(MARK, ICON_M, move);
+  const pop = ap(t, 0, 5); // the mark pops in on the drop frame itself
+  const ms = mixN(MARK, ICON_M, move) * mixN(0.8, 1, pop); // visible at full opacity on the drop frame, settles in 5 frames
   const halo = Math.min(1, t / 18);
   return (
     <Canvas>

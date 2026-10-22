@@ -25,7 +25,7 @@
 - The punchline holds on screen, turns green exactly on a beat, then transitions to the logo.
 - Learn section is a list (Apple grouped-list style), not a carousel. No SIP in the feature montage.
 - Music: launch-video style track with beat drops; the motion is cut and keyed to its drops,
-  stops and downbeats. Intro is silent (message sounds only); music fades in gently from "yes they are" and the beat drops at exactly 0:11.
+  stops and downbeats. Intro is silent (message sounds only); music fades in gently from "yes they are" as a filtered build with no hits; the beat drops at exactly 0:11 ON THE FLOSTOCKS LOGO (the logo appears on the drop frame), never on the green message.
 - The CTA ending is fast (everything lands inside one bar) and short.
 - No heartbeat / per-beat pulsing animations anywhere.
 - Text never overlaps other text or crosses graphics.
