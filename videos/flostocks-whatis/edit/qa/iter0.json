@@ -2,7 +2,7 @@
   "final": "/home/user/Video-Editing-/videos/flostocks-whatis/edit/final.mp4",
   "passed": false,
   "counts": {
-    "FAIL": 3,
+    "FAIL": 2,
     "WARN": 3,
     "INFO": 0
   },
@@ -11,12 +11,12 @@
       "id": "audio.music_too_loud",
       "severity": "FAIL",
       "stage": "music",
-      "message": "music only -52.8 LU under the voice (want 15\u201325) \u2014 speech gets buried on phone speakers",
+      "message": "music only -56.7 LU under the voice (want 15\u201325) \u2014 speech gets buried on phone speakers",
       "metric": {
-        "speech_db": -15.0,
-        "voice_over_music_db": -52.8,
+        "speech_db": -15.399999618530273,
+        "voice_over_music_db": -56.7,
         "balance_source": "stems",
-        "duration": 42.43
+        "duration": 55.53
       },
       "fix": {
         "action": "music_volume",
@@ -27,7 +27,7 @@
       "id": "audio.dead_air",
       "severity": "FAIL",
       "stage": "assemble",
-      "message": "2 silent gap(s) in speech: 0.0-28.3s, 29.7-41.1s",
+      "message": "2 silent gap(s) in speech: 0.0-28.3s, 29.7-54.2s",
       "metric": {
         "gaps": [
           {
@@ -37,7 +37,7 @@
           },
           {
             "start": 29.66,
-            "end": 41.08,
+            "end": 54.18,
             "clip": 0
           }
         ]
@@ -52,26 +52,10 @@
           },
           {
             "start": 29.66,
-            "end": 41.08,
+            "end": 54.18,
             "clip": 0
           }
         ]
-      }
-    },
-    {
-      "id": "grade.skin_overexposed",
-      "severity": "FAIL",
-      "stage": "assemble",
-      "message": "faces too bright (lit side L\u224899, natural 65\u201376)",
-      "metric": {
-        "L_p75_median": 99.0,
-        "hue_median": 128.5,
-        "chroma_median": 1.1,
-        "samples": 3
-      },
-      "fix": {
-        "action": "grade_extra",
-        "filter": "eq=gamma=0.93"
       }
     },
     {
@@ -88,7 +72,7 @@
       "id": "grade.clipping",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "23.2% of the picture is clipped white",
+      "message": "23.1% of the picture is clipped white",
       "metric": {},
       "fix": null
     },
@@ -96,10 +80,10 @@
       "id": "pacing.long_shot",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "a 40.0s shot with no cut/zoom change \u2014 add a punch-in",
+      "message": "a 53.1s shot with no cut/zoom change \u2014 add a punch-in",
       "metric": {
-        "mean_shot_s": 40.0,
-        "longest_s": 40.0
+        "mean_shot_s": 53.1,
+        "longest_s": 53.1
       },
       "fix": null
     }
@@ -109,40 +93,34 @@
       "width": 1080,
       "height": 1920,
       "fps": 30.0,
-      "duration": 42.5,
+      "duration": 55.6,
       "vcodec": "h264",
       "pix_fmt": "yuv420p",
       "acodec": "aac",
       "sample_rate": "48000"
     },
     "loudness": {
-      "integrated_lufs": -14.1,
-      "true_peak_dbfs": -0.9
+      "integrated_lufs": -14.0,
+      "true_peak_dbfs": -1.2
     },
     "mix": {
-      "speech_db": -15.0,
-      "voice_over_music_db": -52.8,
+      "speech_db": -15.399999618530273,
+      "voice_over_music_db": -56.7,
       "balance_source": "stems",
-      "duration": 42.43
+      "duration": 55.53
     },
     "picture": {
       "black": [],
       "freeze_starts": []
     },
     "framing_skin": {
-      "framing": {},
-      "skin": {
-        "L_p75_median": 99.0,
-        "hue_median": 128.5,
-        "chroma_median": 1.1,
-        "samples": 3
-      }
+      "framing": {}
     },
     "captions": {},
     "brand": {},
     "pacing": {
-      "mean_shot_s": 40.0,
-      "longest_s": 40.0
+      "mean_shot_s": 53.1,
+      "longest_s": 53.1
     }
   }
 }
