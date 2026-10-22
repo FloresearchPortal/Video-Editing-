@@ -2,8 +2,8 @@
   "final": "/home/user/Video-Editing-/videos/flostocks-whatis/edit/final.mp4",
   "passed": false,
   "counts": {
-    "FAIL": 2,
-    "WARN": 3,
+    "FAIL": 4,
+    "WARN": 9,
     "INFO": 0
   },
   "issues": [
@@ -11,12 +11,12 @@
       "id": "audio.music_too_loud",
       "severity": "FAIL",
       "stage": "music",
-      "message": "music only -56.7 LU under the voice (want 15\u201325) \u2014 speech gets buried on phone speakers",
+      "message": "music only -56.5 LU under the voice (want 15\u201325) \u2014 speech gets buried on phone speakers",
       "metric": {
-        "speech_db": -15.399999618530273,
-        "voice_over_music_db": -56.7,
+        "speech_db": -16.0,
+        "voice_over_music_db": -56.5,
         "balance_source": "stems",
-        "duration": 55.53
+        "duration": 46.57
       },
       "fix": {
         "action": "music_volume",
@@ -27,7 +27,7 @@
       "id": "audio.dead_air",
       "severity": "FAIL",
       "stage": "assemble",
-      "message": "2 silent gap(s) in speech: 0.0-28.3s, 29.7-54.2s",
+      "message": "2 silent gap(s) in speech: 0.0-28.3s, 29.7-45.2s",
       "metric": {
         "gaps": [
           {
@@ -37,7 +37,7 @@
           },
           {
             "start": 29.66,
-            "end": 54.18,
+            "end": 45.2,
             "clip": 0
           }
         ]
@@ -52,11 +52,107 @@
           },
           {
             "start": 29.66,
-            "end": 54.18,
+            "end": 45.2,
             "clip": 0
           }
         ]
       }
+    },
+    {
+      "id": "picture.black",
+      "severity": "FAIL",
+      "stage": "assemble",
+      "message": "black frames 16.37\u201316.63s",
+      "metric": {
+        "start": 16.3667,
+        "end": 16.6333
+      },
+      "fix": {
+        "action": "soften_dip",
+        "clip": 0
+      }
+    },
+    {
+      "id": "grade.skin_orange",
+      "severity": "FAIL",
+      "stage": "assemble",
+      "message": "skin too orange/saturated (hue 134\u00b0, chroma 99)",
+      "metric": {
+        "L_p75_median": 73.1,
+        "hue_median": 133.9,
+        "chroma_median": 98.7,
+        "samples": 5
+      },
+      "fix": {
+        "action": "grade_extra",
+        "filter": "hue=s=0.88"
+      }
+    },
+    {
+      "id": "picture.freeze",
+      "severity": "WARN",
+      "stage": "assemble",
+      "message": "frozen picture from 0.00s (clip 0: source ends early or out-point past the footage?)",
+      "metric": {
+        "start": 0.0,
+        "clip": 0
+      },
+      "fix": null
+    },
+    {
+      "id": "picture.freeze",
+      "severity": "WARN",
+      "stage": "assemble",
+      "message": "frozen picture from 1.90s (clip 0: source ends early or out-point past the footage?)",
+      "metric": {
+        "start": 1.9,
+        "clip": 0
+      },
+      "fix": null
+    },
+    {
+      "id": "picture.freeze",
+      "severity": "WARN",
+      "stage": "assemble",
+      "message": "frozen picture from 3.73s (clip 0: source ends early or out-point past the footage?)",
+      "metric": {
+        "start": 3.73333,
+        "clip": 0
+      },
+      "fix": null
+    },
+    {
+      "id": "picture.freeze",
+      "severity": "WARN",
+      "stage": "assemble",
+      "message": "frozen picture from 5.07s (clip 0: source ends early or out-point past the footage?)",
+      "metric": {
+        "start": 5.06667,
+        "clip": 0
+      },
+      "fix": null
+    },
+    {
+      "id": "picture.freeze",
+      "severity": "WARN",
+      "stage": "assemble",
+      "message": "frozen picture from 7.13s (clip 0: source ends early or out-point past the footage?)",
+      "metric": {
+        "start": 7.13333,
+        "clip": 0
+      },
+      "fix": null
+    },
+    {
+      "id": "picture.freeze",
+      "severity": "WARN",
+      "stage": "assemble",
+      "message": "frozen picture from 9.40s (clip 0: source ends early or out-point past the footage?)",
+      "metric": {
+        "start": 9.4,
+        "clip": 0
+      },
+      "fix": null
     },
     {
       "id": "framing.no_subject",
@@ -72,7 +168,7 @@
       "id": "grade.clipping",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "23.1% of the picture is clipped white",
+      "message": "24.9% of the picture is clipped white",
       "metric": {},
       "fix": null
     },
@@ -80,10 +176,10 @@
       "id": "pacing.long_shot",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "a 53.1s shot with no cut/zoom change \u2014 add a punch-in",
+      "message": "a 44.1s shot with no cut/zoom change \u2014 add a punch-in",
       "metric": {
-        "mean_shot_s": 53.1,
-        "longest_s": 53.1
+        "mean_shot_s": 44.13,
+        "longest_s": 44.13
       },
       "fix": null
     }
@@ -93,7 +189,7 @@
       "width": 1080,
       "height": 1920,
       "fps": 30.0,
-      "duration": 55.6,
+      "duration": 46.6,
       "vcodec": "h264",
       "pix_fmt": "yuv420p",
       "acodec": "aac",
@@ -101,26 +197,48 @@
     },
     "loudness": {
       "integrated_lufs": -14.0,
-      "true_peak_dbfs": -1.2
+      "true_peak_dbfs": -0.9
     },
     "mix": {
-      "speech_db": -15.399999618530273,
-      "voice_over_music_db": -56.7,
+      "speech_db": -16.0,
+      "voice_over_music_db": -56.5,
       "balance_source": "stems",
-      "duration": 55.53
+      "duration": 46.57
     },
     "picture": {
-      "black": [],
-      "freeze_starts": []
+      "black": [
+        [
+          16.3667,
+          16.6333
+        ],
+        [
+          26.3,
+          26.5333
+        ]
+      ],
+      "freeze_starts": [
+        0.0,
+        1.9,
+        3.73333,
+        5.06667,
+        7.13333,
+        9.4
+      ]
     },
     "framing_skin": {
-      "framing": {}
+      "framing": {},
+      "skin": {
+        "L_p75_median": 73.1,
+        "hue_median": 133.9,
+        "chroma_median": 98.7,
+        "samples": 5
+      }
     },
     "captions": {},
     "brand": {},
     "pacing": {
-      "mean_shot_s": 53.1,
-      "longest_s": 53.1
+      "mean_shot_s": 44.13,
+      "longest_s": 44.13
     }
   }
 }
