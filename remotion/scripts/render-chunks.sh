@@ -5,6 +5,7 @@
 # relaunched tab hangs (seen on small 4-core containers).
 #
 #   scripts/render-chunks.sh <CompId> <totalFrames> [chunkFrames=240] [concurrency=2]
+#   HQ=1 scripts/render-chunks.sh …   delivery master: PNG frames, CRF 12 -> out/<CompId>.hq.mp4
 set -euo pipefail
 
 ID="$1"
@@ -12,7 +13,8 @@ TOTAL="$2"
 CHUNK="${3:-240}"
 CONC="${4:-2}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-WORK="$ROOT/out/chunks-$ID"
+SUF=""; HQFLAG=""; [ "${HQ:-0}" = 1 ] && { SUF=".hq"; HQFLAG="--hq"; }
+WORK="$ROOT/out/chunks-$ID$SUF"
 mkdir -p "$WORK"
 : > "$WORK/list.txt"
 
@@ -26,7 +28,7 @@ while [ "$start" -lt "$TOTAL" ]; do
     ok=0
     for attempt in 1 2 3; do
       echo "chunk $n: frames $start-$end (attempt $attempt)"
-      if node "$ROOT/scripts/render-all.mjs" --scale=1 --frames="$start-$end" --concurrency="$CONC" "$ID" > "$WORK/part$n.log" 2>&1 \
+      if node "$ROOT/scripts/render-all.mjs" --scale=1 --frames="$start-$end" --concurrency="$CONC" $HQFLAG "$ID" > "$WORK/part$n.log" 2>&1 \
          && grep -q "done: 1 shot" "$WORK/part$n.log"; then
         mv "$ROOT/out/$ID.mp4" "$part"
         ok=1
@@ -47,5 +49,5 @@ done
 # beat) — so pin each entry to its video duration, stitch video only, add fresh silence
 ffmpeg -v error -y -f concat -safe 0 -i "$WORK/list.txt" -map 0:v -c copy "$WORK/video.mp4"
 ffmpeg -v error -y -i "$WORK/video.mp4" -f lavfi -i anullsrc=r=48000:cl=stereo \
-  -map 0:v -map 1:a -c:v copy -c:a aac -shortest "$ROOT/out/$ID.mp4"
-echo "stitched $n chunks -> out/$ID.mp4 ($(ffprobe -v error -show_entries format=duration -of csv=p=0 "$ROOT/out/$ID.mp4")s)"
+  -map 0:v -map 1:a -c:v copy -c:a aac -shortest "$ROOT/out/$ID$SUF.mp4"
+echo "stitched $n chunks -> out/$ID$SUF.mp4 ($(ffprobe -v error -show_entries format=duration -of csv=p=0 "$ROOT/out/$ID$SUF.mp4")s)"

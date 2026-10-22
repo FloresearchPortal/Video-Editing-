@@ -21,6 +21,8 @@ const framesArg = args.find((a) => a.startsWith('--frames='));
 const FRAME_RANGE = framesArg ? framesArg.split('=')[1].split('-').map(Number) : null;
 const concArg = args.find((a) => a.startsWith('--concurrency='));
 const CONCURRENCY = concArg ? Number(concArg.split('=')[1]) : null;
+// --hq: lossless PNG frames + CRF 12 (delivery masters); default is JPEG frames + CRF 18 (fast previews)
+const HQ = args.includes('--hq');
 const VERBOSE = args.includes('--verbose'); // Remotion verbose logs + browser console, for diagnosing hangs
 
 const manifest = JSON.parse(readFileSync(path.join(root, 'src', 'shots.manifest.json'), 'utf8'));
@@ -60,8 +62,8 @@ for (const shot of manifest) {
       codec: transparent ? 'prores' : 'h264',
       proResProfile: transparent ? '4444' : undefined,
       pixelFormat: transparent ? 'yuva444p10le' : 'yuv420p',
-      imageFormat: transparent ? 'png' : 'jpeg',
-      crf: transparent ? undefined : 18,
+      imageFormat: transparent || HQ ? 'png' : 'jpeg',
+      crf: transparent ? undefined : HQ ? 12 : 18,
       onProgress: ({ progress }) => process.stdout.write(`\r  ${shot.id}: ${Math.round(progress * 100)}%   `),
     });
     process.stdout.write('\n');
