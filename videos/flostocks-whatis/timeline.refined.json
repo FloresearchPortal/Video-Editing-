@@ -1,5 +1,5 @@
 {
-  "note": "What is FloStocks? v7 \u2014 premium Apple-style UI x dynamic fintech motion (BRIEF.md). Natural-pace iMessage chat (silent, message sounds only); the punchline bubble lifts, turns green and opens like an app launch straight into FloStocks on the music drop (frame 314); 20 bars on a 124 BPM grid. Composition: remotion/src/shots/flostocks/FsReelV7.tsx (scenes in src/lib/flostocks-v7/). Music: instrumental (vocals removed with Demucs) launch edit of Mixkit 'Take this Higher' built by work/music_v7.py, aligned from 0 s. SFX: work/build_sfx_v7.py. The reel ends on its own branded CTA + lockup + market-risk disclaimer (client asked to end on 'Open your PSX account' with the disclaimer), so no separate end card is appended. Audio is git-ignored (Mixkit licence).",
+  "note": "What is FloStocks? v8 \u2014 premium Apple-style UI x dynamic fintech motion (BRIEF.md). Natural-pace iMessage chat (silent, message sounds only); the punchline lands on a beat, holds, turns green on the music's last hit (frame 311) and opens like an app launch into FloStocks on the drop (frame 369); 18 bars on a 124 BPM grid, one bar per idea, drop B is a beat-synced feature montage. Composition: remotion/src/shots/flostocks/FsReelV8.tsx (scenes in src/lib/flostocks-v8/). Music: instrumental (vocals removed with Demucs) launch edit of Mixkit 'Take this Higher' built by work/music_v8.py, aligned from 0 s. SFX: work/build_sfx_v8.py. The reel ends on its own branded CTA + lockup + market-risk disclaimer (client asked to end on 'Open your PSX account' with the disclaimer), so no separate end card is appended. Audio is git-ignored (Mixkit licence).",
   "brand": true,
   "grade": "none",
   "output": {
@@ -7,11 +7,11 @@
   },
   "clips": [
     {
-      "src": "../../remotion/out/FsReelV7.mp4",
+      "src": "../../remotion/out/FsReelV8.mp4",
       "track": false,
       "zoom": "none",
       "in": 0,
-      "out": 49.6667
+      "out": 47.6667
     }
   ],
   "captions": {
@@ -20,7 +20,7 @@
     "language": "en"
   },
   "music": {
-    "src": "edit/audio/music_v7.wav",
+    "src": "edit/audio/music_v8.wav",
     "start": 0,
     "volume": 0.9,
     "duck": false,
@@ -29,7 +29,7 @@
   "sfx": [
     {
       "t": 0,
-      "src": "edit/audio/sfx_v7.wav",
+      "src": "edit/audio/sfx_v8.wav",
       "gain": 0.8
     }
   ]

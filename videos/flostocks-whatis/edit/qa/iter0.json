@@ -3,7 +3,7 @@
   "passed": false,
   "counts": {
     "FAIL": 4,
-    "WARN": 20,
+    "WARN": 13,
     "INFO": 0
   },
   "issues": [
@@ -11,12 +11,12 @@
       "id": "audio.music_too_loud",
       "severity": "FAIL",
       "stage": "music",
-      "message": "music only -55.9 LU under the voice (want 15\u201325) \u2014 speech gets buried on phone speakers",
+      "message": "music only -56.0 LU under the voice (want 15\u201325) \u2014 speech gets buried on phone speakers",
       "metric": {
         "speech_db": -19.100000381469727,
-        "voice_over_music_db": -55.9,
+        "voice_over_music_db": -56.0,
         "balance_source": "stems",
-        "duration": 49.62
+        "duration": 47.59
       },
       "fix": {
         "action": "music_volume",
@@ -27,7 +27,7 @@
       "id": "audio.dead_air",
       "severity": "FAIL",
       "stage": "assemble",
-      "message": "2 silent gap(s) in speech: 0.0-28.3s, 29.7-48.3s",
+      "message": "2 silent gap(s) in speech: 0.0-28.3s, 29.7-46.3s",
       "metric": {
         "gaps": [
           {
@@ -37,7 +37,7 @@
           },
           {
             "start": 29.66,
-            "end": 48.26,
+            "end": 46.26,
             "clip": 0
           }
         ]
@@ -52,7 +52,7 @@
           },
           {
             "start": 29.66,
-            "end": 48.26,
+            "end": 46.26,
             "clip": 0
           }
         ]
@@ -62,11 +62,11 @@
       "id": "grade.skin_overexposed",
       "severity": "FAIL",
       "stage": "assemble",
-      "message": "faces too bright (lit side L\u224898, natural 65\u201376)",
+      "message": "faces too bright (lit side L\u224897, natural 65\u201376)",
       "metric": {
-        "L_p75_median": 98.1,
-        "hue_median": 101.9,
-        "chroma_median": 0.8,
+        "L_p75_median": 97.1,
+        "hue_median": 75.3,
+        "chroma_median": 0.6,
         "samples": 2
       },
       "fix": {
@@ -132,9 +132,9 @@
       "id": "picture.freeze",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "frozen picture from 8.30s (clip 0: source ends early or out-point past the footage?)",
+      "message": "frozen picture from 9.27s (clip 0: source ends early or out-point past the footage?)",
       "metric": {
-        "start": 8.3,
+        "start": 9.26667,
         "clip": 0
       },
       "fix": null
@@ -143,9 +143,9 @@
       "id": "picture.freeze",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "frozen picture from 11.50s (clip 0: source ends early or out-point past the footage?)",
+      "message": "frozen picture from 13.10s (clip 0: source ends early or out-point past the footage?)",
       "metric": {
-        "start": 11.5,
+        "start": 13.1,
         "clip": 0
       },
       "fix": null
@@ -154,9 +154,9 @@
       "id": "picture.freeze",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "frozen picture from 17.40s (clip 0: source ends early or out-point past the footage?)",
+      "message": "frozen picture from 30.57s (clip 0: source ends early or out-point past the footage?)",
       "metric": {
-        "start": 17.4,
+        "start": 30.5667,
         "clip": 0
       },
       "fix": null
@@ -165,9 +165,9 @@
       "id": "picture.freeze",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "frozen picture from 19.97s (clip 0: source ends early or out-point past the footage?)",
+      "message": "frozen picture from 40.07s (clip 0: source ends early or out-point past the footage?)",
       "metric": {
-        "start": 19.9667,
+        "start": 40.0667,
         "clip": 0
       },
       "fix": null
@@ -176,9 +176,9 @@
       "id": "picture.freeze",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "frozen picture from 24.93s (clip 0: source ends early or out-point past the footage?)",
+      "message": "frozen picture from 41.63s (clip 0: source ends early or out-point past the footage?)",
       "metric": {
-        "start": 24.9333,
+        "start": 41.6333,
         "clip": 0
       },
       "fix": null
@@ -187,86 +187,9 @@
       "id": "picture.freeze",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "frozen picture from 26.97s (clip 0: source ends early or out-point past the footage?)",
+      "message": "frozen picture from 43.63s (clip 0: source ends early or out-point past the footage?)",
       "metric": {
-        "start": 26.9667,
-        "clip": 0
-      },
-      "fix": null
-    },
-    {
-      "id": "picture.freeze",
-      "severity": "WARN",
-      "stage": "assemble",
-      "message": "frozen picture from 32.50s (clip 0: source ends early or out-point past the footage?)",
-      "metric": {
-        "start": 32.5,
-        "clip": 0
-      },
-      "fix": null
-    },
-    {
-      "id": "picture.freeze",
-      "severity": "WARN",
-      "stage": "assemble",
-      "message": "frozen picture from 36.67s (clip 0: source ends early or out-point past the footage?)",
-      "metric": {
-        "start": 36.6667,
-        "clip": 0
-      },
-      "fix": null
-    },
-    {
-      "id": "picture.freeze",
-      "severity": "WARN",
-      "stage": "assemble",
-      "message": "frozen picture from 38.47s (clip 0: source ends early or out-point past the footage?)",
-      "metric": {
-        "start": 38.4667,
-        "clip": 0
-      },
-      "fix": null
-    },
-    {
-      "id": "picture.freeze",
-      "severity": "WARN",
-      "stage": "assemble",
-      "message": "frozen picture from 40.60s (clip 0: source ends early or out-point past the footage?)",
-      "metric": {
-        "start": 40.6,
-        "clip": 0
-      },
-      "fix": null
-    },
-    {
-      "id": "picture.freeze",
-      "severity": "WARN",
-      "stage": "assemble",
-      "message": "frozen picture from 41.77s (clip 0: source ends early or out-point past the footage?)",
-      "metric": {
-        "start": 41.7667,
-        "clip": 0
-      },
-      "fix": null
-    },
-    {
-      "id": "picture.freeze",
-      "severity": "WARN",
-      "stage": "assemble",
-      "message": "frozen picture from 44.03s (clip 0: source ends early or out-point past the footage?)",
-      "metric": {
-        "start": 44.0333,
-        "clip": 0
-      },
-      "fix": null
-    },
-    {
-      "id": "picture.freeze",
-      "severity": "WARN",
-      "stage": "assemble",
-      "message": "frozen picture from 47.83s (clip 0: source ends early or out-point past the footage?)",
-      "metric": {
-        "start": 47.8333,
+        "start": 43.6333,
         "clip": 0
       },
       "fix": null
@@ -285,7 +208,7 @@
       "id": "grade.clipping",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "50.4% of the picture is clipped white",
+      "message": "49.7% of the picture is clipped white",
       "metric": {},
       "fix": null
     },
@@ -293,10 +216,10 @@
       "id": "pacing.long_shot",
       "severity": "WARN",
       "stage": "assemble",
-      "message": "a 49.7s shot with no cut/zoom change \u2014 add a punch-in",
+      "message": "a 47.7s shot with no cut/zoom change \u2014 add a punch-in",
       "metric": {
-        "mean_shot_s": 49.67,
-        "longest_s": 49.67
+        "mean_shot_s": 47.67,
+        "longest_s": 47.67
       },
       "fix": null
     }
@@ -306,21 +229,21 @@
       "width": 1080,
       "height": 1920,
       "fps": 30.0,
-      "duration": 49.67,
+      "duration": 47.67,
       "vcodec": "h264",
       "pix_fmt": "yuv420p",
       "acodec": "aac",
       "sample_rate": "48000"
     },
     "loudness": {
-      "integrated_lufs": -14.0,
-      "true_peak_dbfs": -1.2
+      "integrated_lufs": -14.1,
+      "true_peak_dbfs": -1.1
     },
     "mix": {
       "speech_db": -19.100000381469727,
-      "voice_over_music_db": -55.9,
+      "voice_over_music_db": -56.0,
       "balance_source": "stems",
-      "duration": 49.62
+      "duration": 47.59
     },
     "picture": {
       "black": [],
@@ -329,35 +252,28 @@
         1.63333,
         2.93333,
         6.2,
-        8.3,
-        11.5,
-        17.4,
-        19.9667,
-        24.9333,
-        26.9667,
-        32.5,
-        36.6667,
-        38.4667,
-        40.6,
-        41.7667,
-        44.0333,
-        47.8333
+        9.26667,
+        13.1,
+        30.5667,
+        40.0667,
+        41.6333,
+        43.6333
       ]
     },
     "framing_skin": {
       "framing": {},
       "skin": {
-        "L_p75_median": 98.1,
-        "hue_median": 101.9,
-        "chroma_median": 0.8,
+        "L_p75_median": 97.1,
+        "hue_median": 75.3,
+        "chroma_median": 0.6,
         "samples": 2
       }
     },
     "captions": {},
     "brand": {},
     "pacing": {
-      "mean_shot_s": 49.67,
-      "longest_s": 49.67
+      "mean_shot_s": 47.67,
+      "longest_s": 47.67
     }
   }
 }
