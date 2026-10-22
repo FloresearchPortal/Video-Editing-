@@ -1,5 +1,5 @@
 {
-  "note": "What is FloStocks? v9 \u2014 premium Apple-style UI x dynamic fintech motion (BRIEF.md). iMessage chat over a slow music build that starts under 'Wo tou pmex\u2026' (3.7 s); the punchline turns green on a beat when the build is loud (9.07 s); the green bubble opens and cuts to the FloStocks logo exactly on the drop at 0:11. Fast cuts on a 124 BPM grid: drop A (brand, official, market, open, learn, research+tools), Regulated on the stop bar, drop B feature montage (MTS, V Trade, IPOs, Relationship manager, Every sector), 'Why just look abroad when the opportunity is right at home?' build, CTA 'Open your PSX account today.' on the drop, then the beat goes silent for the logo, licence line and market-risk disclaimer. Composition: remotion/src/shots/flostocks/FsReelV9.tsx (src/lib/flostocks-v9/). Music: work/music_v9.py (instrumental Mixkit 'Take this Higher' + synthesised riser/roll). SFX: work/build_sfx_v9.py. Final audio master: work/master_v9.sh (linear two-pass loudnorm keeps the build -> drop contrast). Ends on its own branded CTA + disclaimer (client brief), no separate end card. Audio is git-ignored (Mixkit licence).",
+  "note": "What is FloStocks? v10 \u2014 premium Apple-style UI x dynamic fintech motion (BRIEF.md). iMessage chat over a slow music build from 'Wo tou pmex\u2026' (3.7 s); the punchline turns green on a beat (9.07 s), holds, and cuts straight to the FloStocks logo animation on the drop at exactly 0:11 (no expanding bubble). 124 BPM grid at the earlier pace: drop A one bar per idea (market two), Regulated across break + stop bar, drop B feature montage (MTS, V Trade, IPOs, Relationship manager, Every sector), 'All of PSX. One account.' on a riser + snare-roll build, CTA 'Open your PSX account today.' on the drop, then the beat goes silent for the logo, licence line and disclaimer. Composition: remotion/src/shots/flostocks/FsReelV10.tsx (src/lib/flostocks-v10/). Music: work/music_v10.py; SFX: work/build_sfx_v10.py; final audio master: work/master_v10.sh. Ends on its own branded CTA + disclaimer, no separate end card.",
   "brand": true,
   "grade": "none",
   "output": {
@@ -7,11 +7,11 @@
   },
   "clips": [
     {
-      "src": "../../remotion/out/FsReelV9.mp4",
+      "src": "../../remotion/out/FsReelV10.mp4",
       "track": false,
       "zoom": "none",
       "in": 0,
-      "out": 41.3333
+      "out": 43.1333
     }
   ],
   "captions": {
@@ -20,7 +20,7 @@
     "language": "en"
   },
   "music": {
-    "src": "edit/audio/music_v9.wav",
+    "src": "edit/audio/music_v10.wav",
     "start": 0,
     "volume": 0.9,
     "duck": false,
@@ -29,7 +29,7 @@
   "sfx": [
     {
       "t": 0,
-      "src": "edit/audio/sfx_v9.wav",
+      "src": "edit/audio/sfx_v10.wav",
       "gain": 0.8
     }
   ]
