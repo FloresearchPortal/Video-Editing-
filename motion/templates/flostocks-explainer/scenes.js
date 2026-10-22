@@ -1,5 +1,5 @@
 // FloStocks explainer — STARTER scenes. Replace with the real beat sheet for each video.
-// Rules + workflow: .claude/skills/flostocks-explainer/SKILL.md. Full worked example (114 s, 20 scenes):
+// Rules + workflow: .claude/skills/60sec/SKILL.md. Full worked example (114 s, 20 scenes):
 // motion/projects/what-is-psx/scenes.js.
 //
 // Every cue time is a VO word time from videos/<slug>/edit/vo.words.json — never guess timings.

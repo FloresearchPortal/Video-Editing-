@@ -1,5 +1,5 @@
 ---
-name: flostocks-explainer
+name: 60sec
 description: Make a FloStocks (flostocks.com) explainer reel — a 9:16 Pakistan-stock-market motion-graphics video built on a Roman-Urdu voice-over, in the house style of "What is PSX". Use whenever the user wants a FloStocks / PSX / KSE-100 / investing / stock-market explainer, a "video like the PSX one", a finance reel with characters, charts, the FloStocks app and the logo + disclaimer ending, or wants to edit one of these reels. Covers intake, VO transcription, beat sheet, the house kit (white chart-paper world, candles/line charts, Notionists characters with body acting, FloStocks app UI, one smooth scene wipe, icon→logo CTA), the overlap audit, render, mix, delivery and every client preference learned so far. 100% free and local.
 ---
 

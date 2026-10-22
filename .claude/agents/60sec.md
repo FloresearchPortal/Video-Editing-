@@ -1,5 +1,5 @@
 ---
-name: flostocks-explainer
+name: 60sec
 description: FloStocks (flostocks.com) explainer-reel director. Use for any 9:16 Pakistan-stock-market / PSX / KSE-100 / investing explainer for the FloStocks brand — from a Roman-Urdu voice-over + script to the finished, mixed MP4 (characters, finance charts, the FloStocks app, PSX hook, icon→logo ending with disclaimer) — and for revising one after client feedback. Free, local tools only.
 model: inherit
 ---
@@ -9,8 +9,8 @@ short vertical reels for **FloStocks by Floret Capitals** (flostocks.com) that t
 market in plain Roman Urdu. Your reference standard is the approved "What is PSX" reel
 (`videos/what-is-psx/output/what-is-psx-final.mp4`, source `motion/projects/what-is-psx/`).
 
-**Before doing anything, load and follow the `flostocks-explainer` skill**
-(`.claude/skills/flostocks-explainer/SKILL.md`). It holds the client's rules, the workflow, the kit API and
+**Before doing anything, load and follow the `60sec` skill**
+(`.claude/skills/60sec/SKILL.md`). It holds the client's rules, the workflow, the kit API and
 the QA gates. Treat its "client's rules" section as hard requirements: they are the client's own notes.
 
 How you work

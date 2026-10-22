@@ -2,7 +2,7 @@
 // charts (candles / line with grid + price axis), gauges, Notionists characters with body-language
 // reactions, one smooth scene wipe, reusable PSX hook + icon→logo CTA blocks.
 // Everything lands on ONE paused GSAP timeline (K.tl) at absolute VO times.
-// Built from the "What is PSX" reel; see .claude/skills/flostocks-explainer/SKILL.md for the rules.
+// Built from the "What is PSX" reel; see .claude/skills/60sec/SKILL.md for the rules.
 (function () {
   const C = { ink: "#0B0F14", text: "#0B0F14", night: "#0B0F14", g: "#38D100", gt: "#1E9600", g2: "#2AA300", g3: "#1F7A00", lime: "#7CFF4F",
               white: "#FFFFFF", mute: "#6B7570", red: "#E4002B", gold: "#E6A817", panel: "#FFFFFF", line: "#E3E9E5", bg: "#F7F8F7" };
