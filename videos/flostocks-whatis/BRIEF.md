@@ -20,6 +20,10 @@
 4. End on "Open your PSX account" + flostocks.com + the market-risk disclaimer. Never promise returns.
 
 **Motion rules**
+- Fast-paced like the music: one bar per idea, entrances on beats/8ths/16ths; feature montages
+  get a one-liner per element and a market graphic that moves on the beat. Music is instrumental only (no vocals).
+- The punchline holds on screen, turns green exactly on a beat, then transitions to the logo.
+- Learn section is a list (Apple grouped-list style), not a carousel. No SIP in the feature montage.
 - Music: launch-video style track with beat drops; the motion is cut and keyed to its drops,
   stops and downbeats. Intro is silent (message sounds only); music fades in from "but".
 - No heartbeat / per-beat pulsing animations anywhere.
