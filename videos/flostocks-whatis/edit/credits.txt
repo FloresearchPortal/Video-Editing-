@@ -6,7 +6,11 @@ Music
   posts, online ads and YouTube; NOT for TV/radio broadcast, CDs/DVDs or games; don't register it
   with Content ID / any rights-management service. No attribution required. Used from 56.22 s.
   File not committed (licence forbids standalone redistribution): work/fetch_audio_v3.sh.
-  edit/music_bed_v2.wav (v2, current) — synthesized locally by work/gen_music_v2.py (numpy/scipy
+  edit/audio/music_v5.wav (v5, current) — original 128 BPM D-minor track composed and
+  synthesised locally by work/gen_music_v5.py (numpy/scipy, no samples) in the style of the
+  reference showreel's music (tempo, key, sidechain pump, break/hard-stop structure). The
+  reference track itself is NOT used. No third-party rights. Licence: n/a (original in-repo work).
+  edit/music_bed_v2.wav (v2) — synthesized locally by work/gen_music_v2.py (numpy/scipy
   synthesis, 150 BPM). No samples, no third-party rights. Licence: n/a (original in-repo work).
   edit/music_bed.wav — synthesized locally by work/gen_music.py (deterministic numpy/ffmpeg
   synthesis, same approach as reelkit.sfx_gen). No samples, no third-party rights; the repo
