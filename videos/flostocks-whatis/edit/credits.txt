@@ -1,6 +1,11 @@
 Audio credits — videos/flostocks-whatis
 
 Music
+  v3 (current): "What About Action?" — Mixkit (assets.mixkit.co/music/474), Mixkit Stock Music
+  Free License (https://mixkit.co/license/#musicFree): free for commercial use in social-media
+  posts, online ads and YouTube; NOT for TV/radio broadcast, CDs/DVDs or games; don't register it
+  with Content ID / any rights-management service. No attribution required. Used from 56.22 s.
+  File not committed (licence forbids standalone redistribution): work/fetch_audio_v3.sh.
   edit/music_bed_v2.wav (v2, current) — synthesized locally by work/gen_music_v2.py (numpy/scipy
   synthesis, 150 BPM). No samples, no third-party rights. Licence: n/a (original in-repo work).
   edit/music_bed.wav — synthesized locally by work/gen_music.py (deterministic numpy/ffmpeg
@@ -17,3 +22,10 @@ Fonts (burned into the Remotion shots)
 
 Logos / brand
   FloStocks / Floret Capitals brand assets from brand/ — the channel's own marks.
+
+SFX (v3) — Mixkit Sound Effects Free License (https://mixkit.co/license/#sfxFree), commercial
+  use incl. broadcast, no attribution: Single key type (#2533), Fast small sweep transition
+  (#166), Bubble pop up alert notification (#2357), Cinematic whoosh fast transition (#1492),
+  Fast whoosh transition (#1490), Fast sci fi transition sweep (#3114), Movie logo intro impact
+  (#2900), Quick zoom impact (#772), Interface option select (#2573), Confirmation tone (#2867),
+  Magic sparkle whoosh (#2350). Mixed into edit/audio/sfx_v3.wav by work/build_sfx_v3.py.

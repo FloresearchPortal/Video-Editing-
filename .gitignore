@@ -66,3 +66,6 @@ media/library/sfx/generated/
 
 # Remotion agent skills — fetched by scripts/install-remotion-skills.sh (upstream has no licence file)
 .claude/skills/remotion-*/
+
+# Mixkit audio (licence forbids standalone redistribution) — restore with work/fetch_audio_v3.sh
+videos/*/edit/audio/
