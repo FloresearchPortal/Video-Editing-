@@ -6,7 +6,12 @@ Music
   posts, online ads and YouTube; NOT for TV/radio broadcast, CDs/DVDs or games; don't register it
   with Content ID / any rights-management service. No attribution required. Used from 56.22 s.
   File not committed (licence forbids standalone redistribution): work/fetch_audio_v3.sh.
-  edit/audio/music_v5.wav (v5, current) — original 128 BPM D-minor track composed and
+  edit/audio/music_v7.wav (v7, current) — launch edit of "Take this Higher" by Michael Ramir C.
+  (Mixkit #1012, https://mixkit.co/free-stock-music/tag/powerful/), Mixkit Stock Music Free
+  License (https://mixkit.co/license/#musicFree): OK in social media posts / online ads, no
+  attribution; not for TV/radio/CD/games; never register on Content ID. Cut on the beat grid by
+  work/music_v7.py (source downloaded to edit/audio/mixkit/, git-ignored — not redistributed).
+  edit/audio/music_v5.wav (v5) — original 128 BPM D-minor track composed and
   synthesised locally by work/gen_music_v5.py (numpy/scipy, no samples) in the style of the
   reference showreel's music (tempo, key, sidechain pump, break/hard-stop structure). The
   reference track itself is NOT used. No third-party rights. Licence: n/a (original in-repo work).

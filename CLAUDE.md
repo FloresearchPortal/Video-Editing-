@@ -43,5 +43,6 @@ videos/         per-video projects (raw footage is gitignored)
 - Iterate with `--preview`, check `python -m reelkit.review <video>` contact sheets by eye before
   saying an edit is done.
 - Footage and renders never go in git (see `.gitignore`); timelines, transcripts and styles do.
+- Per-video creative briefs live in `videos/<name>/BRIEF.md` (client keywords, story, motion rules) — read it before touching that video.
 - Every music/SFX file needs a known free licence, logged in the project's `edit/credits.txt`
   or the library catalog.
