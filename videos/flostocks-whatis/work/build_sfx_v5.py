@@ -60,12 +60,12 @@ ANCH = {n: anchor(x, MODE[n]) for n, x in SFX.items()}
 cues: list[tuple[float, str, float]] = []  # (frame where the anchor should land, file, gain)
 
 # ---- chat (natural pace, silent bed: only message sounds) ---------------------------
-for f in (40, 130, 220, 246):
+for f in (40, 130, 220, 246):  # dots windows end on these frames
     cues.append((f, "msg_receive.mp3", 0.6))
-cues.append((290, "msg_receive.mp3", 0.8))
+cues.append((276, "msg_receive.mp3", 0.8))
 for f in (84, 176):
     cues.append((f, "msg_send.mp3", 0.55))
-cues.append((296, "sparkle.mp3", 0.55))               # bubble snaps green
+cues.append((287, "sparkle.mp3", 0.4))                # focus: bubble lifts + turns green
 cues.append((DROP - 2, "whoosh_fast.mp3", 0.75))      # the fast flood
 cues.append((DROP, "zoom_impact.mp3", 0.95))
 

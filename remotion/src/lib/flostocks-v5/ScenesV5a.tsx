@@ -17,12 +17,8 @@ const Dot: React.FC<{ size: number; color: string; s?: number }> = ({ size, colo
 // =============================================================================
 export const News: React.FC<{ t: number }> = ({ t }) => {
   const squeeze = lerp(t, b(3.5), b(4), 0, 1, FS_EASE.in);
-  const groove = lerp(t, b(2), b(2.5), 0, 1);
   return (
     <Field color={C.green}>
-      <AbsoluteFill style={{ opacity: groove * 0.28 }}>
-        <Marquee t={t} word={TAPE} color={C.white} solidRow={-1} size={110} speed={12} rows={19} top={-20} />
-      </AbsoluteFill>
       <div style={{ position: 'absolute', left: NEWS_X, top: NEWS_Y }}>
         <NewsBlock
           color={C.white}
@@ -30,8 +26,7 @@ export const News: React.FC<{ t: number }> = ({ t }) => {
             const at = b(i * 0.5);
             const s = sp(t, at, { damping: 9, stiffness: 260, mass: 0.5 });
             const hit = t >= at;
-            const wave = groove * Math.sin((t - b(2)) * 0.26 - i * 0.9);
-            const wdth = hit ? interpolate(s, [0, 1], [62, 100]) + wave * 22 - squeeze * 40 : 100;
+            const wdth = hit ? interpolate(s, [0, 1], [62, 100]) - squeeze * 40 : 100;
             const isLast = i === NEWS_LINES.length - 1;
             const text = isLast ? line.replace('!', '') : line;
             return (
@@ -43,7 +38,6 @@ export const News: React.FC<{ t: number }> = ({ t }) => {
           }}
         />
       </div>
-      <AbsoluteFill style={{ backgroundColor: C.white, opacity: lerp(t, 0, 5, 0.55, 0) }} />
     </Field>
   );
 };
@@ -54,9 +48,11 @@ export const News: React.FC<{ t: number }> = ({ t }) => {
 // a candle burst + camera shake on the hit, then the title stacks in on the beats.
 // =============================================================================
 const IMPACT = 7; // frame the mark lands (drop spring below reaches rest ≈ here)
+// the rip runs along the lower third, under the title, so it never crosses any text
 const RIP = [
-  [-40, 1500], [90, 1460], [170, 1490], [260, 1380], [330, 1410], [420, 1270], [500, 1300], [590, 1120], [660, 1160], [760, 940], [830, 980], [940, 700], [1000, 740], [1120, 420],
+  [-40, 1840], [90, 1825], [170, 1835], [260, 1790], [330, 1800], [420, 1745], [500, 1755], [590, 1690], [660, 1705], [760, 1625], [830, 1640], [940, 1535], [1000, 1550], [1120, 1430],
 ] as const;
+const MY = 600; // the mark's centre
 const ripPath = (k: number) => {
   const n = RIP.length - 1;
   const upto = k * n;
@@ -96,39 +92,39 @@ export const Identity: React.FC<{ t: number }> = ({ t }) => {
             [0, 4, 9].map((d, k) => {
               const h = hit - d;
               if (h < 0 || h > 26) return null;
-              const r = 150 + (1 - Math.pow(1 - h / 26, 3)) * (520 + k * 160);
-              return <circle key={k} cx={540} cy={760} r={r} fill="none" stroke={k === 1 ? C.green : C.white} strokeWidth={Math.max(1, 14 - h * 0.5)} opacity={1 - h / 26} />;
+              const r = 150 + (1 - Math.pow(1 - h / 26, 3)) * (90 + k * 30);
+              return <circle key={k} cx={540} cy={MY} r={r} fill="none" stroke={k === 1 ? C.green : C.white} strokeWidth={Math.max(1, 14 - h * 0.5)} opacity={1 - h / 26} />;
             })}
           {/* candle burst */}
           {hit >= 0 &&
-            hit < 30 &&
+            hit < 12 &&
             BURST.map((p, i) => {
-              const k = 1 - Math.pow(1 - Math.min(1, hit / 30), 3);
-              const r = 170 + k * 640 * p.v;
+              const k = 1 - Math.pow(1 - Math.min(1, hit / 12), 3);
+              const r = 170 + k * 300 * p.v;
               const x = 540 + Math.cos(p.a) * r;
-              const y = 760 + Math.sin(p.a) * r;
-              const len = interpolate(hit, [0, 6, 30], [20, 110, 24]) * p.v;
+              const y = MY + Math.sin(p.a) * r;
+              const len = interpolate(hit, [0, 4, 12], [20, 90, 24]) * p.v;
               return (
-                <g key={i} transform={`rotate(${(p.a * 180) / Math.PI + 90} ${x} ${y})`} opacity={1 - hit / 30}>
+                <g key={i} transform={`rotate(${(p.a * 180) / Math.PI + 90} ${x} ${y})`} opacity={1 - hit / 12}>
                   <Candle x={x} y={y} w={14} body={len * 0.55} wick={len} up={p.up} color={p.up ? C.green : C.white} />
                 </g>
               );
             })}
         </svg>
         <AbsoluteFill style={{ backgroundColor: C.green, opacity: flash * 0.35, mixBlendMode: 'screen' }} />
-        <MBlur id="idm" vy={vel(fall, t)} style={{ position: 'absolute', left: 540 - 170, top: 760 - 170 }}>
+        <MBlur id="idm" vy={vel(fall, t)} style={{ position: 'absolute', left: 540 - 170, top: MY - 170 }}>
           <Img
             src={LOGO.iconOnDark}
             style={{ width: 340, height: 340, transform: `translateY(${fall(t)}px) scaleY(${squash}) scaleX(${2 - squash})`, transformOrigin: '50% 100%', opacity: t >= 0 ? 1 : 0 }}
           />
         </MBlur>
-        <div style={{ position: 'absolute', top: 1110, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
+        <div style={{ position: 'absolute', top: 920, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
           <Rise t={t} at={b(1)} text="THE OFFICIAL" id="idA" stagger={0.7} style={mono(36, C.green)} />
           <Rise t={t} at={b(1.5)} text="PSX DIVISION" id="idB" stagger={1} style={disp(124, C.white, 96, 900)} />
           <Rise t={t} at={b(2.25)} text="of Floret Capitals" id="idC" stagger={0.5} style={thin(54, C.white)} />
         </div>
       </AbsoluteFill>
-      <Disk t={t} at={b(3.3)} dur={10} color={C.white} cy={760} />
+      <Disk t={t} at={b(3.3)} dur={10} color={C.white} cy={MY} />
     </Field>
   );
 };
@@ -139,7 +135,6 @@ export const Identity: React.FC<{ t: number }> = ({ t }) => {
 // =============================================================================
 export const Wordmark: React.FC<{ t: number }> = ({ t }) => {
   const rule = lerp(t, 0, b(1), 0, 1, FS_EASE.out);
-  const waveOn = lerp(t, b(1.5), b(2.2), 0, 1);
   return (
     <Field color={C.white}>
       <div style={{ position: 'absolute', top: 690, left: 70, right: 70 }}>
@@ -158,7 +153,6 @@ export const Wordmark: React.FC<{ t: number }> = ({ t }) => {
           stagger={1.5}
           style={disp(128, C.ink, 100, 900, true)}
           colorFn={(i) => (i < 3 ? C.ink : C.green)}
-          wdthFn={(i) => 96 + waveOn * 22 * Math.sin((t - b(1.5)) * 0.2 - i * 0.7)}
         />
       </div>
       <div style={{ position: 'absolute', top: 960, left: 0, right: 0, display: 'flex', justifyContent: 'center' }}>
@@ -230,9 +224,6 @@ export const HowItWorks: React.FC<{ t: number }> = ({ t }) => (
         <div key={r.k}>
           <span style={{ ...mono(26, C.ink, 0.5), position: 'absolute', left: 70, top: y - 46 }}>{r.n}</span>
           <span style={{ ...disp(56, C.ink, 90, 800), position: 'absolute', left: 70, top: y - 14 }}>{r.k}</span>
-          <svg width={40} height={36} viewBox="0 0 40 36" style={{ position: 'absolute', left: 250, top: y - 18 }}>
-            <path d={r.curve} fill="none" stroke={C.ink} strokeWidth={2.5} />
-          </svg>
           {/* track + ticks */}
           <div style={{ position: 'absolute', left: TX0, top: y, width: (TX1 - TX0) * lerp(t, 4 + i * 3, 20 + i * 3, 0, 1), height: 2, backgroundColor: C.ink, opacity: 0.25 }} />
           {Array.from({ length: 14 }, (_, k) => (
@@ -261,7 +252,7 @@ export const HowItWorks: React.FC<{ t: number }> = ({ t }) => (
           {arrived && ring < 24 && (
             <div style={{ position: 'absolute', left: TX1 - 26 - ring * 3, top: traceY(i, TX1, y) - 26 - ring * 3, width: 52 + ring * 6, height: 52 + ring * 6, borderRadius: '50%', border: `3px solid ${r.col}`, opacity: 1 - ring / 24 }} />
           )}
-          <span style={{ ...thin(36, C.ink), position: 'absolute', left: TX0, top: y + 40, opacity: arrived ? lerp(ring, 0, 10, 0, 0.9) : 0 }}>{r.sub}</span>
+          <span style={{ ...thin(36, C.ink), position: 'absolute', left: TX0, top: y + 66, opacity: arrived ? lerp(ring, 0, 10, 0, 0.9) : 0 }}>{r.sub}</span>
         </div>
       );
     })}

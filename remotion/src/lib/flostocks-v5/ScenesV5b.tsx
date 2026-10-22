@@ -76,7 +76,6 @@ export const Markets: React.FC<{ t: number }> = ({ t }) => {
   const lineOn = lerp(t, 34, 52, 0, 1, FS_EASE.inOut);
   const lastK = Math.min(SERIES.length - 1, Math.floor((GC - 1 + shift) / 4));
   const lastY = rowY(SERIES[lastK].c);
-  const live = 0.5 + 0.5 * Math.sin(t * 0.4);
   return (
     <Field color={C.white}>
       <svg width={1080} height={1920} style={{ position: 'absolute', inset: 0 }}>
@@ -85,7 +84,7 @@ export const Markets: React.FC<{ t: number }> = ({ t }) => {
         {lineOn > 0.95 && (
           <g>
             <line x1={GX0 - 10} y1={lastY} x2={GX0 + (GC - 1) * PITCH + 10} y2={lastY} stroke={C.green} strokeWidth={2} strokeDasharray="6 8" />
-            <circle cx={GX0 + (GC - 1) * PITCH} cy={lastY} r={10 + live * 8} fill={C.green} opacity={0.35} />
+            <circle cx={GX0 + (GC - 1) * PITCH} cy={lastY} r={14} fill={C.green} opacity={0.35} />
             <rect x={GX0 + (GC - 1) * PITCH - 128} y={lastY - 52} width={120} height={40} rx={8} fill={C.ink} />
             <text x={GX0 + (GC - 1) * PITCH - 68} y={lastY - 24} textAnchor="middle" fontFamily="IBM Plex Mono" fontWeight={600} fontSize={22} fill={C.green}>
               PSX ▲
@@ -93,7 +92,7 @@ export const Markets: React.FC<{ t: number }> = ({ t }) => {
           </g>
         )}
       </svg>
-      <div style={{ position: 'absolute', top: 330, left: 70, right: 70, display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ position: 'absolute', top: 262, left: 70, right: 70, display: 'flex', justifyContent: 'space-between' }}>
         <span style={mono(24, C.ink, 0.7)}>{swap ? 'PSX · SECTOR BOARD' : 'PSX · KSE-100 · LIVE BOARD'}</span>
         <span style={mono(24, C.ink, 0.7)}>● MARKET OPEN</span>
       </div>
@@ -199,7 +198,7 @@ export const OneAccount: React.FC<{ t: number }> = ({ t }) => {
         <path d={d} fill={fill} fillRule="evenodd" />
         {Array.from({ length: 14 }, (_, i) => {
           const a = (i / 14) * Math.PI * 2 + t * 0.03;
-          const rr = 380 + Math.sin(t * 0.1 + i) * 14;
+          const rr = 380;
           const x = 540 + Math.cos(a) * rr;
           const y = 800 + Math.sin(a) * rr;
           return i % 2 === 0 ? (
@@ -209,7 +208,7 @@ export const OneAccount: React.FC<{ t: number }> = ({ t }) => {
           );
         })}
       </svg>
-      <span style={{ ...mono(24, C.white, 0.9), position: 'absolute', left: 560, top: 470 }}>
+      <span style={{ ...mono(24, C.white, 0.9), position: 'absolute', left: 70, top: 262 }}>
         0{cur + 1}/04 · {LABELS[cur]}
       </span>
       <div style={{ position: 'absolute', top: 1260, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
@@ -349,7 +348,7 @@ export const Hype: React.FC<{ t: number }> = ({ t }) => {
       <Field color={C.ink}>
         <div style={{ position: 'absolute', top: 900, left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 14 }}>
           <span style={{ ...thin(72, C.white), opacity: Math.min(1, k / 2) }}>are you in?</span>
-          <span style={{ width: 6, height: 78, backgroundColor: C.green, opacity: Math.floor(k / 4) % 2 ? 0 : 1 }} />
+          <span style={{ width: 6, height: 78, backgroundColor: C.green }} />
         </div>
       </Field>
     );
@@ -377,7 +376,6 @@ export const Hype: React.FC<{ t: number }> = ({ t }) => {
   const s = sp(u, 0, { damping: 14, stiffness: 420, mass: 0.45 });
   const size = Math.min(320, 1500 / Math.max(3, h.w.length));
   const wdth = interpolate(s, [0, 1], [h.w.length > 5 ? 100 : 125, h.w.length > 5 ? 70 : 100]);
-  const arrowY = (tt: number) => interpolate(tt - b(idx), [0, BEATF], [1500, -700], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
   return (
     <Field color={bg}>
       {/* speed lines */}
@@ -388,12 +386,6 @@ export const Hype: React.FC<{ t: number }> = ({ t }) => {
           return <rect key={i} x={x} y={y} width={4} height={180 + seeded(i + 40) * 260} fill={fg} opacity={0.18} />;
         })}
       </svg>
-      {/* giant arrow ripping up */}
-      <MBlur id={`hya${idx}`} vy={vel(arrowY, t)} style={{ position: 'absolute', left: 540 - 380, top: 0, transform: `translateY(${arrowY(t)}px)` }}>
-        <svg width={760} height={900} viewBox="0 0 760 900">
-          <path d="M380 0 L760 420 L540 420 L540 900 L220 900 L220 420 L0 420 Z" fill="none" stroke={fg} strokeWidth={10} opacity={0.35} />
-        </svg>
-      </MBlur>
       <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 34 }}>
         <p style={{ ...disp(size, fg, wdth, 900), textTransform: 'none', transform: `scale(${interpolate(s, [0, 1], [1.45, 1])})` }}>{h.w}</p>
         <span style={{ ...mono(30, fg, 0.9), transform: `translateY(${(1 - s) * 60}px)` }}>{h.sub}</span>
@@ -432,7 +424,7 @@ export const Cta: React.FC<{ t: number }> = ({ t }) => {
             [0, 5].map((d, k) => {
               const h = hit - d;
               if (h < 0 || h > 24) return null;
-              const r = 120 + (1 - Math.pow(1 - h / 24, 3)) * (460 + k * 200);
+              const r = 120 + (1 - Math.pow(1 - h / 24, 3)) * (70 + k * 40);
               return <circle key={k} cx={540} cy={430} r={r} fill="none" stroke={k ? C.ink : C.green} strokeWidth={Math.max(1, 12 - h * 0.45)} opacity={1 - h / 24} />;
             })}
         </svg>
@@ -462,7 +454,7 @@ export const Cta: React.FC<{ t: number }> = ({ t }) => {
           }}
         >
           <span style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 50, color: C.white }}>flostocks.com</span>
-          <span style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 50, color: C.green, transform: `translateX(${Math.sin(t / 5) * 6}px)` }}>→</span>
+          <span style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: 50, color: C.green }}>→</span>
         </div>
         <div style={{ position: 'absolute', top: 1420, left: 90, right: 90 }}>
           <div style={{ height: 2, backgroundColor: C.ink, opacity: 0.5, width: `${lerp(t, b(4), b(5), 0, 100, FS_EASE.out)}%` }} />

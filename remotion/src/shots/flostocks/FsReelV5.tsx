@@ -1,11 +1,10 @@
 import React from 'react';
 import { AbsoluteFill, Sequence, useCurrentFrame } from 'remotion';
-import { pulse } from '../../lib/flostocks-v2/fx';
 import { ChatV5 } from '../../lib/flostocks-v5/ChatV5';
 import { Analyze, HowItWorks, Identity, Learn, News, Wordmark } from '../../lib/flostocks-v5/ScenesV5a';
 import { Cta, Hype, Markets, OneAccount, Regulated, Tools } from '../../lib/flostocks-v5/ScenesV5b';
 import { Grain, Hud } from '../../lib/flostocks-v5/mkit';
-import { BEATF, DROP, END, barF } from '../../lib/flostocks-v5/timing';
+import { DROP, barF } from '../../lib/flostocks-v5/timing';
 
 // =============================================================================
 // COMPOSITION CONFIG — 1360 frames (45.33 s): chat → 17-bar showreel → CTA hold
@@ -41,7 +40,7 @@ const SCENES: Scene[] = [
 ];
 const startF = (s: Scene) => barF(s.from);
 const endF = (s: Scene) => (s.to > 17 ? TOTAL : barF(s.to));
-const IMPACTS = [barF(0), barF(12), barF(14)];
+const IMPACTS = [barF(12), barF(14)]; // no flash on the drop: the chat zoom hands off smoothly
 
 const SceneSeq: React.FC<{ s: Scene }> = ({ s }) => {
   const t = useCurrentFrame();
@@ -52,14 +51,13 @@ const ChatSeq: React.FC = () => <ChatV5 f={useCurrentFrame()} />;
 const FsReelV5: React.FC = () => {
   const frame = useCurrentFrame();
   const cur = SCENES.find((s) => frame >= startF(s) && frame < endF(s));
-  const bump = frame >= DROP && frame < END ? pulse(frame, DROP, BEATF) : 0;
   const imp = IMPACTS.map((f) => frame - f).find((d) => d >= 0 && d < 6);
   return (
     <AbsoluteFill style={{ backgroundColor: '#fff', overflow: 'hidden' }}>
       <Sequence from={0} durationInFrames={DROP} layout="none">
         <ChatSeq />
       </Sequence>
-      <AbsoluteFill style={{ transform: `scale(${1 + bump * 0.014})` }}>
+      <AbsoluteFill>
         {SCENES.map((s, i) => (
           <Sequence key={i} from={startF(s)} durationInFrames={endF(s) - startF(s)} layout="none">
             <SceneSeq s={s} />

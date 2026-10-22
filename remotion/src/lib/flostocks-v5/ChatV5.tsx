@@ -1,13 +1,16 @@
-// v5 opening: a realistic, full-screen iOS Messages conversation at a natural pace —
+// v6 opening: a realistic, full-screen iOS Messages conversation at a natural pace —
 // thread starts at the top under the header, no keyboard, no input bar. Silent except
-// for message sounds. The punchline turns FloStocks green and floods the screen fast,
-// landing as the first frame of the showreel on the music drop.
+// for message sounds. The punchline gets an Apple-style "focus": the thread behind it
+// frosts (blur + white veil, like an iOS context menu / macOS vibrancy), the bubble
+// lifts on a soft shadow and turns FloStocks green, then zooms open like a macOS window
+// going full screen and lands as the first frame of the showreel on the music drop.
+// Only one text is ever visible at a time (message text out, headline in).
 import React from 'react';
-import { AbsoluteFill, interpolate } from 'remotion';
-import { FS, FS_BODY, FS_EASE } from '../flostocks';
-import { lerp, sp } from '../flostocks-v2/fx';
+import { AbsoluteFill, Easing, interpolate } from 'remotion';
+import { FS, FS_BODY } from '../flostocks';
+import { sp } from '../flostocks-v2/fx';
 import { DROP } from './timing';
-import { NEWS_SIZE, NEWS_X, NEWS_Y, NewsBlock } from './news';
+import { NEWS_X, NEWS_Y, NewsBlock } from './news';
 
 const PT = 2.748; // 1 iOS point in px at 1080 wide
 const FONT = `${FS_BODY}, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif`;
@@ -41,11 +44,13 @@ export const MSGS: Msg[] = [
   { me: true, text: 'Wo tou pmex ke top broker nai?', at: 176 },
   { me: false, text: 'yes they are', at: 220, dots: [188, 220] },
   { me: false, text: 'but', at: 246 },
-  { me: false, text: 'THEY ARE NOW IN STOCKS TOO!', at: 290, dots: [256, 290] },
+  { me: false, text: 'THEY ARE NOW IN STOCKS TOO!', at: 276, dots: [252, 276] },
 ];
-export const PUNCH_AT = 290;
-export const MORPH = 296; // bubble snaps green
-export const FLOOD = 302; // fast flood, lands on DROP (314)
+export const PUNCH_AT = 276;
+export const FOCUS = 287; // thread frosts, bubble lifts + turns green
+export const ZOOM = 297; // bubble opens to full screen, lands on DROP (314)
+// Apple's standard "ease" for sheets/zooms: fast start, very soft landing, no overshoot
+const APPLE = Easing.bezier(0.32, 0.72, 0, 1);
 
 // ---- pieces --------------------------------------------------------------------
 const Tail: React.FC<{ me: boolean; color: string }> = ({ me, color }) => (
@@ -59,19 +64,17 @@ const Tail: React.FC<{ me: boolean; color: string }> = ({ me, color }) => (
   </svg>
 );
 
-const Bubble: React.FC<{ m: Msg; f: number; tail: boolean; delivered: boolean; groupTop: boolean; green?: number; hide?: boolean }> = ({
+const Bubble: React.FC<{ m: Msg; f: number; tail: boolean; delivered: boolean; groupTop: boolean; hide?: boolean }> = ({
   m,
   f,
   tail,
   delivered,
   groupTop,
-  green = 0,
   hide = false,
 }) => {
   const s = sp(f, m.at, { damping: 15, stiffness: 260, mass: 0.55 });
   const grow = Math.min(1, s * 1.15);
-  const color = m.me ? C.blue : green > 0 ? mix(C.recv, FS.green, green) : C.recv;
-  const pulse = green > 0 ? 1 + Math.sin(Math.min(1, green) * Math.PI) * 0.06 : 1;
+  const color = m.me ? C.blue : C.recv;
   return (
     <div
       style={{
@@ -90,13 +93,12 @@ const Bubble: React.FC<{ m: Msg; f: number; tail: boolean; delivered: boolean; g
           padding: `${7 * PT}px ${12 * PT}px`,
           transform: m.me
             ? `translateY(${(1 - s) * 140}px) scale(${interpolate(s, [0, 1], [0.92, 1])})`
-            : `scale(${interpolate(s, [0, 1], [0.5, 1]) * pulse})`,
+            : `scale(${interpolate(s, [0, 1], [0.5, 1])})`,
           transformOrigin: m.me ? 'bottom right' : 'bottom left',
           opacity: hide ? 0 : Math.min(1, s * 3),
-          boxShadow: green > 0 ? `0 0 ${50 * green}px rgba(56,209,0,${0.55 * green})` : undefined,
         }}
       >
-        <p style={{ margin: 0, fontFamily: FONT, fontSize: 17 * PT, lineHeight: 1.3, color: m.me || green > 0.5 ? '#fff' : C.text, letterSpacing: '-0.01em' }}>
+        <p style={{ margin: 0, fontFamily: FONT, fontSize: 17 * PT, lineHeight: 1.3, color: m.me ? '#fff' : C.text, letterSpacing: '-0.01em' }}>
           {m.text}
         </p>
         {tail && <Tail me={m.me} color={color} />}
@@ -209,38 +211,41 @@ const Header: React.FC = () => (
 );
 
 // ---- scene -----------------------------------------------------------------
-// punchline bubble rect at rest (measured from a full-res still of the top-anchored thread)
+// punchline bubble body at rest (measured from a full-res still of the top-anchored thread)
 const BX0 = 44;
 const BY0 = 1315;
-const BX1 = 769;
+const BX1 = 768;
 const BY1 = 1473;
+const BR = 18 * PT; // bubble corner radius
 
 export const ChatV5: React.FC<{ f: number }> = ({ f }) => {
   const shown = MSGS.filter((m) => f >= m.at);
   const lastMeIdx = shown.map((m) => m.me).lastIndexOf(true);
   const dots = MSGS.find((m) => m.dots && f >= m.dots[0] && f < m.dots[1]);
-  const green = lerp(f, MORPH, MORPH + 5, 0, 1, FS_EASE.out);
-  const flood = lerp(f, FLOOD, DROP, 0, 1, FS_EASE.in);
-  const flooding = f >= FLOOD;
+  const focused = f >= FOCUS;
+  const k = interpolate(f, [FOCUS, ZOOM], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: APPLE });
+  const green = interpolate(f, [FOCUS, FOCUS + 9], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic) });
+  const z = interpolate(f, [ZOOM, DROP], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: APPLE });
 
-  // gentle settle of the whole UI behind the flood
-  const back = 1 - flood * 0.06;
-
-  // flood rect: bubble -> full screen
-  const x0 = interpolate(flood, [0, 1], [BX0, 0]);
-  const y0 = interpolate(flood, [0, 1], [BY0, 0]);
-  const x1 = interpolate(flood, [0, 1], [BX1, 1080]);
-  const y1 = interpolate(flood, [0, 1], [BY1, 1920]);
-  const radius = interpolate(flood, [0, 1], [18 * PT, 0]);
-  const padX = interpolate(flood, [0, 1], [12 * PT, NEWS_X]);
-  const textTop = interpolate(flood, [0, 1], [7 * PT, NEWS_Y]);
-  const bScale = interpolate(flood, [0, 1], [17 * PT * 1.25 / NEWS_SIZE, 1]);
-  const aScale = (bScale * NEWS_SIZE) / (17 * PT * 1.25);
-  const xfade = lerp(flood, 0.1, 0.24, 0, 1, (n) => n);
+  // lifted bubble: scales up a touch about its centre and rises on a soft shadow
+  const lift = 1 + 0.06 * k;
+  const cx = (BX0 + BX1) / 2;
+  const cy = (BY0 + BY1) / 2 - 40 * k;
+  const w0 = (BX1 - BX0) * lift;
+  const h0 = (BY1 - BY0) * lift;
+  // window zoom: lifted bubble -> full screen (corner radius eases to 0 at the very end)
+  const x0 = interpolate(z, [0, 1], [cx - w0 / 2, 0]);
+  const y0 = interpolate(z, [0, 1], [cy - h0 / 2, 0]);
+  const x1 = interpolate(z, [0, 1], [cx + w0 / 2, 1080]);
+  const y1 = interpolate(z, [0, 1], [cy + h0 / 2, 1920]);
+  const radius = BR * lift * (1 - z) + 120 * Math.sin(Math.PI * z) * (1 - z);
+  // text hand-off: message text out completely, then the headline resolves in (never both)
+  const msgOut = interpolate(f, [ZOOM, ZOOM + 5], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const headIn = interpolate(f, [ZOOM + 7, DROP], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic) });
 
   return (
     <AbsoluteFill style={{ backgroundColor: '#fff', overflow: 'hidden' }}>
-      <AbsoluteFill style={{ transform: `scale(${back})`, filter: flood > 0.02 ? `blur(${flood * 6}px)` : undefined }}>
+      <AbsoluteFill style={{ filter: k > 0.01 ? `blur(${k * 22}px) saturate(${1 + 0.4 * k})` : undefined, transform: `scale(${1 - 0.04 * k})` }}>
         <div
           style={{
             position: 'absolute',
@@ -263,7 +268,6 @@ export const ChatV5: React.FC<{ f: number }> = ({ f }) => {
           {shown.map((m, i) => {
             const next = shown[i + 1];
             const prev = shown[i - 1];
-            const punch = m.at === PUNCH_AT;
             return (
               <Bubble
                 key={i}
@@ -272,8 +276,7 @@ export const ChatV5: React.FC<{ f: number }> = ({ f }) => {
                 tail={!next || next.me !== m.me}
                 delivered={i === lastMeIdx}
                 groupTop={!prev || prev.me !== m.me}
-                green={punch ? green : 0}
-                hide={punch && flooding}
+                hide={m.at === PUNCH_AT && focused}
               />
             );
           })}
@@ -282,9 +285,11 @@ export const ChatV5: React.FC<{ f: number }> = ({ f }) => {
         <Header />
         <div style={{ position: 'absolute', bottom: 8 * PT, left: '50%', marginLeft: -67 * PT, width: 134 * PT, height: 5 * PT, borderRadius: 3 * PT, backgroundColor: '#000' }} />
       </AbsoluteFill>
+      {/* frosted veil, like an iOS context-menu / macOS vibrancy backdrop */}
+      <AbsoluteFill style={{ backgroundColor: `rgba(246,247,244,${0.5 * k})` }} />
 
-      {/* the flood: punchline bubble grows into the full-screen green field */}
-      {flooding && (
+      {/* the punchline, lifted out of the thread and zoomed open */}
+      {focused && (
         <div
           style={{
             position: 'absolute',
@@ -293,34 +298,46 @@ export const ChatV5: React.FC<{ f: number }> = ({ f }) => {
             width: x1 - x0,
             height: y1 - y0,
             borderRadius: radius,
-            backgroundColor: FS.green,
+            backgroundColor: mix(C.recv, FS.green, green),
             overflow: 'hidden',
-            boxShadow: '0 0 60px rgba(56,209,0,0.5)',
+            boxShadow: `0 ${30 * k * (1 - z)}px ${80 * k * (1 - z)}px rgba(10,14,10,${0.22 * k * (1 - z)}), 0 2px 6px rgba(10,14,10,${0.08 * k * (1 - z)})`,
           }}
         >
-          {/* layer A: the iMessage text, scaling with the bubble */}
           <p
             style={{
               position: 'absolute',
-              left: padX,
-              top: textTop,
+              left: 12 * PT * lift,
+              top: 7 * PT * lift,
               width: BX1 - BX0 - 24 * PT,
               margin: 0,
               fontFamily: FONT,
               fontSize: 17 * PT,
               lineHeight: 1.3,
-              color: '#fff',
-              transform: `scale(${aScale})`,
+              letterSpacing: '-0.01em',
+              color: mix('#000000', '#FFFFFF', interpolate(green, [0.15, 0.45], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })),
+              transform: `scale(${lift})`,
               transformOrigin: '0 0',
-              opacity: 1 - xfade,
+              opacity: msgOut,
+              filter: msgOut < 1 ? `blur(${(1 - msgOut) * 8}px)` : undefined,
             }}
           >
             THEY ARE NOW IN STOCKS TOO!
           </p>
-          {/* layer B: the showreel's first frame (big Archivo, line-broken) */}
-          <div style={{ position: 'absolute', left: padX, top: textTop, transform: `scale(${bScale})`, transformOrigin: '0 0', opacity: xfade }}>
-            <NewsBlock color="#fff" />
-          </div>
+          {headIn > 0 && (
+            <div
+              style={{
+                position: 'absolute',
+                left: NEWS_X - x0,
+                top: NEWS_Y - y0,
+                opacity: headIn,
+                filter: headIn < 1 ? `blur(${(1 - headIn) * 14}px)` : undefined,
+                transform: `scale(${0.94 + 0.06 * headIn})`,
+                transformOrigin: '0 0',
+              }}
+            >
+              <NewsBlock color="#fff" />
+            </div>
+          )}
         </div>
       )}
     </AbsoluteFill>

@@ -10,7 +10,7 @@ import { AbsoluteFill, interpolate } from 'remotion';
 import { FS, FS_BODY, FS_EASE, FS_MONO } from '../flostocks';
 import { loadLocalFont } from '../localFont';
 import { lerp, seeded, sp } from '../flostocks-v2/fx';
-import { BEATF, BARF, DROP, SHOW_BARS } from './timing';
+import { BARF, BPM, DROP, SHOW_BARS } from './timing';
 
 export const ARCH = loadLocalFont('Archivo', 'Archivo-wdth-wght.ttf', '100 900', 'normal', '62% 125%');
 export const ARCH_I = ((): string => loadLocalFont('Archivo', 'Archivo-Italic-wdth-wght.ttf', '100 900', 'italic', '62% 125%'))();
@@ -101,7 +101,6 @@ export const Hud: React.FC<{ frame: number; label: string; tone: 'dark' | 'light
   const col = tone === 'dark' ? C.ink : C.white;
   const rel = frame - DROP;
   const bar = Math.min(SHOW_BARS, Math.floor(rel / BARF) + 1);
-  const beat = Math.floor((rel % BARF) / BEATF);
   const prog = Math.max(0, Math.min(1, rel / (SHOW_BARS * BARF)));
   const L = 46;
   const corner = (x: number, y: number, sx: number, sy: number) => (
@@ -115,7 +114,7 @@ export const Hud: React.FC<{ frame: number; label: string; tone: 'dark' | 'light
       {corner(1080 - 40 - L, 1740 - L, -1, -1)}
       <div style={{ position: 'absolute', top: 132, left: 104, right: 104, display: 'flex', justifyContent: 'space-between' }}>
         <span style={mono(22, col, 0.85)}>
-          FLOSTOCKS <span style={{ opacity: 0.55 }}>· WHAT IS FLOSTOCKS · 2026</span>
+          FLOSTOCKS
         </span>
         <span style={mono(22, col, 0.85)}>{label}</span>
       </div>
@@ -124,11 +123,7 @@ export const Hud: React.FC<{ frame: number; label: string; tone: 'dark' | 'light
           {tc(frame)} <span style={{ opacity: 0.5 }}>· 30 FPS</span>
         </span>
         <span style={{ ...mono(22, col, 0.8), display: 'flex', alignItems: 'center', gap: 10 }}>
-          128 BPM
-          {[0, 1, 2, 3].map((i) => (
-            <span key={i} style={{ width: 14, height: 14, display: 'inline-block', border: `2px solid ${col}`, backgroundColor: i === beat ? col : 'transparent' }} />
-          ))}
-          BAR {bar}/{SHOW_BARS}
+          {BPM} BPM <span style={{ opacity: 0.5 }}>·</span> BAR {bar}/{SHOW_BARS}
         </span>
       </div>
       <div style={{ position: 'absolute', top: 1716, left: 104, right: 104, height: 2, backgroundColor: col, opacity: 0.25 }} />
