@@ -69,3 +69,6 @@ media/library/sfx/generated/
 
 # Mixkit audio (licence forbids standalone redistribution) — restore with work/fetch_audio_v3.sh
 videos/*/edit/audio/
+
+# music-option previews cut from Mixkit tracks (licence forbids standalone redistribution)
+videos/*/edit/music_options/
