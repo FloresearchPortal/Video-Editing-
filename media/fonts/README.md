@@ -15,3 +15,4 @@ All families are licensed under the SIL Open Font License 1.1:
 | SpaceGrotesk-wght.ttf | Space Grotesk (variable) | github.com/google/fonts `ofl/spacegrotesk` (OFL 1.1) |
 | JetBrainsMono-wght.ttf | JetBrains Mono (variable) | github.com/google/fonts `ofl/jetbrainsmono` (OFL 1.1) |
 | Spectral-Medium.ttf, Spectral-SemiBold.ttf | Spectral | github.com/google/fonts `ofl/spectral` (OFL 1.1) |
+| Archivo-wdth-wght.ttf, Archivo-Italic-wdth-wght.ttf | Archivo (variable width 62–125 % + weight 100–900) | github.com/google/fonts `ofl/archivo` (OFL 1.1, see OFL-Archivo.txt) — kinetic display type in the v4 reel |

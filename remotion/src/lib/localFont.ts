@@ -3,12 +3,13 @@
 // egress proxies and on offline renders. Variable fonts take a weight range ('300 800').
 import { continueRender, delayRender, staticFile } from 'remotion';
 
-export const loadLocalFont = (family: string, file: string, weight: string, style = 'normal'): string => {
+export const loadLocalFont = (family: string, file: string, weight: string, style = 'normal', stretch?: string): string => {
   if (typeof document !== 'undefined') {
     const handle = delayRender(`load font ${family} ${weight}`);
     const face = new FontFace(family, `url('${staticFile(`fonts/${file}`)}') format('truetype')`, {
       weight,
       style,
+      ...(stretch ? { stretch } : {}),
     });
     face
       .load()

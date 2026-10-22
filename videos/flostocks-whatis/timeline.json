@@ -1,5 +1,5 @@
 {
-  "note": "What is FloStocks? v3 \u2014 realistic full-screen iMessage open (light mode, typing on the iOS keyboard) that punches into 'THEY ARE NOW IN STOCKS TOO!' on the music drop, then a 23-bar beat-locked showreel of FloStocks strengths from flostocks.com. Composition: remotion/src/shots/flostocks/FsReelV3.tsx (scenes in src/lib/flostocks-v3/). Music: Mixkit 'What About Action?' (121 BPM) started at 56.2237 s so its drop lands on frame 224. Audio files are git-ignored (Mixkit licence) \u2014 restore with work/fetch_audio_v3.sh, rebuild SFX with work/build_sfx_v3.py.",
+  "note": "What is FloStocks? v4 \u2014 motion-design showreel in the style of the prompt-motion reference (flat colour fields, HUD frame, Archivo variable-width kinetic type, directional motion blur, market glyphs). Natural-pace iMessage chat (no keyboard); the punchline bubble turns FloStocks green and floods the screen into the music drop at frame 372; 16 bars on a 121 BPM grid. Composition: remotion/src/shots/flostocks/FsReelV4.tsx (scenes in src/lib/flostocks-v4/). Music: Mixkit 'What About Action?' from 51.2904 s. Audio is git-ignored (Mixkit licence) \u2014 restore with work/fetch_audio_v3.sh, rebuild SFX with work/build_sfx_v4.py.",
   "brand": true,
   "grade": "none",
   "output": {
@@ -7,11 +7,11 @@
   },
   "clips": [
     {
-      "src": "../../remotion/out/FsReelV3.mp4",
+      "src": "../../remotion/out/FsReelV4.mp4",
       "track": false,
       "zoom": "none",
       "in": 0,
-      "out": 53.1
+      "out": 44.1333
     },
     {
       "src": "../../brand/endcard-light.png",
@@ -30,7 +30,7 @@
   },
   "music": {
     "src": "edit/audio/music_what_about_action.mp3",
-    "start": 56.2237,
+    "start": 51.2904,
     "volume": 0.85,
     "duck": false,
     "lufs": -14
@@ -38,7 +38,7 @@
   "sfx": [
     {
       "t": 0,
-      "src": "edit/audio/sfx_v3.wav",
+      "src": "edit/audio/sfx_v4.wav",
       "gain": 0.9
     }
   ]
