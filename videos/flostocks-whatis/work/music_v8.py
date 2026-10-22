@@ -1,16 +1,16 @@
 """v8 soundtrack: a launch-video edit of Mixkit "Take this Higher" (#1012, Michael Ramir C.,
 EDM, 124 BPM, D major) — Mixkit Stock Music Free License. Built to the reel's timeline:
 
-    0.00–8.20   silent (chat; message sounds only)
-    8.20        fades in from "but" under the last messages
-   10.365       the track's last hit (frame 311): the punchline bubble turns green on it,
+    0.00–6.20   silent (chat; message sounds only)
+    6.20        fades in gently from "yes they are" (frame 186)
+    9.065       the track's last hit (frame 272): the punchline bubble turns green on it,
                 then the track's own 3-beat stop — silence while the bubble lifts and zooms
-   12.300       DROP (frame 369) = bar 0, the FloStocks logo lands
+   11.000       DROP (frame 330) = bar 0, exactly 0:11 — the FloStocks logo lands
     bars 0–8    drop A
     bar 8       break riser
     bar 9       stop bar: one hit, then three beats of silence ("Regulated.")
     bars 10–16  DROP B (the same big drop again)
-    bars 16–18  the track's own decaying outro (CTA + disclaimer hold)
+    bar 16      one bar of the track's own decaying outro (CTA + disclaimer hold), then the end
 
 The client wants NO vocals, so the edit is cut from the track's instrumental stem: Demucs
 (htdemucs, two-stem, run locally — free) removes the vocal chops; the beat grid is unchanged,
@@ -39,8 +39,8 @@ URL = "https://assets.mixkit.co/music/1012/1012.mp3"
 BPM = 124.0
 BEAT = 60 / BPM
 PHASE = 0.459
-DROP_S = 369 / 30
-BUT_S = 246 / 30
+DROP_S = 330 / 30
+BUT_S = 186 / 30  # music starts at "yes they are" (name kept from the earlier cut)
 EARLY = 0.010
 
 
@@ -76,9 +76,9 @@ def join(parts, xf=0.012):
 
 x = load()
 pre = cut(x, t(59) - (DROP_S - BUT_S), t(59))
-ramp = np.clip(np.arange(len(pre)) / (SR * 1.2), 0, 1) ** 1.5  # fade in over the first 1.2 s after "but"
+ramp = np.clip(np.arange(len(pre)) / (SR * 2.2), 0, 1) ** 2  # slight, slow fade-in over 2.2 s from "yes they are"
 pre *= ramp[:, None]
-tail = cut(x, t(187), t(195))
+tail = cut(x, t(187), t(191))
 tail *= (np.linspace(1, 0, len(tail)) ** 1.3)[:, None]
 show = join([
     pre,
@@ -86,7 +86,7 @@ show = join([
     cut(x, t(103), t(107)),  # break riser, 1 bar
     cut(x, t(55), t(59)),    # stop bar: hit + 3 beats of silence
     cut(x, t(59), t(83)),    # drop B, 6 bars
-    tail,                    # outro decay, 2 bars
+    tail,                    # outro decay, 1 bar
 ])
 lead = np.zeros((int(round(BUT_S * SR)), 2), np.float32)
 y = np.concatenate([lead, show])
@@ -96,4 +96,4 @@ raw.write_bytes(y.astype(np.float32).tobytes())
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", str(raw), str(OUT)], check=True)
 raw.unlink()
 barf = BEAT * 4 * 30
-print(f"{OUT.name}: {len(y) / SR:.2f}s, drop at {DROP_S:.3f}s, bar = {barf:.3f} frames, end of outro = frame {369 + 18 * barf:.0f}")
+print(f"{OUT.name}: {len(y) / SR:.2f}s, drop at {DROP_S:.3f}s, bar = {barf:.3f} frames, end of outro = frame {330 + 17 * barf:.0f}")

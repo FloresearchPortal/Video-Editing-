@@ -38,17 +38,17 @@ const HEADER_H = 380;
 // ---- script ------------------------------------------------------------------
 type Msg = { me: boolean; text: string; at: number; dots?: [number, number] };
 export const MSGS: Msg[] = [
-  { me: false, text: 'i opened my account with floret capitals', at: 40, dots: [8, 40] },
-  { me: true, text: 'PMEX?', at: 84 },
-  { me: false, text: 'Nope, PSX', at: 130, dots: [96, 130] },
-  { me: true, text: 'Wo tou pmex ke top broker nai?', at: 176 },
-  { me: false, text: 'yes they are', at: 220, dots: [188, 220] },
-  { me: false, text: 'but', at: 246 },
-  { me: false, text: 'THEY ARE NOW IN STOCKS TOO!', at: 268, dots: [251, 268] }, // lands on a beat
+  { me: false, text: 'i opened my account with floret capitals', at: 36, dots: [6, 36] },
+  { me: true, text: 'PMEX?', at: 74 },
+  { me: false, text: 'Nope, PSX', at: 112, dots: [84, 112] },
+  { me: true, text: 'Wo tou pmex ke top broker nai?', at: 150 },
+  { me: false, text: 'yes they are', at: 186, dots: [160, 186] }, // music starts fading in here
+  { me: false, text: 'but', at: 207 },
+  { me: false, text: 'THEY ARE NOW IN STOCKS TOO!', at: 228, dots: [211, 228] }, // lands on a beat
 ];
-export const PUNCH_AT = 268;
-export const FOCUS = HIT; // 311: on the music's last hit the bubble turns green, lifts, thread frosts
-export const ZOOM = 340; // in the silent stop: the bubble opens to full screen, lands on DROP (369)
+export const PUNCH_AT = 228;
+export const FOCUS = HIT; // 272: on the music's last hit the bubble turns green, lifts, thread frosts
+export const ZOOM = DROP - 29; // 301, in the silent stop: the bubble opens to full screen, lands on DROP (330)
 // Apple's standard "ease" for sheets/zooms: fast start, very soft landing, no overshoot
 const APPLE = Easing.bezier(0.32, 0.72, 0, 1);
 

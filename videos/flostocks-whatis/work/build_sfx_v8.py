@@ -19,9 +19,9 @@ SR = 48000
 FPS = 30
 BEATF = FPS * 60 / 124.0
 BARF = BEATF * 4
-DROP = 369
-END = round(DROP + 18 * BARF)
-TOTAL_S = 1430 / FPS
+DROP = 330
+END = round(DROP + 17 * BARF)
+TOTAL_S = 1325 / FPS
 
 AUDIO = Path(__file__).resolve().parent.parent / "edit" / "audio"
 
@@ -60,12 +60,12 @@ ANCH = {n: anchor(x, MODE[n]) for n, x in SFX.items()}
 cues: list[tuple[float, str, float]] = []  # (frame where the anchor should land, file, gain)
 
 # ---- chat: message sounds only; the punchline lands on a beat, goes green on the hit ----
-for f in (40, 130, 220, 246):
+for f in (36, 112, 186, 207):
     cues.append((f, "msg_receive.mp3", 0.6))
-cues.append((268, "msg_receive.mp3", 0.8))
-for f in (84, 176):
+cues.append((228, "msg_receive.mp3", 0.8))
+for f in (74, 150):
     cues.append((f, "msg_send.mp3", 0.55))
-cues.append((311, "ui_select.mp3", 0.45))             # green + lift, on the music's hit
+cues.append((272, "ui_select.mp3", 0.45))             # green + lift, on the music's hit
 cues.append((DROP - 2, "whoosh_fast.mp3", 0.6))       # app-launch zoom in the silence
 cues.append((DROP, "zoom_impact.mp3", 0.55))          # logo lands with the drop
 
@@ -106,10 +106,10 @@ cues.append((beat_f(10, 10) + 2, "whoosh_fast.mp3", 0.38))   # ticker blast
 cues.append((beat_f(10, 12) + 2, "zoom_impact.mp3", 0.35))   # All of PSX.
 # ---- CTA / outro ----------------------------------------------------------------------
 cues.append((bar_f(14) + 2, "zoom_impact.mp3", 0.4))
-cues.append((beat_f(14, 1) + 4, "ui_select.mp3", 0.32))      # button
-cues.append((beat_f(14, 4), "key_tap.mp3", 0.7))             # tap
-cues.append((beat_f(14, 4) + 2, "confirm.mp3", 0.35))
-cues.append((beat_f(14, 8) + 6, "sparkle.mp3", 0.22))        # lockup + disclaimer
+cues.append((beat_f(14, 0.5) + 3, "ui_select.mp3", 0.32))    # button
+cues.append((beat_f(14, 2), "key_tap.mp3", 0.7))             # tap
+cues.append((beat_f(14, 2) + 2, "confirm.mp3", 0.35))
+cues.append((beat_f(14, 2.5) + 4, "sparkle.mp3", 0.22))      # lockup + disclaimer
 
 # ---- mix ------------------------------------------------------------------------------
 out = np.zeros((int(TOTAL_S * SR) + SR, 2), np.float32)

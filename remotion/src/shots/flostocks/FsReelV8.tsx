@@ -6,11 +6,11 @@ import { Cta, Montage, Regulated } from '../../lib/flostocks-v8/ScenesV8b';
 import { DROP, TOTAL, barF } from '../../lib/flostocks-v8/timing';
 
 // =============================================================================
-// COMPOSITION CONFIG — 1430 frames (47.67 s), music: work/music_v8.py
+// COMPOSITION CONFIG — 1325 frames (44.17 s), music: work/music_v8.py
 // =============================================================================
 export const compositionConfig = {
   id: 'FsReelV8',
-  durationInSeconds: 47.6667,
+  durationInSeconds: 44.1667,
   fps: 30,
   width: 1080,
   height: 1920,

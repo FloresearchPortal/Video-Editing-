@@ -274,22 +274,23 @@ export const Montage: React.FC<{ t: number }> = ({ t }) => {
 };
 
 // =============================================================================
-// 10 CTA (bars 14–18) — "Open your PSX account." on the hit, the button on beat 1, a
-// pointer taps it on the next downbeat; in the outro the lockup, licence line and the
-// market-risk disclaimer settle in and hold.
+// 10 CTA (bars 14–17) — fast: "Open your PSX account." on the hit, the button on the "and"
+// of 1, the pointer taps it on beat 2, lockup on 2½, licence line on 3, disclaimer on 3½ —
+// all inside one bar — then it holds while the music's tail rings out.
 // =============================================================================
 export const DISCLAIMER = 'Investments in securities are subject to market risks. Please read all relevant documents carefully before investing.';
 
 export const Cta: React.FC<{ t: number }> = ({ t }) => {
-  const btn = enter(t, b(1), 8, 50);
-  const tap = t - b(4);
+  const btn = enter(t, b(0.5), 7, 50);
+  const tap = t - b(2);
   const press = tap >= 0 && tap < 8 ? 1 - Math.sin((tap / 8) * Math.PI) * 0.05 : 1;
-  const cur = ap(t, b(2), b(1.5));
+  const cur = ap(t, b(1), b(1) - 1);
   const cx = mixN(930, 640, cur);
   const cy = mixN(1560, 1040, cur);
-  const curOut = 1 - ap(t, b(5.5), 8);
-  const outro = enter(t, b(8), 14, 40);
-  const disc = enter(t, b(8.5), 16, 20);
+  const curOut = 1 - ap(t, b(3), 6);
+  const outro = enter(t, b(2.5), 8, 40);
+  const lic = enter(t, b(3), 8, 30);
+  const disc = enter(t, b(3.5), 8, 20);
   return (
     <Canvas>
       <div style={{ position: 'absolute', top: 210, left: 0, right: 0, display: 'flex', justifyContent: 'center', ...outro.style }}>
@@ -297,7 +298,7 @@ export const Cta: React.FC<{ t: number }> = ({ t }) => {
       </div>
       <div style={{ position: 'absolute', top: 520, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
         <Reveal t={t} at={0} text="Open your" style={sf(124, 800)} align="center" dur={8} stagger={1.2} />
-        <Reveal t={t} at={b(0.5)} text="PSX account." style={sf(132, 800, A.deep)} align="center" dur={8} stagger={1.2} />
+        <Reveal t={t} at={4} text="PSX account." style={sf(132, 800, A.deep)} align="center" dur={8} stagger={1.2} />
       </div>
       <div
         style={{
@@ -330,7 +331,7 @@ export const Cta: React.FC<{ t: number }> = ({ t }) => {
           <path d="M4 4 L4 64 L20 50 L31 74 L42 69 L31 46 L52 46 Z" fill="#111" stroke="#fff" strokeWidth={4} strokeLinejoin="round" />
         </svg>
       )}
-      <div style={{ position: 'absolute', top: 1300, left: 90, right: 90, ...outro.style }}>
+      <div style={{ position: 'absolute', top: 1300, left: 90, right: 90, ...lic.style }}>
         <div style={{ height: 2, backgroundColor: A.line }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 18 }}>
           {['SECP LICENSED', 'PSX TREC 535', 'FLORET CAPITALS'].map((x) => (
