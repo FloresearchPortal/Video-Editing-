@@ -1,5 +1,5 @@
 // PSX TOP 10 — series design system (FloStocks). Every episode is built from these tokens and the
-// components in this folder, so only the topic, the explainer content and the data change per episode.
+// components in this folder, so only the topic and the ranking data change per episode.
 // Visual language (from the FloStocks PSX Weekly intro): white grid paper, PSX ticker bands with motion
 // blur, split-flap boards, chart builds, slanted green band wipes, the logo lockup. Poppins only.
 import React from 'react';

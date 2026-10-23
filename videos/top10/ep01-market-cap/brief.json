@@ -7,40 +7,6 @@
   "CAPITALIZATION"
  ],
  "pill": "IN PSX",
- "explainer": {
-  "kicker": "HOW THEY ARE RANKED",
-  "question": [
-   "WHAT IS",
-   "MARKET CAP?"
-  ],
-  "a": {
-   "label": "SHARE PRICE",
-   "note": "the price of one share",
-   "pre": "Rs",
-   "value": "299.74",
-   "visual": "one"
-  },
-  "op": "×",
-  "b": {
-   "label": "TOTAL SHARES",
-   "note": "all the shares the company has",
-   "value": "4.30",
-   "post": "bn",
-   "visual": "many"
-  },
-  "result": {
-   "label": "MARKET CAP",
-   "note": "what the whole company is worth",
-   "pre": "Rs",
-   "value": "1,289",
-   "post": "bn"
-  },
-  "example": "e.g. OGDC · PSX close 14 Oct 2026",
-  "takeaway": [
-   "BIGGER MARKET CAP",
-   "= HIGHER RANK"
-  ]
- },
  "rankings": {
   "heading": [
    "TOP 10 BY",

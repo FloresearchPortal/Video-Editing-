@@ -44,7 +44,7 @@ def fit(s, max_w, max_size, face='900i', tracking=-0.02):
 def validate(b):
     err, warn = [], []
     need = lambda cond, msg: None if cond else err.append(msg)
-    for k in ('episode', 'slug', 'title', 'pill', 'explainer', 'rankings'):
+    for k in ('episode', 'slug', 'title', 'pill', 'rankings'):
         need(k in b, f'missing "{k}"')
     if err:
         return err, warn
@@ -57,35 +57,8 @@ def validate(b):
         size = min(92, *[fit(x, 940, 92, '800', 0.01) for x in t])
         need(size >= 64, f'title lines too long (text would shrink to {size}px; keep each line under ~17 characters)')
     need(text_w(b['pill'], 32, '800', 0.2) <= 330, 'pill label too long (max ~10 characters, e.g. "IN PSX")')
-    ex = b['explainer']
-    ex_keys = ('kicker', 'question', 'a', 'op', 'b', 'result', 'example', 'takeaway')
-    for k in ex_keys:
-        need(k in ex, f'explainer: missing "{k}"')
-    if all(k in ex for k in ex_keys):
-        need(ex['op'] in ('×', '÷', '+', '−'), 'explainer.op must be one of × ÷ + −')
-        need(len(ex['question']) == 2, 'explainer.question must be 2 lines, e.g. ["WHAT IS", "MARKET CAP?"]')
-        need(len(ex['takeaway']) == 2, 'explainer.takeaway must be 2 lines, e.g. ["BIGGER MARKET CAP", "= HIGHER RANK"]')
-        if len(ex['question']) == 2:
-            need(fit(ex['question'][1], 940, 116) >= 80, 'explainer.question line 2 too long (keep under ~14 characters)')
-        for line in ex['takeaway']:
-            need(fit(line, 940, 62) >= 50, f'takeaway line too long: "{line}" (keep under ~20 characters)')
-        need(text_w(ex['kicker'], 24, '700', 0.16) <= 880, 'explainer.kicker too long')
-        for key in ('a', 'b', 'result'):
-            tm = ex[key]
-            for k in ('label', 'note', 'value'):
-                need(k in tm, f'explainer.{key}: missing "{k}"')
-            if any(k not in tm for k in ('label', 'note', 'value')):
-                continue
-            vh = 96 if key == 'result' else 82
-            digits = sum(c.isdigit() for c in tm['value'])
-            need(re.fullmatch(r'[0-9][0-9.,]*', tm['value']), f'explainer.{key}.value must be digits only (put "Rs", "%", "bn" in pre/post): "{tm["value"]}"')
-            need(digits <= 6, f'explainer.{key}.value has {digits} digits; max 6 (round it, use "bn"/"mn" in post)')
-            value_w = digits * (vh * 0.68 + 5) + (len(tm['value']) - digits) * vh * 0.24 \
-                + sum(text_w(tm[p], vh * 0.5, '800', 0) + 20 for p in ('pre', 'post') if tm.get(p))
-            room = 952 - 52 - 44 - value_w - 36
-            need(text_w(tm['label'], 38, '800', 0.06) <= room, f'explainer.{key}.label "{tm["label"]}" too long for its card next to the value')
-            need(text_w(tm['note'], 26, '500', 0) <= 2 * room - 40, f'explainer.{key}.note too long (max 2 short lines): "{tm["note"]}"')
-            need(tm.get('visual') in (None, 'one', 'many'), f'explainer.{key}.visual must be "one", "many" or left out')
+    if 'explainer' in b:
+        warn.append('"explainer" is ignored: the series no longer has an explainer section')
     r = b['rankings']
     for k in ('heading', 'subtitle', 'value_format', 'items', 'source'):
         need(k in r, f'rankings: missing "{k}"')
@@ -195,7 +168,6 @@ def qa(final: Path, preview: bool):
 def key_frames():
     fr = [3, 20, 30, 52, 66]
     fr += [bf(S['title']['start']) + x for x in (14, 34, 70)]
-    fr += [bf(S['explain']['start']) + x for x in (30, 90, 180)]
     fr += [bf(S['rank']['start']) + x for x in (40, 100, 126, 185)]
     fr += [bf(S['cta']['start']) + 8, END - 1]
     return sorted({int(min(END - 1, max(0, x))) for x in fr})

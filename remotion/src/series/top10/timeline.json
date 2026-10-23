@@ -1,5 +1,5 @@
 {
- "_doc": "PSX TOP 10 series beat grid \u2014 LOCKED, the same for every episode. 150 BPM = 12 frames per beat @ 30 fps. intro 0-6 (ticker wall + TOP 10 flap board, zoom-through), title 6-13 (topic lockup), explain 13-29 (formula), rank 29-45 (rows #10 -> #1 on beats 30.33..39.33), cta 45 (static from 46.5, 1.2 s hold) = 19.8 s. The music generator reads `sections` (energy) and `cues`.",
+ "_doc": "PSX TOP 10 series beat grid — LOCKED, the same for every episode. 150 BPM = 12 frames per beat @ 30 fps. intro 0-6 (ticker wall + TOP 10 flap board, zoom-through), title 6-13 (topic lockup), rank 13-29 (rows #10 -> #1 on beats 14.33..23.33), cta 29 (static from 30.5, 1.2 s hold) = 13.4 s. The music generator reads `sections` (energy) and `cues`.",
  "bpm": 150,
  "fps": 30,
  "width": 1080,
@@ -15,19 +15,14 @@
    "end": 13,
    "energy": "groove"
   },
-  "explain": {
+  "rank": {
    "start": 13,
    "end": 29,
-   "energy": "light"
-  },
-  "rank": {
-   "start": 29,
-   "end": 45,
    "energy": "full"
   },
   "cta": {
-   "start": 45,
-   "static_from": 46.5,
+   "start": 29,
+   "static_from": 30.5,
    "hold_seconds": 1.2,
    "energy": "soft"
   }
@@ -109,35 +104,52 @@
   },
   {
    "beat": 13,
-   "type": "hit"
+   "type": "impact"
   },
   {
    "beat": 14.33,
-   "type": "pluck"
-  },
-  {
-   "beat": 16.17,
    "type": "stab"
   },
   {
-   "beat": 16.67,
-   "type": "pluck"
+   "beat": 15.33,
+   "type": "stab"
+  },
+  {
+   "beat": 16.33,
+   "type": "stab"
+  },
+  {
+   "beat": 17.33,
+   "type": "stab"
+  },
+  {
+   "beat": 18.33,
+   "type": "stab"
   },
   {
    "beat": 19.33,
    "type": "stab"
   },
   {
-   "beat": 19.83,
-   "type": "hit"
+   "beat": 20.33,
+   "type": "stab"
   },
   {
    "beat": 21.33,
-   "type": "pluck"
+   "type": "stab"
   },
   {
-   "beat": 22.33,
-   "type": "stab"
+   "beat": 22,
+   "type": "riser",
+   "to": 23.33
+  },
+  {
+   "beat": 23.33,
+   "type": "impact"
+  },
+  {
+   "beat": 24.5,
+   "type": "hit"
   },
   {
    "beat": 28,
@@ -146,60 +158,6 @@
   },
   {
    "beat": 29,
-   "type": "impact"
-  },
-  {
-   "beat": 30.33,
-   "type": "stab"
-  },
-  {
-   "beat": 31.33,
-   "type": "stab"
-  },
-  {
-   "beat": 32.33,
-   "type": "stab"
-  },
-  {
-   "beat": 33.33,
-   "type": "stab"
-  },
-  {
-   "beat": 34.33,
-   "type": "stab"
-  },
-  {
-   "beat": 35.33,
-   "type": "stab"
-  },
-  {
-   "beat": 36.33,
-   "type": "stab"
-  },
-  {
-   "beat": 37.33,
-   "type": "stab"
-  },
-  {
-   "beat": 38,
-   "type": "riser",
-   "to": 39.33
-  },
-  {
-   "beat": 39.33,
-   "type": "impact"
-  },
-  {
-   "beat": 40.5,
-   "type": "hit"
-  },
-  {
-   "beat": 44,
-   "type": "riser",
-   "to": 45
-  },
-  {
-   "beat": 45,
    "type": "hit"
   }
  ]
