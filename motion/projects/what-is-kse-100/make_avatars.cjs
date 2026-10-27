@@ -28,7 +28,7 @@ const CAST = {
   usman:  { hair: 54, beard: 8, body: 7, shirt: SH[6] },
   zara:   { hair: 48, body: 12, shirt: SH[7] },
   rehan:  { hair: 1, beard: 12, body: 20, shirt: '#1B2A44' },   // suited institutional investor (navy suit, tie)
-  anchor: { hair: 23, body: 13, shirt: '#2C9E00' },            // TV news anchor (client pick: option C, lapel blazer in #2C9E00)
+  anchor: { hair: 55, body: 13, shirt: '#2C9E00', glasses: 8 }, // TV news anchor (client pick: male, option A - side part, clear glasses, lapel blazer #2C9E00)
 };
 
 // split the top-level layer groups inside <g mask=...>
