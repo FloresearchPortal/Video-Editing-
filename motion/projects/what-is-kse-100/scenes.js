@@ -149,7 +149,7 @@
     ["BANKS", 33.68, `<path d="M20,70 L110,22 L200,70Z" fill="#fff" ${S}/>${[46, 88, 132, 174].map((x) => `<rect x="${x - 9}" y="80" width="18" height="70" fill="#fff" stroke="#0B0F14" stroke-width="6"/>`).join("")}<rect x="20" y="150" width="180" height="22" fill="${C.g}" ${S}/>`],
     ["OIL", 34.38, `<rect x="56" y="40" width="108" height="132" rx="14" fill="#fff" ${S}/><path d="M56,80 h108 M56,132 h108" ${S}/><path d="M110,92 c-14,18 -14,30 0,30 c14,0 14,-12 0,-30Z" fill="${C.g}" stroke="#0B0F14" stroke-width="5"/>`],
     ["CEMENT", 34.86, `<path d="M44,52 q66,-22 132,0 l10,110 q-76,20 -152,0Z" fill="#fff" ${S}/><path d="M60,92 h100" ${S}/><rect x="80" y="104" width="60" height="30" rx="6" fill="${C.g}" stroke="#0B0F14" stroke-width="5"/>`],
-    ["FERTILIZER", 35.48, `<path d="M50,64 h120 l-8,110 h-104Z" fill="#fff" ${S}/><path d="M110,150 V96" ${S}/><path d="M110,112 c-30,-6 -36,-30 -30,-44 c24,4 32,24 30,44Z M110,104 c26,-10 32,-30 26,-42 c-22,6 -28,24 -26,42Z" fill="${C.g}" stroke="#0B0F14" stroke-width="5"/>`],
+    ["FERTILIZER", 35.48, `<path d="M110,150 V30" ${S}/><path d="M110,76 c-36,-2 -50,-28 -46,-50 c30,0 46,24 46,50Z M110,58 c32,-8 46,-32 40,-50 c-28,4 -42,26 -40,50Z" fill="${C.g}" stroke="#0B0F14" stroke-width="5" stroke-linejoin="round"/><path d="M60,112 h100 l-8,64 h-84Z" fill="#fff" ${S}/><path d="M74,138 h72" stroke="${C.g}" stroke-width="10" stroke-linecap="round"/>`],
   ].map(([lab, t, art], i) => {
     const b = card(s4, { left: 45 + i * 255, top: 1210, width: 225, height: 270, borderRadius: 26 });
     el(b, { left: 2, top: 20, width: 220, height: 190 }, `<svg viewBox="0 0 220 190" width="220" height="190">${art}</svg>`);
