@@ -1,10 +1,10 @@
 {
- "date": "2026-10-13 (intraday snapshot, ~12:41 PM PKT, market open - not a close)",
+ "date": "2026-10-27 (intraday snapshot, ~11:44 AM PKT - not a close)",
  "source": "https://dps.psx.com.pk/indices and https://dps.psx.com.pk/company/<SYMBOL>",
  "kse100": {
-  "level": 165298.5,
-  "change_pct": 0.11,
-  "change_points": 174.09
+  "level": 163940.2,
+  "change_pct": 0.55,
+  "change_points": 901.74
  },
  "stocks": [
   {
@@ -85,5 +85,27 @@
  ],
  "omitted": {
   "ENGRO": "PSX page showed stale quote dated Jan 3, 2025"
+ },
+ "indices": {
+  "KSE100": {
+   "level": 163940.2,
+   "change_points": 901.74,
+   "change_pct": 0.55
+  },
+  "KSE30": {
+   "level": 48370.13,
+   "change_points": 279.12,
+   "change_pct": 0.58
+  },
+  "KMI30": {
+   "level": 235385.45,
+   "change_points": 1408.61,
+   "change_pct": 0.6
+  },
+  "ALLSHR": {
+   "level": 99355.1,
+   "change_points": 467.42,
+   "change_pct": 0.47
+  }
  }
 }

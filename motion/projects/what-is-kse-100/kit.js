@@ -189,7 +189,7 @@
   function pulse(w, t, color, scaleTo = 1.25) {
     const r = el(w, { left: w.size * 0.12, top: w.size * 0.02, width: w.size * 0.76, height: w.size * 0.76, borderRadius: "50%", border: `5px solid ${color}`, opacity: 0 });
     r.style.zIndex = -1;
-    tl.fromTo(r, { scale: 0.8, opacity: 0.7 }, { scale: scaleTo, opacity: 0, duration: 0.7, ease: "power2.out" }, t);
+    tl.fromTo(r, { scale: 0.8, opacity: 0.7 }, { scale: scaleTo, opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false }, t);   // no early ring
   }
   // expressive but restrained: clear faces + readable body acting + one small brand-coloured accent
   function sparkle(w, x, y, t, sz = 46) {
