@@ -71,6 +71,12 @@ Characters (Notionists, `cast.js` + `avatars.js`)
   friends' group names are funny and NOT about investing (e.g. "Bacha Party 🎉"); named products are the real current model with its **Pakistan market price** (research it, cite it).
   Use the exact model the client names; if it isn't on sale in Pakistan yet, show an "expected PK price" and say so.
 - Groups of "the public" = 6 people.
+- **News anchor** (`anchor`, client pick: Notionists hair 23 / lapel blazer body 13 in #2C9E00) reads the hook headline on a TV
+  (LIVE chip, 9:00 PM, BREAKING strip, rising chart wall; no real channel branding). Built in "What is KSE-100".
+- Kid / viewer reactions in hooks use the approved bigger faces: `grinOpen` (watching), `bigO` (big number), `puzzled`
+  (the question) with one lean/tilt via `K.pose` - not the faint smile→think.
+- Analogy props can use client-supplied images (record them in edit/credits.txt), e.g. the biryani pot: lid slides right in one
+  eased move and the food is revealed only where the lid has passed (a mask that moves with the lid).
 - **Show a character/reaction sheet for approval before using new characters or new acting** (§4).
 
 Sound

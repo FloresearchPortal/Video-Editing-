@@ -51,10 +51,14 @@
   tl.fromTo(pts, { scale: 0.7, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "power2.out" }, 4.44);
   wl.draw(5.0, 0.9);                                                                          // "tezi": the chart wall climbs
   const sofa = icon(room, "sofa", -40, 1420, 560, 210);
-  const aap = who(room, "aap", 30, 1060, 440, { expr: "smile", gesture: "none" });
+  // the kid (client-approved Set 2): grin while watching → big "O" + lean in on "hazaar" → puzzled + head tilt on "aakhir"
+  const aap = who(room, "aap", 30, 1060, 440, { expr: "grinOpen", gesture: "none" });
   fadeUp(sofa, 0.5, 0.45, 30); fadeUp(aap, 0.55, 0.45, 30);
-  life(aap, 0.6, 8.3, "smile", 22);
-  react.think(aap, 6.54, 1.6, { gesture: "none", dots: false });
+  life(aap, 0.6, 8.3, "grinOpen", 22);
+  X(tl, aap.av, "bigO", 4.44);
+  K.pose(aap, 4.44, { h: [-5, 6, -14], b: [1.04, 0.99] }, 0.3);
+  X(tl, aap.av, "puzzled", 6.54);
+  K.pose(aap, 6.54, { h: [9, -4, 4], b: [1, 1] }, 0.4);
   const q = kin(s1, "AAKHIR | YE *KSE-100* | HAI KIA?", { x: 520, y: 1250, w: 540, size: 84 });
   charsIn.rise(q, 7.28, 0.02);
   OV.push(tv, win);
@@ -64,53 +68,69 @@
   const sc2 = K.seriesCard(s2, 8.4, { tSweep: 9.0, tTitle: 9.3, tSeries: 10.12, tTag: 11.04, tEp: 12.12, ep: "EP 02 · WHAT IS KSE-100" });
   OV.push(sc2.watch);
 
-  // ═══ S3 13.64–25.48: biryani ki deg → ek chamach se pata chal jata hai → KSE-100 = PSX ka chamach ═══
+  // ═══ S3 13.64–25.48: covered biryani pot → lid slides right (food shows only as it's uncovered) → tablespoon tastes
+  //      → "pata chal gaya" → KSE-100 = PSX ka chamach (client-approved revision: pot B, client's biryani image) ═══
   const s3 = scene(13.64, 25.48);
   const h3 = kin(s3, "BIRYANI KI *DEG*", { y: 170, size: 100 }); charsIn.rise(h3, 14.24, 0.02);
   const kitchen = el(s3, { left: 0, top: 0, width: 1080, height: 1920 }); kitchen.setAttribute("data-ov-group", "");
-  const r = rnd;
-  const rice = Array.from({ length: 70 }, () => {
-    const a = r() * Math.PI * 2, d = Math.sqrt(r());
-    const col = [["#F29F1F", 5], ["#E8742A", 4], ["#38D100", 2], ["#8A4B1E", 2], ["#FFFFFF", 3]].find(((acc) => (c) => (acc -= c[1]) < 0)(r() * 16))?.[0] || "#F29F1F";
-    return `<ellipse cx="${(310 + Math.cos(a) * d * 230).toFixed(1)}" cy="${(92 + Math.sin(a) * d * 32).toFixed(1)}" rx="7" ry="4" fill="${col}"/>`;
-  }).join("");
-  const deg = el(kitchen, { left: 80, top: 720, width: 620, height: 520 },
-    `<svg viewBox="0 0 620 520" width="620" height="520">
-      <path d="M40,90 C10,220 40,430 150,500 H470 C580,430 610,220 580,90Z" fill="#D8893B" ${S}/>
-      <path d="M44,190 C120,214 500,214 576,190" fill="none" stroke="#B86A26" stroke-width="10"/>
-      <path d="M30,140 a24,24 0 0 1 0,-48 M590,140 a24,24 0 0 0 0,-48" fill="none" ${S}/>
-      <ellipse cx="310" cy="90" rx="290" ry="58" fill="#E9A55A" ${S}/>
-      <ellipse cx="310" cy="94" rx="252" ry="40" fill="#FFF4D6" stroke="#0B0F14" stroke-width="6"/>${rice}</svg>`);
-  fadeUp(deg, 14.1, 0.5, 50);
-  const steam = el(kitchen, { left: 220, top: 560, width: 340, height: 160 },
-    `<svg viewBox="0 0 340 160" width="340" height="160">${[40, 160, 280].map((x) => `<path d="M${x},150 c-24,-30 24,-50 0,-80 c-20,-26 14,-44 4,-66" fill="none" stroke="#9AA8A0" stroke-width="7" stroke-linecap="round"/>`).join("")}</svg>`);
-  tl.fromTo(steam, { y: 30, opacity: 0 }, { y: 0, opacity: 0.9, duration: 0.6, ease: "power2.out" }, 15.6);
-  tl.to(steam, { y: -30, opacity: 0, duration: 0.6, ease: "power2.in" }, 17.9);
-  const no = chip(kitchen, { left: 600, top: 590, borderColor: C.red, color: C.red }, "POORI DEG NAHI ✗");
-  fadeUp(no, 17.2, 0.35, 20);
-  tl.to(no, { opacity: 0, duration: 0.2 }, 18.3);
-  const yes = chip(kitchen, { left: 600, top: 590 }, "SIRF EK CHAMACH ✓");
-  fadeUp(yes, 18.66, 0.35, 20);
-  // the ladle: comes in, dips into the rice, lifts a taste
-  const ladle = el(kitchen, { left: 330, top: 470, width: 120, height: 420, transformOrigin: "50% 0%" },
-    `<svg viewBox="0 0 120 430" width="120" height="430"><path d="M60,4 V318" stroke="#0B0F14" stroke-width="16" stroke-linecap="round"/>
-     <path d="M8,318 h104 a52,52 0 0 1 -104,0Z" fill="#C9CED3" ${S}/>
-     <path class="scoop" d="M18,318 q42,-34 84,0Z" fill="#FFF4D6" stroke="#0B0F14" stroke-width="5"/></svg>`);
-  tl.fromTo(ladle, { y: -520, opacity: 0, rotation: 8 }, { y: 0, opacity: 1, rotation: 0, duration: 0.5, ease: "power3.out" }, 18.44);
-  tl.fromTo(ladle.querySelector(".scoop"), { opacity: 0 }, { opacity: 1, duration: 0.15, immediateRender: false }, 19.2);
-  tl.set(ladle.querySelector(".scoop"), { opacity: 0 }, 0);
-  tl.to(ladle, { y: -140, duration: 0.55, ease: "power2.inOut" }, 19.32);
-  const aap3 = who(kitchen, "aap", 650, 900, 400, { expr: "smile", gesture: "none" });
+  const LID = "M28,160 C36,-62 364,-62 372,160 A172,68 0 0 1 28,160Z";
+  const wisps = [140, 200, 260].map((x) => `<path d="M${x},96 c-16,-20 16,-34 0,-54 c-14,-18 10,-30 3,-46" fill="none" stroke="#9AA8A0" stroke-width="6" stroke-linecap="round"/>`).join("");
+  // 400×590 user units drawn at 1.5× → 600×885 px; pot mouth centre = (200,160)
+  const pot = el(kitchen, { left: 40, top: 560, width: 600, height: 885 },
+    `<svg viewBox="0 -170 400 590" width="600" height="885" style="overflow:visible">
+      <defs><mask id="potReveal" maskUnits="userSpaceOnUse" x="-300" y="-300" width="1400" height="800"><rect x="-300" y="-300" width="1400" height="800" fill="#fff"/><path class="rv" d="${LID}" fill="#000"/></mask>
+        <clipPath id="potMouth"><rect x="0" y="-170" width="400" height="330"/><ellipse cx="200" cy="160" rx="152" ry="58"/></clipPath></defs>
+      <path d="M44,160 C30,290 60,390 120,410 H280 C340,390 370,290 356,160Z" fill="#FFFFFF" ${S}/>
+      <path d="M50,272 C140,296 260,296 350,272" fill="none" stroke="${C.g}" stroke-width="30"/>
+      <path d="M40,196 a22,22 0 0 1 0,-44 M360,196 a22,22 0 0 0 0,-44" fill="none" ${S}/>
+      <ellipse cx="200" cy="160" rx="162" ry="66" fill="#3A2A1A" ${S}/>
+      <g mask="url(#potReveal)"><g clip-path="url(#potMouth)"><image href="assets/food/biryani.png" x="-3" y="-2" width="402" height="301"/></g></g>
+      <path d="M38,160 A162,66 0 0 0 362,160" fill="none" ${S}/>
+      <g class="burst">${wisps}</g>
+      <g class="lid"><path d="${LID}" fill="#FFFFFF" ${S}/><path d="M46,124 C68,24 332,24 354,124" fill="none" stroke="${C.g}" stroke-width="12" stroke-linecap="round"/><rect x="176" y="-29" width="48" height="30" rx="12" fill="${C.g}" ${S}/></g>
+      <g class="spoon">
+        <path d="M193,-160 Q200,-168 207,-160 L205,46 Q200,54 195,46Z" fill="${C.g}" stroke="#0B0F14" stroke-width="5"/>
+        <path d="M196,-10 L195,46 Q200,54 205,46 L204,-10Z" fill="#C9CED3" stroke="#0B0F14" stroke-width="5"/>
+        <ellipse cx="200" cy="90" rx="24" ry="40" fill="#C9CED3" stroke="#0B0F14" stroke-width="5"/>
+        <g class="taste"><ellipse cx="200" cy="96" rx="15" ry="22" fill="#F2B526" stroke="#0B0F14" stroke-width="3"/><path d="M192,86 l6,4 M200,100 l7,-3 M194,106 l5,3" stroke="#FFF4D6" stroke-width="3" stroke-linecap="round"/></g>
+      </g></svg>`);
+  const q3 = (c) => pot.querySelector(c);
+  fadeUp(pot, 13.8, 0.5, 50);
+  // label on the pot band: BIRYANI → PSX on "PSX"
+  const lab = el(kitchen, { left: 190, top: 1218, width: 300, textAlign: "center" },
+    `<span style="display:inline-block;padding:6px 22px;border-radius:14px;border:4px solid #0B0F14;background:#fff;font:800 42px Manrope;color:${C.text}">BIRYANI</span>`);
+  fadeUp(lab, 14.24, 0.35, 16);
+  const labP = el(kitchen, { left: 190, top: 1218, width: 300, textAlign: "center" },
+    `<span style="display:inline-block;padding:6px 30px;border-radius:14px;border:4px solid #0B0F14;background:${C.ink};font:800 42px Manrope;color:#fff">PSX</span>`);
+  tl.to(lab, { y: -14, opacity: 0, duration: 0.18, ease: "power2.in" }, 23.84);
+  tl.fromTo(labP, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 23.96);
+  // "jab biryani tayyar hoti hai": the lid slides smoothly right; the food is revealed only where the lid has passed
+  tl.to([q3(".lid"), q3(".rv")], { x: 780, duration: 1.4, ease: "power2.inOut" }, 15.5);   // fully out of frame (pot at 1.5×)
+  tl.fromTo(q3(".burst"), { y: 24, opacity: 0 }, { y: -6, opacity: 0.95, duration: 0.6, ease: "power2.out" }, 16.5);
+  tl.to(q3(".burst"), { y: -40, opacity: 0, duration: 0.7, ease: "power2.in" }, 17.7);
+  // "poori deg nahi chakhte" → "bas ek chamach se" → "pata chal jata hai"
+  const no = chip(kitchen, { left: 640, top: 420, borderColor: C.red, color: C.red }, "POORI DEG NAHI ✗");
+  fadeUp(no, 17.2, 0.35, 20); out(no, 18.3, 0.2);
+  const yes = chip(kitchen, { left: 640, top: 420 }, "SIRF EK CHAMACH ✓");
+  fadeUp(yes, 18.66, 0.35, 20); out(yes, 20.1, 0.2);
+  const got = chip(kitchen, { left: 640, top: 420 }, "PATA CHAL GAYA ✓");
+  fadeUp(got, 20.32, 0.35, 20);
+  // the tablespoon: comes down, dips into the biryani, stirs once, lifts a taste
+  const sp = q3(".spoon");
+  tl.set(q3(".taste"), { opacity: 0 }, 0);
+  tl.fromTo(sp, { y: -360, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, 18.44);
+  tl.to(sp, { x: -16, duration: 0.15, ease: "sine.inOut" }, 18.96).to(sp, { x: 16, duration: 0.2, ease: "sine.inOut" }, 19.11).to(sp, { x: 0, duration: 0.15, ease: "sine.inOut" }, 19.31);
+  tl.to(q3(".taste"), { opacity: 1, duration: 0.12 }, 19.4);
+  tl.to(sp, { y: -150, duration: 0.55, ease: "power2.inOut" }, 19.5);
+  const aap3 = who(kitchen, "aap", 650, 980, 400, { expr: "smile", gesture: "none" });
   fadeUp(aap3, 17.0, 0.45, 30); life(aap3, 17.0, 25.4, "smile", 31);
-  react.joy(aap3, 21.32, { gesture: "none" });
+  react.joy(aap3, 21.32, { gesture: "none", face: "grinOpen" });
   // "KSE-100 bhi PSX ka wohi chamach hai"
-  out(h3, 22.5, 0.2); out(yes, 22.5, 0.2);
+  out(h3, 22.5, 0.2); out(got, 22.5, 0.2);
   const h3b = kin(s3, "KSE-100 = | PSX KA *CHAMACH*", { y: 120, size: 84 }); charsIn.rise(h3b, 22.68, 0.02);
-  const kTag = el(kitchen, { left: 470, top: 380, padding: "10px 22px", borderRadius: 14, background: C.g, color: C.ink, font: "800 40px Manrope", whiteSpace: "nowrap" }, "KSE-100");
+  const kTag = el(kitchen, { left: 400, top: 470, padding: "10px 22px", borderRadius: 14, background: C.g, color: C.ink, font: "800 40px Manrope", whiteSpace: "nowrap" }, "KSE-100");
   fadeUp(kTag, 22.9, 0.35, 16);
-  const pTag = el(kitchen, { left: 290, top: 1020, padding: "10px 30px", borderRadius: 14, background: C.ink, color: "#fff", font: "800 48px Manrope", whiteSpace: "nowrap" }, "PSX");
-  fadeUp(pTag, 23.84, 0.35, 16);
-  OV.push(no, yes);
+  OV.push(no, yes, got);
 
   // ═══ S4 25.48–39.16: 500+ listed → the 100 biggest (banks, oil, cement, fertilizer) → one number ═══
   const s4 = scene(25.48, 39.16);
@@ -194,11 +214,11 @@
   OV.push(...ic, most, cov);
 
   // ═══ S7 51.02–62: CTA → FloStocks icon → logo → disclaimer ═══
-  const s7 = scene(51.02, 62, { push: false });
+  const s7 = scene(51.02, 60, { push: false });
   const c1 = kin(s7, "MARKET KE TERMS", { y: 560, size: 100 }); const c2 = kin(s7, "*AASAAN* ZUBAAN MEIN", { y: 700, size: 86 });
   charsIn.rise(c1, 51.6, 0.02); charsIn.rise(c2, 52.68, 0.02);
   tl.to([c1, c2], { y: -40, opacity: 0, duration: 0.3, ease: "power2.in" }, 54.0);
-  const cta = ctaLogo(s7, 54.4, { tDisc: 56.1 });
+  const cta = ctaLogo(s7, 54.4, { tDisc: 55.8 });
   OV.push(cta.fl);
 
   K.linkScenes();

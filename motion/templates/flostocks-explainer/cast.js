@@ -4,7 +4,7 @@
 // tl.set), CAST.blinks / CAST.talk / CAST.bob add life.
 (function () {
   const D = window.AVDATA;
-  const EXPRS = ["neutral", "smile", "happy", "grin", "talk", "wow", "worried", "shocked", "think", "blink", "delight"];
+  const EXPRS = ["neutral", "smile", "happy", "grin", "talk", "wow", "worried", "shocked", "think", "blink", "delight", "grinOpen", "bigO", "puzzled"];
   const GESTS = ["none", "hand", "handPhone", "point", "pointLongArm", "ok", "okLongArm", "waveLongArm", "waveOkLongArms", "shrug", "cup", "crossed"];
   // extra poses built from the Notionists arms: both open palms up (helpless shrug), and a hand holding a chai cup
   const CROSSED = '<g class="crossed"><path d="M360,1350 L1180,1500" stroke="#0B0F14" stroke-width="150" stroke-linecap="round"/><path d="M360,1350 L1180,1500" stroke="#1B2A44" stroke-width="122" stroke-linecap="round"/><path d="M1384,1350 L564,1500" stroke="#0B0F14" stroke-width="150" stroke-linecap="round"/><path d="M1384,1350 L564,1500" stroke="#1B2A44" stroke-width="122" stroke-linecap="round"/><ellipse cx="1200" cy="1480" rx="62" ry="52" fill="#fff" stroke="#0B0F14" stroke-width="14"/><ellipse cx="544" cy="1480" rx="62" ry="52" fill="#fff" stroke="#0B0F14" stroke-width="14"/><path d="M500,1440 L640,1450 M1104,1450 L1244,1440" stroke="#fff" stroke-width="18"/></g>';

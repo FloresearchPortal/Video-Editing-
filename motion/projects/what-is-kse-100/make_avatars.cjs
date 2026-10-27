@@ -11,6 +11,7 @@ const v = (n) => 'variant' + String(n).padStart(2, '0');
 const EXPR = {             // eyes, brows, lips
   neutral: [4, 4, 4], smile: [4, 4, 22], happy: [4, 12, 3], grin: [4, 12, 25], talk: [4, 4, 8],
   wow: [5, 12, 15], worried: [4, 13, 18], shocked: [5, 12, 15], think: [4, 2, 20], blink: [4, 4, 22], delight: [4, 12, 25],
+  grinOpen: [4, 12, 25], bigO: [5, 1, 15], puzzled: [4, 13, 18],          // client-approved Set 2 (KSE-100 hook): grin, big O, puzzled
 };
 const GEST = ['hand', 'handPhone', 'point', 'pointLongArm', 'ok', 'okLongArm', 'waveLongArm', 'waveOkLongArms'];
 
@@ -27,7 +28,7 @@ const CAST = {
   usman:  { hair: 54, beard: 8, body: 7, shirt: SH[6] },
   zara:   { hair: 48, body: 12, shirt: SH[7] },
   rehan:  { hair: 1, beard: 12, body: 20, shirt: '#1B2A44' },   // suited institutional investor (navy suit, tie)
-  anchor: { hair: 28, body: 16, shirt: G3 },                    // TV news anchor (client pick A: deep brand-green blazer)
+  anchor: { hair: 23, body: 13, shirt: '#2C9E00' },            // TV news anchor (client pick: option C, lapel blazer in #2C9E00)
 };
 
 // split the top-level layer groups inside <g mask=...>
