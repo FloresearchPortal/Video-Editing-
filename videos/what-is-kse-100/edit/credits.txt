@@ -1,3 +1,4 @@
 # Credits / licences for what-is-kse-100
 music/bed.wav: original, synthesized by tools/flostocks/make_bed.py (seeded numpy) - no third-party audio
 SFX: media/library/sfx/generated (reelkit.sfx_gen, original)
+assets/food/biryani.png (motion/projects/what-is-kse-100): cut out from the biryani image supplied by the client on 27 Oct 2026 - client-provided, used with their permission
