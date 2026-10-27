@@ -1,0 +1,3 @@
+# Credits / licences for what-is-kse-100
+music/bed.wav: original, synthesized by tools/flostocks/make_bed.py (seeded numpy) - no third-party audio
+SFX: media/library/sfx/generated (reelkit.sfx_gen, original)
