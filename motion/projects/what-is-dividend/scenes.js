@@ -63,7 +63,27 @@
   const s3 = scene(14.84, 25.56);
   const h3 = kin(s3, "AAP + DOST KI *BAKERY*", { y: 150, size: 88 }); charsIn.rise(h3, 15.26, 0.02);
   const shop = el(s3, { left: 0, top: 0, width: 1080, height: 1920 }); shop.setAttribute("data-ov-group", "");
-  const stall = icon(shop, "stall", 140, 330, 800, 640, "BAKERY");
+  // a proper bakery store (client note: the stall read like a dhaaba): facade, signboard, display window, glass door
+  const loaf = (x, y) => `<rect x="${x}" y="${y}" width="58" height="34" rx="16" fill="#D9963F" stroke="#0B0F14" stroke-width="5"/><path d="M${x + 14},${y + 10} l6,14 M${x + 28},${y + 8} l6,14 M${x + 42},${y + 10} l6,14" stroke="#F4C77E" stroke-width="4" stroke-linecap="round"/>`;
+  const crois = (x, y) => `<path d="M${x},${y + 26} q30,-40 60,0 q-12,10 -30,10 q-18,0 -30,-10Z" fill="#E8A94E" stroke="#0B0F14" stroke-width="5" stroke-linejoin="round"/><path d="M${x + 20},${y + 12} l4,16 M${x + 38},${y + 12} l-4,16" stroke="#B9772D" stroke-width="4" stroke-linecap="round"/>`;
+  const stall = art(shop, { left: 140, top: 300, width: 800, height: 700 }, 800, 700,
+    `<rect x="40" y="70" width="720" height="580" fill="#FFF7EC" ${S}/>
+     <rect x="20" y="44" width="760" height="40" rx="8" fill="#0B0F14"/>
+     <rect x="130" y="104" width="540" height="104" rx="18" fill="${C.g3}" ${S}/>
+     <text x="400" y="176" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="62" letter-spacing="6" fill="#FFF7EC">BAKERY</text>
+     <rect x="80" y="246" width="410" height="330" rx="10" fill="#E3F1F4" ${S}/>
+     <path d="M80,360 H490 M80,470 H490" ${S}/>
+     <path d="M190,256 L120,350 M250,256 L160,370 M430,370 L470,320" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" opacity=".9"/>
+     <path d="M300,354 v-46 h96 v46Z" fill="#FFC6D3" ${S}/><path d="M300,326 h96" stroke="#fff" stroke-width="8"/><circle cx="348" cy="296" r="10" fill="#E4002B" stroke="#0B0F14" stroke-width="5"/>
+     ${loaf(110, 320)}${loaf(190, 320)}
+     ${crois(110, 432)}${crois(200, 432)}${crois(290, 432)}${loaf(380, 430)}
+     ${loaf(120, 538)}${loaf(210, 538)}${loaf(300, 538)}${loaf(390, 538)}
+     <rect x="540" y="246" width="180" height="404" rx="10" fill="#E3F1F4" stroke="${C.g3}" stroke-width="12"/>
+     <path d="M560,276 L620,346" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" opacity=".9"/>
+     <path d="M600,300 L630,272 L660,300" fill="none" stroke="#0B0F14" stroke-width="4"/>
+     <rect x="580" y="300" width="100" height="44" rx="8" fill="#fff" ${S}/><text x="630" y="331" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="24" fill="${C.g3}">OPEN</text>
+     <rect x="690" y="440" width="12" height="60" rx="6" fill="#0B0F14"/>
+     <rect x="20" y="650" width="760" height="34" rx="8" fill="#E3E9E5" ${S}/>`);
   fadeUp(stall, 14.95, 0.5, 40);
   const pAap = who(shop, "aap", 130, 1010, 400, { expr: "smile", gesture: "none" });
   const pDost = who(shop, "bilal", 560, 1010, 400, { expr: "smile", gesture: "none" });
