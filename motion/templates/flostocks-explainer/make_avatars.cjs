@@ -29,6 +29,7 @@ const CAST = {
   zara:   { hair: 48, body: 12, shirt: SH[7] },
   rehan:  { hair: 1, beard: 12, body: 20, shirt: '#1B2A44' },   // suited institutional investor (navy suit, tie)
   anchor: { hair: 55, body: 13, shirt: '#2C9E00', glasses: 8 }, // TV news anchor (client pick: male, option A - side part, clear glasses, lapel blazer #2C9E00)
+  abbu:   { hair: 5, beard: 10, body: 10, glasses: 3, shirt: '#F4F1E8', vest: G3, hairTint: '#8C9196', beardTint: '#8C9196' },  // Abbu (client pick A: grey hair + moustache, reading glasses, green waistcoat over cream kurta)
 };
 
 // split the top-level layer groups inside <g mask=...>
@@ -85,7 +86,10 @@ for (const [name, c] of Object.entries(CAST)) {
   for (const ge of GEST) alt.gesture[ge] = layers(render(c, 'smile', ge)).groups[gestIdx];
   // FloStocks accents: clothing (layer 1) white -> brand green; cap white -> green; hijab black -> deep green
   const groups = base.groups.slice();
+  if (c.vest) groups[1] = recolor(groups[1], '#000', c.vest);          // waistcoat panels (body 10)
   groups[1] = recolor(groups[1], '#fff', c.shirt);
+  if (c.hairTint) groups[2] = recolor(groups[2], '#000', c.hairTint);  // grey hair
+  if (c.beardTint) groups[4] = recolor(groups[4], '#000', c.beardTint); // grey moustache / beard
   if (c.hatTint) groups[2] = recolor(groups[2], '#fff', c.hatTint);
   if (c.hijabTint) groups[2] = recolor(groups[2], '#000', c.hijabTint);
   out[name] = {

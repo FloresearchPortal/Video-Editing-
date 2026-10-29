@@ -73,6 +73,8 @@ Characters (Notionists, `cast.js` + `avatars.js`)
 - Groups of "the public" = 6 people.
 - **News anchor** (`anchor`, client pick: male, Notionists hair 55 + clear glasses 8, lapel blazer body 13 in #2C9E00) reads the hook headline on a TV
   (LIVE chip, 9:00 PM, BREAKING strip, rising chart wall; no real channel branding). Built in "What is KSE-100".
+- **Abbu** (`abbu`, client pick A: grey hair + grey moustache, reading glasses, green waistcoat over a cream kurta) - the
+  family elder; at home he holds his **phone** (`gesture: "handPhone"`) and his **chai sits on a table**, not in his hand.
 - Kid / viewer reactions in hooks use the approved bigger faces: `grinOpen` (watching), `bigO` (big number), `puzzled`
   (the question) with one lean/tilt via `K.pose` - not the faint smile→think.
 - Analogy props can use client-supplied images (record them in edit/credits.txt), e.g. the biryani pot: lid slides right in one
