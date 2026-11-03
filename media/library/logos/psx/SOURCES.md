@@ -28,3 +28,16 @@ company in FloStocks editorial content. Not free-licensed.
 
 To add these, download the header logo by hand from the official site in a normal
 browser, save it here as `<TICKER>.<svg|png|webp|jpg>`, and add a row above.
+
+## Supplied by the user (2026-11-03)
+Sent by the FloStocks team in this project's conversation (the company sites block automated downloads).
+Only empty white margins were trimmed; nothing else changed.
+
+| Ticker | Company | File | Note |
+|---|---|---|---|
+| OGDC | Oil & Gas Development Company Ltd | OGDC.png | Trademark of OGDCL; used only to identify the company in FloStocks editorial content. Not free-licensed. |
+| MEBL | Meezan Bank Ltd | MEBL.png | Trademark of Meezan Bank; same use. Not free-licensed. |
+| FFC | Fauji Fertilizer Company Ltd | FFC.png | Trademark of FFC; same use. Not free-licensed. |
+| MARI | Mari Energies Ltd (MPCL) | MARI.png | Trademark of Mari Energies; same use. Not free-licensed. |
+| PPL | Pakistan Petroleum Ltd | PPL.png | Trademark of PPL; same use. Not free-licensed. |
+| MCB | MCB Bank Ltd | — | pending: re-send requested |

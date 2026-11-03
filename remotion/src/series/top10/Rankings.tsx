@@ -110,7 +110,7 @@ export const Rankings: React.FC<{ r: R }> = ({ r }) => {
                 backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)', transform: `scale(${ring}) rotate(${(1 - Math.min(1, ring)) * -8}deg)`,
                 boxShadow: isOne ? '0 0 0 3px rgba(58,204,0,0.55), 0 0 28px rgba(58,204,0,0.35), 0 18px 36px rgba(15,23,42,0.16)' : '0 18px 36px rgba(15,23,42,0.16), 0 2px 6px rgba(15,23,42,0.08), inset 0 1.5px 0 #FFFFFF' }}>
                 <div style={{ position: 'absolute', inset: 9, borderRadius: 22, background: '#FFFFFF', boxShadow: 'inset 0 0 0 1px rgba(15,23,42,0.06), 0 2px 6px rgba(15,23,42,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Img src={staticFile(c.logo)} style={{ width: '86%', height: '72%', objectFit: 'contain' }} />
+                  <Img src={staticFile(c.logo)} style={{ width: '88%', height: '84%', objectFit: 'contain' }} />
                 </div>
               </div>
             )}
