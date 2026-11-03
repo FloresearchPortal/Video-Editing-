@@ -2,14 +2,14 @@
 
 Fast, kinetic 2D motion graphics in the FloStocks PSX Weekly language: white grid paper, PSX ticker
 bands with motion blur, split-flap boards, chart builds, slanted green band wipes and the logo lockup.
-Poppins only, white brand theme, 1080×1920 @ 30 fps, 13.4 s, 150 BPM (12 frames per beat).
+Poppins only, white brand theme, 1080×1920 @ 30 fps, 14.9 s, 150 BPM (12 frames per beat).
 
 | Section | Beats | Changes per episode? | Component |
 |---|---|---|---|
 | Intro: ticker-band wall → split-flap **TOP 10** board + PSX RANKINGS tag, hold, zoom-through | 0–6 | **never** | `SeriesIntro` |
 | Topic lockup: logo, rule, 2–3 title lines (ink, then green), loading pill with label, flostocks.com | 6–13 | text | `TopicTitle` ← `episode.title` |
-| Rankings chart in grey glass: stepped bars from the left (graphite tab: rank, ticker, sector · light glass bar ∝ value · green edge glow), company logo in a frosted ring at each bar end, name + value inside or beside the bar; countdown #10 → #1 on the beat, total + source | 13–29 | data | `Rankings` ← `episode.rankings` |
-| CTA: logo lockup, **KNOW THE MARKET, / INVEST SMARTER.**, flostocks.com, disclaimer | 29– (still from 30.5) | **never** | `CtaCard` |
+| Rankings chart in grey glass: stepped bars from the left (graphite tab: rank, ticker, sector · light glass bar ∝ value · green edge glow), company logo on a frosted plate at each bar end, name + value inside or beside the bar; countdown #10 → #1 on the beat, total + source, then the full chart holds ~3 s | 13–32.75 | data | `Rankings` ← `episode.rankings` |
+| CTA: logo lockup, **KNOW THE MARKET, / INVEST SMARTER.**, flostocks.com, disclaimer | 32.75– (still from 34.25) | **never** | `CtaCard` |
 
 Transitions (always the same): zoom-through → ticker-band shutter → slant band wipe.
 The series header (logo + `PSX TOP 10 · EP xx`) sits on every content scene.

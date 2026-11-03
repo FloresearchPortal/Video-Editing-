@@ -1,5 +1,5 @@
 {
- "_doc": "PSX TOP 10 series beat grid — LOCKED, the same for every episode. 150 BPM = 12 frames per beat @ 30 fps. intro 0-6 (ticker wall + TOP 10 flap board, zoom-through), title 6-13 (topic lockup), rank 13-29 (rows #10 -> #1 on beats 14.33..23.33), cta 29 (static from 30.5, 1.2 s hold) = 13.4 s. The music generator reads `sections` (energy) and `cues`.",
+ "_doc": "PSX TOP 10 series beat grid — LOCKED, the same for every episode. 150 BPM = 12 frames per beat @ 30 fps. intro 0-6 (ticker wall + TOP 10 flap board, zoom-through), title 6-13 (topic lockup), rank 13-32.75 (rows #10 -> #1 on beats 14.33..23.33, then the full chart holds), cta 32.75 (static from 34.25, 1.2 s hold) = 14.9 s. The music generator reads `sections` (energy) and `cues`.",
  "bpm": 150,
  "fps": 30,
  "width": 1080,
@@ -17,12 +17,12 @@
   },
   "rank": {
    "start": 13,
-   "end": 29,
+   "end": 32.75,
    "energy": "full"
   },
   "cta": {
-   "start": 29,
-   "static_from": 30.5,
+   "start": 32.75,
+   "static_from": 34.25,
    "hold_seconds": 1.2,
    "energy": "soft"
   }
@@ -152,12 +152,12 @@
    "type": "hit"
   },
   {
-   "beat": 28,
+   "beat": 31.75,
    "type": "riser",
-   "to": 29
+   "to": 32.75
   },
   {
-   "beat": 29,
+   "beat": 32.75,
    "type": "hit"
   }
  ]

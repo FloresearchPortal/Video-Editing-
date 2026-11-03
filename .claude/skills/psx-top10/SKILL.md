@@ -1,6 +1,6 @@
 ---
 name: psx-top10
-description: The FloStocks PSX TOP 10 episode bot. Turns a short content brief (episode, title, the top-10 data, source + date) into a finished 13.4 s 1080x1920 motion-graphics reel in the LOCKED series style (white FloStocks theme, Poppins, ticker-wall + split-flap TOP 10 intro, logo-lockup title, countdown ranking chart, KNOW THE MARKET / INVEST SMARTER CTA, original music), validated, rendered, QA'd and delivered. Use whenever the user wants a new "Top 10" / PSX rankings video, a new episode of the series, "make another one like this", or sends a top-10 list or brief.
+description: The FloStocks PSX TOP 10 episode bot. Turns a short content brief (episode, title, the top-10 data, source + date) into a finished 14.9 s 1080x1920 motion-graphics reel in the LOCKED series style (white FloStocks theme, Poppins, ticker-wall + split-flap TOP 10 intro, logo-lockup title, countdown ranking chart, KNOW THE MARKET / INVEST SMARTER CTA, original music), validated, rendered, QA'd and delivered. Use whenever the user wants a new "Top 10" / PSX rankings video, a new episode of the series, "make another one like this", or sends a top-10 list or brief.
 ---
 
 # /psx-top10 — the PSX TOP 10 episode bot
