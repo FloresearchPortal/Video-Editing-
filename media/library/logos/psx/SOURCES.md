@@ -40,4 +40,4 @@ Only empty white margins were trimmed; nothing else changed.
 | FFC | Fauji Fertilizer Company Ltd | FFC.png | Trademark of FFC; same use. Not free-licensed. |
 | MARI | Mari Energies Ltd (MPCL) | MARI.png | Trademark of Mari Energies; same use. Not free-licensed. |
 | PPL | Pakistan Petroleum Ltd | PPL.png | Trademark of PPL; same use. Not free-licensed. |
-| MCB | MCB Bank Ltd | — | pending: re-send requested |
+| MCB | MCB Bank Ltd | MCB.png | Trademark of MCB Bank; same use. Not free-licensed. (Supplied as a small 200 px file.) |
