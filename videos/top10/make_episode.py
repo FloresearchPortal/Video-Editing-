@@ -78,14 +78,14 @@ def validate(b):
                 warn.append('values are not in rank order (neither highest-first nor lowest-first); check the ranks')
             vf = r['value_format']
             fmt = lambda v: f"{vf['pre']}{v:,.{vf['decimals']}f}{vf['post']}"
-            # mirror of rowLayout() in remotion/src/series/top10/Rankings.tsx (worst case: logo ring present)
+            # mirror of rowLayout() in remotion/src/series/top10/Rankings.tsx (worst case: logo plate present)
             mx = max(c['value'] for c in it)
             for c in by:
-                end = 300 + c['value'] / mx * (880 - 300)
+                end = 300 + c['value'] / mx * (850 - 300)
                 name = (c.get('name') or c['ticker']).upper()
                 lw = max(text_w(name, 31, '800', 0.01), text_w(fmt(c['value']), 31, '800', 0))
-                inside_ok = end - 64 - 18 - lw >= 324
-                outside_ok = end + 64 + 18 + lw <= 1040
+                inside_ok = end - 95 - 18 - lw >= 324
+                outside_ok = end + 95 + 18 + lw <= 1040
                 need(inside_ok or outside_ok, f'{c["ticker"]}: name "{name}" / value "{fmt(c["value"])}" too long to fit beside its bar; shorten the name (e.g. "PAKISTAN PETROLEUM" -> "PAK PETROLEUM") or use fewer decimals')
                 need(re.fullmatch(r"[A-Za-z0-9 &.'\-]{1,30}", name or ''), f'{c["ticker"]}: name should be a short display name (letters, digits, & . - only)')
                 if c.get('sector'):

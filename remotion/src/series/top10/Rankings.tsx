@@ -1,9 +1,9 @@
 // The ranked chart (data changes per episode), grey glassmorphism: ten frosted-glass bars step down from
 // the left edge, longest = #1. Each bar = a graphite glass tab (rank, ticker, sector) + a light glass bar
-// whose length past the tab is proportional to the value, a thin glowing green edge, and a frosted ring at
-// the bar end holding the company's official logo (no logo file -> no ring). Name + value sit inside the
-// bar when it is long enough, else to the right of the ring. Countdown build #10 -> #1, one row per beat;
-// #1 lands with a lime ring glow. Then the total pill + source.
+// whose length past the tab is proportional to the value, a thin glowing green edge, and a frosted plate at
+// the bar end holding the company's official logo (wordmark-shaped; no logo file -> no plate). Name + value sit inside the
+// bar when it is long enough, else to the right of the plate. Countdown build #10 -> #1, one row per beat;
+// #1 lands with a lime plate glow. Then the total pill + source.
 import React from 'react';
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from 'remotion';
 import { Backdrop } from '../flostocks/Backdrop';
@@ -12,7 +12,7 @@ import { KLine, segText } from './TopicTitle';
 import type { RankItem, Rankings as R } from './types';
 
 // geometry (mirrored in videos/top10/make_episode.py validation)
-export const RANK = { top: 524, pitch: 104, barH: 80, tab: 300, end: 880, ring: 128, gap: 18, labelSize: 31, right: 1040 };
+export const RANK = { top: 524, pitch: 104, barH: 80, tab: 300, end: 850, plateW: 190, plateH: 100, gap: 18, labelSize: 31, right: 1040 };
 export const rowAt = (rank: number) => 16 + (10 - rank) * 12; // reveal frame (relative), one per beat
 
 const fmt = (v: number, d: number) => v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -21,7 +21,7 @@ export const displayName = (c: RankItem) => (c.name || c.ticker).toUpperCase();
 // where each row's bar ends and where its label goes
 export const rowLayout = (c: RankItem, max: number, r: R) => {
   const end = RANK.tab + (c.value / max) * (RANK.end - RANK.tab);
-  const half = c.logo ? RANK.ring / 2 : 0;
+  const half = c.logo ? RANK.plateW / 2 : 0;
   const lw = Math.max(textW(displayName(c), RANK.labelSize, '800', 0.01), textW(`${r.pre}${fmt(c.value, r.decimals)}${r.post}`, RANK.labelSize, '800', 0));
   const insideX = end - half - RANK.gap - lw;
   const inside = insideX >= RANK.tab + 24;
@@ -85,8 +85,8 @@ export const Rankings: React.FC<{ r: R }> = ({ r }) => {
         const ring = Math.max(0, pop(f, a + 4, 10, 2.0));
         const value = `${r.pre}${fmt(c.value * g, r.decimals)}${r.post}`;
         const lab = L.inside ? ramp(f, a + 10, a + 16, E.out) : ramp(f, a + 4, a + 10, E.out);
-        const labX = L.inside ? L.labelX : end + (c.logo ? RANK.ring / 2 : 0) + RANK.gap;
-        const half = RANK.ring / 2;
+        const labX = L.inside ? L.labelX : end + (c.logo ? RANK.plateW / 2 : 0) + RANK.gap;
+        const half = RANK.plateW / 2;
         return (
           <React.Fragment key={c.rank}>
             <div style={{ ...GLASS_BAR, top: y, width: end }} />
@@ -105,12 +105,12 @@ export const Rankings: React.FC<{ r: R }> = ({ r }) => {
               <span style={{ color: T.green }}>{value}</span>
             </div>
             {c.logo && (
-              <div style={{ position: 'absolute', left: end - half, top: y + RANK.barH / 2 - half, width: RANK.ring, height: RANK.ring, boxSizing: 'border-box', borderRadius: half,
+              <div style={{ position: 'absolute', left: end - half, top: y + RANK.barH / 2 - RANK.plateH / 2, width: RANK.plateW, height: RANK.plateH, boxSizing: 'border-box', borderRadius: 30,
                 background: 'linear-gradient(145deg, rgba(255,255,255,0.85), rgba(222,228,234,0.45))', border: '1.5px solid #FFFFFF',
-                backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)', transform: `scale(${ring}) rotate(${(1 - Math.min(1, ring)) * -30}deg)`,
+                backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)', transform: `scale(${ring}) rotate(${(1 - Math.min(1, ring)) * -8}deg)`,
                 boxShadow: isOne ? '0 0 0 3px rgba(58,204,0,0.55), 0 0 28px rgba(58,204,0,0.35), 0 18px 36px rgba(15,23,42,0.16)' : '0 18px 36px rgba(15,23,42,0.16), 0 2px 6px rgba(15,23,42,0.08), inset 0 1.5px 0 #FFFFFF' }}>
-                <div style={{ position: 'absolute', inset: 11, borderRadius: half - 11, background: '#FFFFFF', boxShadow: 'inset 0 0 0 1px rgba(15,23,42,0.06), 0 2px 6px rgba(15,23,42,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Img src={staticFile(c.logo)} style={{ width: '72%', height: '72%', objectFit: 'contain' }} />
+                <div style={{ position: 'absolute', inset: 9, borderRadius: 22, background: '#FFFFFF', boxShadow: 'inset 0 0 0 1px rgba(15,23,42,0.06), 0 2px 6px rgba(15,23,42,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Img src={staticFile(c.logo)} style={{ width: '86%', height: '72%', objectFit: 'contain' }} />
                 </div>
               </div>
             )}
