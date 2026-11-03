@@ -5,7 +5,7 @@ import React from 'react';
 import { AbsoluteFill, Sequence, useCurrentFrame } from 'remotion';
 import { CtaCard } from './CtaCard';
 import { E, FONT, T, ramp, seriesAsset } from './kit';
-import { Rankings } from './Rankings';
+import { GRAPHITE_PILL, Rankings } from './Rankings';
 import { SeriesIntro } from './SeriesIntro';
 import { TopicTitle } from './TopicTitle';
 import type { Episode, Timeline } from './types';
@@ -27,8 +27,8 @@ const Header: React.FC<{ ep: string; from: number }> = ({ ep, from }) => {
   return (
     <AbsoluteFill style={{ opacity: t, transform: `translateY(${(1 - t) * -30}px)` }}>
       <img src={seriesAsset('logos/FLOSTOCKS.png')} style={{ position: 'absolute', left: 64, top: 112, width: 250, height: (250 * 306) / 1164 }} />
-      <div style={{ position: 'absolute', right: 64, top: 118, height: 52, padding: '0 22px', borderRadius: 26, background: T.ink, display: 'flex', alignItems: 'center', gap: 12 }}>
-        <span style={{ width: 12, height: 12, borderRadius: 6, background: T.lime }} />
+      <div style={{ ...GRAPHITE_PILL, position: 'absolute', right: 64, top: 118, height: 52, padding: '0 22px', borderRadius: 26, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <span style={{ width: 12, height: 12, borderRadius: 6, background: T.lime, boxShadow: '0 0 10px rgba(58,204,0,0.8)' }} />
         <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 22, letterSpacing: '0.14em', color: '#FFFFFF' }}>PSX TOP 10 · {ep}</span>
       </div>
     </AbsoluteFill>

@@ -1,81 +1,129 @@
-// The ranked chart (data changes per episode): a countdown build #10 -> #1, one row per beat.
-// Each row: rank tile, (official logo if supplied), ticker, a slanted bar that shoots out to its value
-// while the value label counts up beside it. #1 lands in lime with a flash. Then the total + source.
+// The ranked chart (data changes per episode), grey glassmorphism: ten frosted-glass bars step down from
+// the left edge, longest = #1. Each bar = a graphite glass tab (rank, ticker, sector) + a light glass bar
+// whose length past the tab is proportional to the value, a thin glowing green edge, and a frosted ring at
+// the bar end holding the company's official logo (no logo file -> no ring). Name + value sit inside the
+// bar when it is long enough, else to the right of the ring. Countdown build #10 -> #1, one row per beat;
+// #1 lands with a lime ring glow. Then the total pill + source.
 import React from 'react';
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from 'remotion';
 import { Backdrop } from '../flostocks/Backdrop';
-import { E, FONT, MBlur, T, fitSize, pop, ramp, speedBlur, textW, whip } from './kit';
+import { E, FONT, MBlur, T, fitSize, mix, pop, ramp, speedBlur, textW, whip } from './kit';
 import { KLine, segText } from './TopicTitle';
-import type { Rankings as R } from './types';
+import type { RankItem, Rankings as R } from './types';
 
-const TOP = 556, PITCH = 96, BAR_H = 58, RIGHT = 1016;
+// geometry (mirrored in videos/top10/make_episode.py validation)
+export const RANK = { top: 524, pitch: 104, barH: 80, tab: 300, end: 880, ring: 128, gap: 18, labelSize: 31, right: 1040 };
 export const rowAt = (rank: number) => 16 + (10 - rank) * 12; // reveal frame (relative), one per beat
 
 const fmt = (v: number, d: number) => v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+export const displayName = (c: RankItem) => (c.name || c.ticker).toUpperCase();
+
+// where each row's bar ends and where its label goes
+export const rowLayout = (c: RankItem, max: number, r: R) => {
+  const end = RANK.tab + (c.value / max) * (RANK.end - RANK.tab);
+  const half = c.logo ? RANK.ring / 2 : 0;
+  const lw = Math.max(textW(displayName(c), RANK.labelSize, '800', 0.01), textW(`${r.pre}${fmt(c.value, r.decimals)}${r.post}`, RANK.labelSize, '800', 0));
+  const insideX = end - half - RANK.gap - lw;
+  const inside = insideX >= RANK.tab + 24;
+  return { end, inside, labelX: inside ? insideX : end + half + RANK.gap, labelW: lw };
+};
+
+const GLASS_BAR: React.CSSProperties = {
+  position: 'absolute', left: 0, height: RANK.barH, boxSizing: 'border-box', borderRadius: '0 26px 26px 0',
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.78) 0%, rgba(255,255,255,0.30) 46%, rgba(226,231,236,0.38) 54%, rgba(214,220,227,0.55) 100%)',
+  border: '1.5px solid rgba(255,255,255,0.95)', borderLeft: 0,
+  backdropFilter: 'blur(22px) saturate(150%)', WebkitBackdropFilter: 'blur(22px) saturate(150%)',
+  boxShadow: '0 22px 44px rgba(15,23,42,0.10), 0 3px 8px rgba(15,23,42,0.06), inset 0 1.5px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(15,23,42,0.08)',
+};
+const GLASS_TAB: React.CSSProperties = {
+  position: 'absolute', left: 0, width: RANK.tab, height: RANK.barH, boxSizing: 'border-box', paddingLeft: 30, display: 'flex', alignItems: 'center', gap: 14,
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 50%), rgba(28,33,40,0.86)',
+  backdropFilter: 'blur(22px)', WebkitBackdropFilter: 'blur(22px)', borderRight: '1px solid rgba(255,255,255,0.18)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.22)',
+};
+export const GRAPHITE_PILL: React.CSSProperties = {
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 50%), rgba(28,33,40,0.88)',
+  boxShadow: '0 16px 34px rgba(15,23,42,0.18), inset 0 1px 0 rgba(255,255,255,0.22)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)',
+};
+
+// soft colour behind the glass so it has something to refract (static)
+const Orbs: React.FC = () => (
+  <AbsoluteFill>
+    <div style={{ position: 'absolute', left: 470, top: 470, width: 820, height: 820, borderRadius: 410, background: 'radial-gradient(circle, rgba(58,204,0,0.22) 0%, rgba(58,204,0,0.07) 42%, rgba(58,204,0,0) 68%)' }} />
+    <div style={{ position: 'absolute', left: -260, top: 980, width: 760, height: 760, borderRadius: 380, background: 'radial-gradient(circle, rgba(100,116,139,0.20) 0%, rgba(100,116,139,0.06) 45%, rgba(100,116,139,0) 70%)' }} />
+    <div style={{ position: 'absolute', left: 640, top: 1240, width: 520, height: 520, borderRadius: 260, background: 'radial-gradient(circle, rgba(100,116,139,0.16) 0%, rgba(100,116,139,0) 68%)' }} />
+  </AbsoluteFill>
+);
 
 export const Rankings: React.FC<{ r: R }> = ({ r }) => {
   const f = useCurrentFrame();
   const items = [...r.items].sort((a, b) => a.rank - b.rank);
   const max = Math.max(...items.map((c) => c.value)); // longest bar = largest value (also for 'lowest is best' rankings)
-  const hasLogo = items.some((c) => c.logo);
-  const tickX = 170 + (hasLogo ? 68 : 0);
-  const tickW = Math.max(...items.map((c) => textW(c.ticker, 44, '900i')));
-  const barX = tickX + tickW + 26;
-  const labelW = Math.max(...items.map((c) => textW(`${r.pre}${fmt(c.value, r.decimals)}${r.post}`, 32, '800', 0)));
-  const barMax = RIGHT - barX - 18 - labelW;
   const hs = r.heading.map((q, i) => fitSize(segText(q), 940, i === r.heading.length - 1 ? 104 : 78));
-  const one = rowAt(1);
-  const flash = f >= one ? Math.max(0, 1 - (f - one) / 14) : 0;
-  const totalAt = one + 14;
-  // vertical value grid
-  const step = Math.pow(10, Math.floor(Math.log10(max))) / (max / Math.pow(10, Math.floor(Math.log10(max))) > 5 ? 0.5 : 2);
-  const grid = Array.from({ length: Math.floor(max / step) + 1 }, (_, i) => i * step);
+  const totalAt = rowAt(1) + 14;
+  const bottom = RANK.top + RANK.pitch * 9 + RANK.barH;
   return (
     <AbsoluteFill>
       <Backdrop />
+      <Orbs />
       {r.heading.map((q, i) => {
         const at = i * 4, xf = (fr: number) => (i % 2 ? 1 : -1) * (1 - whip(fr, at, 10)) * 1200;
         return (
-          <MBlur key={i} id={`rh${i}`} x={speedBlur(xf, f, 0.4)} style={{ position: 'absolute', left: 0, right: 0, top: 250 + (i ? hs[0] * 1.06 : 0), transform: `translateX(${xf(f)}px)`, opacity: f >= at ? 1 : 0 }}>
+          <MBlur key={i} id={`rh${i}`} x={speedBlur(xf, f, 0.4)} style={{ position: 'absolute', left: 0, right: 0, top: 246 + (i ? hs[0] * 1.06 : 0), transform: `translateX(${xf(f)}px)`, opacity: f >= at ? 1 : 0 }}>
             <KLine segs={q} size={hs[i]} />
           </MBlur>
         );
       })}
-      <div style={{ position: 'absolute', left: 0, right: 0, top: 250 + hs[0] * 1.06 + hs[1] * 1.08 + 8, textAlign: 'center', fontFamily: FONT, fontWeight: 600, fontSize: 26, letterSpacing: '0.04em', color: T.grey, opacity: ramp(f, 8, 16) }}>{r.subtitle}</div>
-      {grid.map((v, i) => (
-        <div key={i} style={{ position: 'absolute', left: barX + (v / max) * barMax, top: TOP - 20, width: 2, height: PITCH * 10 + 10, background: i ? '#EBEFEC' : T.fog, opacity: ramp(f, 6 + i, 14 + i) }} />
-      ))}
+      <div style={{ position: 'absolute', left: 0, right: 0, top: 246 + hs[0] * 1.06 + hs[1] * 1.08 + 6, textAlign: 'center', fontFamily: FONT, fontWeight: 600, fontSize: 26, letterSpacing: '0.04em', color: T.grey, opacity: ramp(f, 8, 16) }}>{r.subtitle}</div>
       {items.map((c) => {
-        const a = rowAt(c.rank), y = TOP + (c.rank - 1) * PITCH;
+        const a = rowAt(c.rank), y = RANK.top + (c.rank - 1) * RANK.pitch;
         if (f < a) return null;
+        const L = rowLayout(c, max, r);
         const isOne = c.rank === 1;
-        const tile = Math.max(0, pop(f, a, 8, 2.2));
-        const xf = (fr: number) => (1 - whip(fr, a, 8)) * -500;
-        const g = ramp(f, a + 2, a + 13, E.out);
-        const w = Math.max(6, (c.value / max) * barMax * g);
-        const label = `${r.pre}${fmt(c.value * g, r.decimals)}${r.post}`;
+        const tabX = (fr: number) => (1 - whip(fr, a, 8)) * -RANK.tab;
+        const g = ramp(f, a + 2, a + 14, E.out);
+        const end = mix(RANK.tab, L.end, g);
+        const ring = Math.max(0, pop(f, a + 4, 10, 2.0));
+        const value = `${r.pre}${fmt(c.value * g, r.decimals)}${r.post}`;
+        const lab = L.inside ? ramp(f, a + 10, a + 16, E.out) : ramp(f, a + 4, a + 10, E.out);
+        const labX = L.inside ? L.labelX : end + (c.logo ? RANK.ring / 2 : 0) + RANK.gap;
+        const half = RANK.ring / 2;
         return (
           <React.Fragment key={c.rank}>
-            {isOne && flash > 0 && <div style={{ position: 'absolute', left: 0, top: y - 14, width: 1080, height: BAR_H + 28, background: T.mint, opacity: flash }} />}
-            <div style={{ position: 'absolute', left: 64, top: y, width: 84, height: BAR_H, borderRadius: 12, background: isOne ? T.lime : T.ink, color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontFamily: FONT, fontWeight: 900, fontStyle: 'italic', fontSize: 32, transform: `scale(${tile})` }}>{String(c.rank).padStart(2, '0')}</div>
-            {c.logo && <Img src={staticFile(c.logo)} style={{ position: 'absolute', left: 170, top: y + 1, width: 56, height: 56, objectFit: 'contain', borderRadius: 12, background: '#FFFFFF', transform: `scale(${tile})` }} />}
-            <MBlur id={`rt${c.rank}`} x={speedBlur(xf, f, 0.35)} style={{ position: 'absolute', left: tickX, top: y, height: BAR_H, display: 'flex', alignItems: 'center', transform: `translateX(${xf(f)}px)`,
-              fontFamily: FONT, fontWeight: 900, fontStyle: 'italic', fontSize: 44, letterSpacing: '-0.02em', color: T.ink }}>{c.ticker}</MBlur>
-            <div style={{ position: 'absolute', left: barX, top: y + 2, width: w, height: BAR_H - 4, borderRadius: 8, transform: 'skewX(-10deg)', transformOrigin: '0 50%',
-              background: isOne ? `linear-gradient(90deg, ${T.green}, ${T.lime})` : `linear-gradient(90deg, ${T.mint2}, ${T.green})`, boxShadow: isOne ? '0 10px 30px rgba(58,204,0,0.35)' : undefined }} />
-            <div style={{ position: 'absolute', left: barX + w + 18, top: y, height: BAR_H, display: 'flex', alignItems: 'center', whiteSpace: 'nowrap',
-              fontFamily: FONT, fontWeight: 800, fontSize: 32, color: isOne ? T.green : T.ink, opacity: ramp(f, a + 2, a + 6) }}>{label}</div>
+            <div style={{ ...GLASS_BAR, top: y, width: end }} />
+            {end > RANK.tab + 30 && <div style={{ position: 'absolute', left: RANK.tab, top: y + RANK.barH - 6, width: end - RANK.tab - 24, height: 3, borderRadius: 2,
+              background: 'linear-gradient(90deg, rgba(58,204,0,0), rgba(58,204,0,0.9))', boxShadow: '0 0 12px rgba(58,204,0,0.55)' }} />}
+            <MBlur id={`tab${c.rank}`} x={speedBlur(tabX, f, 0.35)} style={{ ...GLASS_TAB, top: y, transform: `translateX(${tabX(f)}px)` }}>
+              <span style={{ fontFamily: FONT, fontSize: 28, fontWeight: 900, fontStyle: 'italic', color: T.lime, width: 44 }}>{String(c.rank).padStart(2, '0')}</span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span style={{ fontFamily: FONT, fontSize: 38, lineHeight: '42px', fontWeight: 900, fontStyle: 'italic', letterSpacing: '-0.02em', color: '#FFFFFF' }}>{c.ticker}</span>
+                {c.sector && <span style={{ fontFamily: FONT, fontSize: 18, lineHeight: '23px', fontWeight: 500, color: '#C9CFD6', whiteSpace: 'nowrap' }}>{c.sector}</span>}
+              </div>
+            </MBlur>
+            <div style={{ position: 'absolute', left: labX, top: y + 3, width: L.labelW + 4, display: 'flex', flexDirection: 'column', alignItems: L.inside ? 'flex-end' : 'flex-start',
+              fontFamily: FONT, fontSize: RANK.labelSize, lineHeight: '37px', fontWeight: 800, whiteSpace: 'nowrap', opacity: lab, transform: `translateY(${(1 - lab) * 14}px)` }}>
+              <span style={{ color: T.ink, letterSpacing: '0.01em' }}>{displayName(c)}</span>
+              <span style={{ color: T.green }}>{value}</span>
+            </div>
+            {c.logo && (
+              <div style={{ position: 'absolute', left: end - half, top: y + RANK.barH / 2 - half, width: RANK.ring, height: RANK.ring, boxSizing: 'border-box', borderRadius: half,
+                background: 'linear-gradient(145deg, rgba(255,255,255,0.85), rgba(222,228,234,0.45))', border: '1.5px solid #FFFFFF',
+                backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)', transform: `scale(${ring}) rotate(${(1 - Math.min(1, ring)) * -30}deg)`,
+                boxShadow: isOne ? '0 0 0 3px rgba(58,204,0,0.55), 0 0 28px rgba(58,204,0,0.35), 0 18px 36px rgba(15,23,42,0.16)' : '0 18px 36px rgba(15,23,42,0.16), 0 2px 6px rgba(15,23,42,0.08), inset 0 1.5px 0 #FFFFFF' }}>
+                <div style={{ position: 'absolute', inset: 11, borderRadius: half - 11, background: '#FFFFFF', boxShadow: 'inset 0 0 0 1px rgba(15,23,42,0.06), 0 2px 6px rgba(15,23,42,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Img src={staticFile(c.logo)} style={{ width: '72%', height: '72%', objectFit: 'contain' }} />
+                </div>
+              </div>
+            )}
           </React.Fragment>
         );
       })}
-      {r.total && <div style={{ position: 'absolute', left: 0, right: 0, top: TOP + PITCH * 10 + 12, display: 'flex', justifyContent: 'center', transform: `scale(${Math.max(0, pop(f, totalAt, 10, 1.8))})` }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18, height: 72, padding: '0 34px', borderRadius: 36, background: T.ink }}>
+      {r.total && <div style={{ position: 'absolute', left: 0, right: 0, top: bottom + 66, display: 'flex', justifyContent: 'center', transform: `scale(${Math.max(0, pop(f, totalAt, 10, 1.8))})` }}>
+        <div style={{ ...GRAPHITE_PILL, display: 'flex', alignItems: 'center', gap: 18, height: 72, padding: '0 34px', borderRadius: 36 }}>
           <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 26, letterSpacing: '0.12em', color: T.fog }}>{r.total.label}</span>
           <span style={{ fontFamily: FONT, fontWeight: 900, fontStyle: 'italic', fontSize: 38, color: T.lime }}>{r.total.value}</span>
         </div>
       </div>}
-      <div style={{ position: 'absolute', left: 0, right: 0, top: TOP + PITCH * 10 + (r.total ? 98 : 24), textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: 22, color: T.grey, opacity: ramp(f, totalAt + 4, totalAt + 12) }}>{r.source}</div>
+      <div style={{ position: 'absolute', left: 0, right: 0, top: bottom + (r.total ? 156 : 70), textAlign: 'center', fontFamily: FONT, fontWeight: 500, fontSize: 22, color: T.grey, opacity: ramp(f, totalAt + 4, totalAt + 12) }}>{r.source}</div>
     </AbsoluteFill>
   );
 };

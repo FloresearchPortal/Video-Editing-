@@ -6,7 +6,8 @@ export type Seg = { t: string; c?: Ink };
 export type Title = { lines: { t: string; c: Ink }[]; pill: string };
 
 // logo: file under media/ (official company logo supplied by the user); none -> no logo slot is drawn
-export type RankItem = { rank: number; ticker: string; name: string; value: number; logo?: string };
+// name: display name shown beside the logo (e.g. MEEZAN BANK); sector: small line under the ticker
+export type RankItem = { rank: number; ticker: string; name: string; sector?: string; value: number; logo?: string };
 export type Rankings = {
   heading: Seg[][]; // [[TOP 10 BY], [MARKET CAP]]
   subtitle: string; // Rs bn · PSX close 14 Oct 2026

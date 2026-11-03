@@ -78,10 +78,19 @@ def validate(b):
                 warn.append('values are not in rank order (neither highest-first nor lowest-first); check the ranks')
             vf = r['value_format']
             fmt = lambda v: f"{vf['pre']}{v:,.{vf['decimals']}f}{vf['post']}"
-            label_w = max(text_w(fmt(c['value']), 32, '800', 0) for c in it)
-            tick_w = max(text_w(c['ticker'], 44, '900i') for c in it)
-            bar_max = 1016 - (170 + tick_w + 26) - 18 - label_w
-            need(bar_max >= 240, f'value labels too long for the chart (longest "{max((fmt(c["value"]) for c in it), key=len)}"); use fewer decimals or a bigger unit (bn/tn)')
+            # mirror of rowLayout() in remotion/src/series/top10/Rankings.tsx (worst case: logo ring present)
+            mx = max(c['value'] for c in it)
+            for c in by:
+                end = 300 + c['value'] / mx * (880 - 300)
+                name = (c.get('name') or c['ticker']).upper()
+                lw = max(text_w(name, 31, '800', 0.01), text_w(fmt(c['value']), 31, '800', 0))
+                inside_ok = end - 64 - 18 - lw >= 324
+                outside_ok = end + 64 + 18 + lw <= 1040
+                need(inside_ok or outside_ok, f'{c["ticker"]}: name "{name}" / value "{fmt(c["value"])}" too long to fit beside its bar; shorten the name (e.g. "PAKISTAN PETROLEUM" -> "PAK PETROLEUM") or use fewer decimals')
+                need(re.fullmatch(r"[A-Za-z0-9 &.'\-]{1,30}", name or ''), f'{c["ticker"]}: name should be a short display name (letters, digits, & . - only)')
+                if c.get('sector'):
+                    need(text_w(c['sector'], 18, '500', 0) <= 206, f'{c["ticker"]}: sector "{c["sector"]}" too long for the tab (max ~22 characters)')
+                need(text_w(c['ticker'], 38, '900i') <= 206, f'{c["ticker"]}: ticker too wide for the tab')
     if 'heading' in r:
         need(len(r['heading']) == 2, 'rankings.heading must be 2 lines, e.g. ["TOP 10 BY", "MARKET CAP"]')
         if len(r['heading']) == 2:

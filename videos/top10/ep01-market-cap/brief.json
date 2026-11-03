@@ -12,7 +12,7 @@
    "TOP 10 BY",
    "MARKET CAP"
   ],
-  "subtitle": "Rs billion · PSX close 14 Oct 2026",
+  "subtitle": "Rs billion · PSX, 3 Nov 2026 · 1:25 PM PKT",
   "value_format": {
    "pre": "Rs ",
    "post": " bn",
@@ -22,68 +22,78 @@
    {
     "rank": 1,
     "ticker": "OGDC",
-    "name": "Oil & Gas Development Company",
-    "value": 1289.16
+    "name": "OIL & GAS DEVELOPMENT",
+    "sector": "Oil & Gas Exploration",
+    "value": 1306.32
    },
    {
     "rank": 2,
     "ticker": "UBL",
-    "name": "United Bank",
-    "value": 1025.71
+    "name": "UNITED BANK",
+    "sector": "Commercial Bank",
+    "value": 1033.9
    },
    {
     "rank": 3,
     "ticker": "MEBL",
-    "name": "Meezan Bank",
-    "value": 985.54
+    "name": "MEEZAN BANK",
+    "sector": "Commercial Bank",
+    "value": 950.51
    },
    {
     "rank": 4,
     "ticker": "FFC",
-    "name": "Fauji Fertilizer Company",
-    "value": 770.44
+    "name": "FAUJI FERTILIZER",
+    "sector": "Fertilizer",
+    "value": 826.72
    },
    {
     "rank": 5,
     "ticker": "MARI",
-    "name": "Mari Energies",
-    "value": 762.34
+    "name": "MARI ENERGIES",
+    "sector": "Oil & Gas Exploration",
+    "value": 782.21
    },
    {
     "rank": 6,
-    "ticker": "PPL",
-    "name": "Pakistan Petroleum",
-    "value": 591.73
+    "ticker": "LUCK",
+    "name": "LUCKY CEMENT",
+    "sector": "Cement",
+    "value": 585.31
    },
    {
     "rank": 7,
-    "ticker": "LUCK",
-    "name": "Lucky Cement",
-    "value": 587.32
+    "ticker": "PPL",
+    "name": "PAKISTAN PETROLEUM",
+    "sector": "Oil & Gas Exploration",
+    "value": 578.21
    },
    {
     "rank": 8,
     "ticker": "MCB",
-    "name": "MCB Bank",
-    "value": 438.53
+    "name": "MCB BANK",
+    "sector": "Commercial Bank",
+    "value": 466.32
    },
    {
     "rank": 9,
     "ticker": "HBL",
-    "name": "Habib Bank",
-    "value": 421.37
+    "name": "HABIB BANK",
+    "sector": "Commercial Bank",
+    "value": 419.55
    },
    {
     "rank": 10,
     "ticker": "PAKT",
-    "name": "Pakistan Tobacco Company",
-    "value": 357.9
+    "name": "PAKISTAN TOBACCO",
+    "sector": "Tobacco",
+    "value": 381.91
    }
   ],
   "total": {
    "label": "TOP 10 TOTAL",
-   "value": "Rs 7.23 trillion"
+   "value": "Rs 7.33 trillion"
   },
-  "source": "Source: PSX Data Portal · market cap = close × shares outstanding"
+  "source": "Source: PSX Data Portal · market cap = share price × shares outstanding"
  }
 }

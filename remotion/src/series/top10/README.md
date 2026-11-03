@@ -8,7 +8,7 @@ Poppins only, white brand theme, 1080×1920 @ 30 fps, 13.4 s, 150 BPM (12 frames
 |---|---|---|---|
 | Intro: ticker-band wall → split-flap **TOP 10** board + PSX RANKINGS tag, hold, zoom-through | 0–6 | **never** | `SeriesIntro` |
 | Topic lockup: logo, rule, 2–3 title lines (ink, then green), loading pill with label, flostocks.com | 6–13 | text | `TopicTitle` ← `episode.title` |
-| Rankings chart, countdown #10 → #1 on the beat, total + source | 13–29 | data | `Rankings` ← `episode.rankings` |
+| Rankings chart in grey glass: stepped bars from the left (graphite tab: rank, ticker, sector · light glass bar ∝ value · green edge glow), company logo in a frosted ring at each bar end, name + value inside or beside the bar; countdown #10 → #1 on the beat, total + source | 13–29 | data | `Rankings` ← `episode.rankings` |
 | CTA: logo lockup, **KNOW THE MARKET, / INVEST SMARTER.**, flostocks.com, disclaimer | 29– (still from 30.5) | **never** | `CtaCard` |
 
 Transitions (always the same): zoom-through → ticker-band shutter → slant band wipe.

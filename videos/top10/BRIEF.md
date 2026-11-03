@@ -8,7 +8,7 @@ INVEST SMARTER. end card and the risk disclaimer) is locked and comes out the sa
 |---|---|---|---|
 | 1 | **Episode number** | EP 01 | |
 | 2 | **Title**: 2–3 short lines + pill label | TOP 10 COMPANIES / BY MARKET / CAPITALIZATION · pill: IN PSX | each line ≤ ~17 characters; pill ≤ ~10 |
-| 3 | **The top 10**: rank, PSX ticker, value (+ unit and decimals) | 1 OGDC 1,289.16 · 2 UBL 1,025.71 … 10 PAKT 357.90 (Rs … bn, 2 decimals) | exactly 10 rows, positive values |
+| 3 | **The top 10**: rank, PSX ticker, short company name, sector, value (+ unit and decimals) | 1 OGDC · OIL & GAS DEVELOPMENT · Oil & Gas Exploration · 1,306.32 … (Rs … bn, 2 decimals) | exactly 10 rows, positive values; name ≤ ~20 characters, sector ≤ ~22 |
 | 4 | **Source + date** of the numbers, and an optional total/average line | PSX Data Portal, close 14 Oct 2026 · TOP 10 TOTAL Rs 7.23 trillion | source is required |
 
 Optional: the chart heading (default: "TOP 10 BY / <METRIC>").
@@ -36,7 +36,7 @@ never redrawn.
   "heading": ["TOP 10 BY", "DIVIDEND YIELD"],
   "subtitle": "% · trailing 12 months · PSX close <date>",
   "value_format": {"pre": "", "post": "%", "decimals": 1},
-  "items": [{"rank": 1, "ticker": "XXXX", "name": "Company name", "value": 12.3}, "… 10 rows …"],
+  "items": [{"rank": 1, "ticker": "XXXX", "name": "SHORT NAME", "sector": "Sector", "value": 12.3}, "… 10 rows …"],
   "total": {"label": "TOP 10 AVERAGE", "value": "9.4%"},
   "source": "Source: <where the numbers come from>"
  }

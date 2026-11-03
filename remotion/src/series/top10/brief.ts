@@ -12,7 +12,7 @@ export type Brief = {
     heading: string[]; // 2 lines; last line green
     subtitle: string;
     value_format: { pre: string; post: string; decimals: number };
-    items: { rank: number; ticker: string; name?: string; value: number }[];
+    items: { rank: number; ticker: string; name?: string; sector?: string; value: number }[]; // name = display name, e.g. "MEEZAN BANK"
     total?: { label: string; value: string };
     source: string;
   };
@@ -29,7 +29,7 @@ export const fromBrief = (b: Brief): Episode => ({
     heading: lines(b.rankings.heading),
     subtitle: b.rankings.subtitle,
     pre: b.rankings.value_format.pre, post: b.rankings.value_format.post, decimals: b.rankings.value_format.decimals,
-    items: b.rankings.items.map((c) => ({ rank: c.rank, ticker: c.ticker, name: c.name ?? c.ticker, value: c.value, logo: b.logos?.[c.ticker] })),
+    items: b.rankings.items.map((c) => ({ rank: c.rank, ticker: c.ticker, name: c.name ?? c.ticker, sector: c.sector, value: c.value, logo: b.logos?.[c.ticker] })),
     total: b.rankings.total,
     source: b.rankings.source,
   },

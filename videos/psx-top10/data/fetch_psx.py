@@ -44,6 +44,8 @@ NAME_BOX = 640  # px width of the company-name block in the countdown (2 lines m
 def name_size(name, box=NAME_BOX, sizes=range(72, 40, -2)):
     """Largest font size at which the name wraps into <= 2 lines of `box` px (measured with the real font)."""
     from PIL import ImageFont
+    if not FONT_NAME.exists():  # only the old 2D cut uses this; the series sizes text from Poppins metrics
+        return None
     for sz in sizes:
         font = ImageFont.truetype(str(FONT_NAME), sz)
         lines, cur = [], ''
