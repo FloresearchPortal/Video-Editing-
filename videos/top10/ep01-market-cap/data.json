@@ -4,18 +4,18 @@
  "close_date": "3 Nov 2026",
  "price_field": "close",
  "formula": "market cap = closing price x shares outstanding",
- "total_bn": 7330.96,
+ "total_bn": 7337.02,
  "top10": [
   {
    "ticker": "OGDC",
    "psx_name": "Oil & Gas Development Company Limited",
    "psx_sector": "OIL & GAS EXPLORATION COMPANIES",
-   "close": 303.73,
+   "close": 303.63,
    "ldcp": 301.68,
    "shares": 4300928400,
-   "as_of": "Tue, Nov 3, 2026 1:25 PM",
-   "price": 303.73,
-   "mcap_bn": 1306.32,
+   "as_of": "Tue, Nov 3, 2026 3:49 PM",
+   "price": 303.63,
+   "mcap_bn": 1305.89,
    "rank": 1,
    "name": "Oil & Gas Development Company",
    "sector": "Oil & Gas Exploration",
@@ -26,12 +26,12 @@
    "ticker": "UBL",
    "psx_name": "United Bank Limited",
    "psx_sector": "COMMERCIAL BANKS",
-   "close": 412.86,
+   "close": 412.67,
    "ldcp": 409.88,
    "shares": 2504247750,
-   "as_of": "Tue, Nov 3, 2026 1:25 PM",
-   "price": 412.86,
-   "mcap_bn": 1033.9,
+   "as_of": "Tue, Nov 3, 2026 3:49 PM",
+   "price": 412.67,
+   "mcap_bn": 1033.43,
    "rank": 2,
    "name": "United Bank",
    "sector": "Commercial Bank",
@@ -42,12 +42,12 @@
    "ticker": "MEBL",
    "psx_name": "Meezan Bank Limited",
    "psx_sector": "COMMERCIAL BANKS",
-   "close": 525.99,
+   "close": 526.57,
    "ldcp": 519.44,
    "shares": 1807096448,
-   "as_of": "Tue, Nov 3, 2026 1:25 PM",
-   "price": 525.99,
-   "mcap_bn": 950.51,
+   "as_of": "Tue, Nov 3, 2026 3:48 PM",
+   "price": 526.57,
+   "mcap_bn": 951.56,
    "rank": 3,
    "name": "Meezan Bank",
    "sector": "Commercial Bank",
@@ -58,28 +58,28 @@
    "ticker": "FFC",
    "psx_name": "Fauji Fertilizer Company Limited",
    "psx_sector": "FERTILIZER",
-   "close": 574.5,
+   "close": 572.37,
    "ldcp": 564.66,
    "shares": 1439023262,
-   "as_of": "Tue, Nov 3, 2026 1:25 PM",
-   "price": 574.5,
-   "mcap_bn": 826.72,
+   "as_of": "Tue, Nov 3, 2026 3:49 PM",
+   "price": 572.37,
+   "mcap_bn": 823.65,
    "rank": 4,
    "name": "Fauji Fertilizer Company",
    "sector": "Fertilizer",
-   "share_pct": 11.3,
+   "share_pct": 11.2,
    "name_size": null
   },
   {
    "ticker": "MARI",
    "psx_name": "Mari Energies Limited",
    "psx_sector": "OIL & GAS EXPLORATION COMPANIES",
-   "close": 651.5,
+   "close": 655.66,
    "ldcp": 651.4,
    "shares": 1200622500,
-   "as_of": "Tue, Nov 3, 2026 1:25 PM",
-   "price": 651.5,
-   "mcap_bn": 782.21,
+   "as_of": "Tue, Nov 3, 2026 3:49 PM",
+   "price": 655.66,
+   "mcap_bn": 787.2,
    "rank": 5,
    "name": "Mari Energies",
    "sector": "Oil & Gas Exploration",
@@ -90,12 +90,12 @@
    "ticker": "LUCK",
    "psx_name": "Lucky Cement Limited",
    "psx_sector": "CEMENT",
-   "close": 399.53,
+   "close": 400.64,
    "ldcp": 395.52,
    "shares": 1465000000,
-   "as_of": "Tue, Nov 3, 2026 1:24 PM",
-   "price": 399.53,
-   "mcap_bn": 585.31,
+   "as_of": "Tue, Nov 3, 2026 3:49 PM",
+   "price": 400.64,
+   "mcap_bn": 586.94,
    "rank": 6,
    "name": "Lucky Cement",
    "sector": "Cement",
@@ -106,12 +106,12 @@
    "ticker": "PPL",
    "psx_name": "Pakistan Petroleum Limited",
    "psx_sector": "OIL & GAS EXPLORATION COMPANIES",
-   "close": 212.5,
+   "close": 212.91,
    "ldcp": 212.06,
    "shares": 2720967548,
-   "as_of": "Tue, Nov 3, 2026 1:25 PM",
-   "price": 212.5,
-   "mcap_bn": 578.21,
+   "as_of": "Tue, Nov 3, 2026 3:49 PM",
+   "price": 212.91,
+   "mcap_bn": 579.32,
    "rank": 7,
    "name": "Pakistan Petroleum",
    "sector": "Oil & Gas Exploration",
@@ -122,12 +122,12 @@
    "ticker": "MCB",
    "psx_name": "MCB Bank Limited",
    "psx_sector": "COMMERCIAL BANKS",
-   "close": 393.5,
+   "close": 393.43,
    "ldcp": 388.41,
    "shares": 1185060006,
-   "as_of": "Tue, Nov 3, 2026 1:23 PM",
-   "price": 393.5,
-   "mcap_bn": 466.32,
+   "as_of": "Tue, Nov 3, 2026 3:41 PM",
+   "price": 393.43,
+   "mcap_bn": 466.24,
    "rank": 8,
    "name": "MCB Bank",
    "sector": "Commercial Bank",
@@ -138,12 +138,12 @@
    "ticker": "HBL",
    "psx_name": "Habib Bank Limited",
    "psx_sector": "COMMERCIAL BANKS",
-   "close": 286.02,
+   "close": 286.16,
    "ldcp": 285.17,
    "shares": 1466852508,
-   "as_of": "Tue, Nov 3, 2026 1:25 PM",
-   "price": 286.02,
-   "mcap_bn": 419.55,
+   "as_of": "Tue, Nov 3, 2026 3:43 PM",
+   "price": 286.16,
+   "mcap_bn": 419.75,
    "rank": 9,
    "name": "Habib Bank",
    "sector": "Commercial Bank",
@@ -154,12 +154,12 @@
    "ticker": "PAKT",
    "psx_name": "Pakistan Tobacco Company Limited",
    "psx_sector": "TOBACCO",
-   "close": 1494.8,
+   "close": 1499.22,
    "ldcp": 1489.86,
    "shares": 255493792,
-   "as_of": "Tue, Nov 3, 2026 1:20 PM",
-   "price": 1494.8,
-   "mcap_bn": 381.91,
+   "as_of": "Tue, Nov 3, 2026 3:41 PM",
+   "price": 1499.22,
+   "mcap_bn": 383.04,
    "rank": 10,
    "name": "Pakistan Tobacco Company",
    "sector": "Tobacco",
@@ -170,117 +170,117 @@
  "cutoff_check": [
   {
    "ticker": "NBP",
-   "price": 163.99,
+   "price": 163.2,
    "shares": 2127512862,
-   "mcap_bn": 348.89
+   "mcap_bn": 347.21
   },
   {
    "ticker": "ENGROH",
-   "price": 265.33,
+   "price": 264.88,
    "shares": 1204231994,
-   "mcap_bn": 319.52
+   "mcap_bn": 318.98
   },
   {
    "ticker": "NESTLE",
-   "price": 6999.98,
+   "price": 6970.8,
    "shares": 45349584,
-   "mcap_bn": 317.45
+   "mcap_bn": 316.12
   },
   {
    "ticker": "FATIMA",
-   "price": 138.25,
+   "price": 138.17,
    "shares": 2100000000,
-   "mcap_bn": 290.32
+   "mcap_bn": 290.16
   },
   {
    "ticker": "COLG",
-   "price": 1173.15,
+   "price": 1174.86,
    "shares": 242773288,
-   "mcap_bn": 284.81
+   "mcap_bn": 285.22
   },
   {
    "ticker": "EFERT",
-   "price": 200.5,
+   "price": 201.7,
    "shares": 1335299375,
-   "mcap_bn": 267.73
+   "mcap_bn": 269.33
   },
   {
    "ticker": "HUBC",
-   "price": 196.0,
+   "price": 197.24,
    "shares": 1297154400,
-   "mcap_bn": 254.24
+   "mcap_bn": 255.85
   },
   {
    "ticker": "SCBPL",
-   "price": 59.0,
+   "price": 57.33,
    "shares": 3871585021,
-   "mcap_bn": 228.42
+   "mcap_bn": 221.96
   },
   {
    "ticker": "ABL",
-   "price": 171.0,
+   "price": 170.38,
    "shares": 1145073830,
-   "mcap_bn": 195.81
+   "mcap_bn": 195.1
   },
   {
    "ticker": "POL",
-   "price": 658.5,
+   "price": 662.45,
    "shares": 283855104,
-   "mcap_bn": 186.92
+   "mcap_bn": 188.04
   },
   {
    "ticker": "BAFL",
-   "price": 58.16,
+   "price": 58.12,
    "shares": 3154330238,
-   "mcap_bn": 183.46
+   "mcap_bn": 183.33
   },
   {
    "ticker": "BAHL",
-   "price": 151.99,
+   "price": 151.78,
    "shares": 1111425419,
-   "mcap_bn": 168.93
-  },
-  {
-   "ticker": "UPFL",
-   "price": 26289.0,
-   "shares": 6369932,
-   "mcap_bn": 167.46
+   "mcap_bn": 168.69
   },
   {
    "ticker": "SYS",
-   "price": 109.05,
+   "price": 109.47,
    "shares": 1530982855,
-   "mcap_bn": 166.95
+   "mcap_bn": 167.6
+  },
+  {
+   "ticker": "UPFL",
+   "price": 26200.0,
+   "shares": 6369932,
+   "mcap_bn": 166.89
   },
   {
    "ticker": "PSO",
-   "price": 349.22,
+   "price": 349.9,
    "shares": 469473300,
-   "mcap_bn": 163.95
+   "mcap_bn": 164.27
   },
   {
    "ticker": "AKBL",
-   "price": 106.2,
+   "price": 106.03,
    "shares": 1449299207,
-   "mcap_bn": 153.92
+   "mcap_bn": 153.67
   },
   {
    "ticker": "FABL",
-   "price": 92.74,
+   "price": 92.79,
    "shares": 1517696526,
-   "mcap_bn": 140.75
+   "mcap_bn": 140.83
   },
   {
    "ticker": "MTL",
-   "price": 281.5,
+   "price": 280.23,
    "shares": 399031894,
-   "mcap_bn": 112.33
+   "mcap_bn": 111.82
   },
   {
    "ticker": "ATRL",
-   "price": 980.0,
+   "price": 979.35,
    "shares": 106616250,
-   "mcap_bn": 104.48
+   "mcap_bn": 104.41
   },
   {
    "ticker": "HMB",
@@ -290,33 +290,33 @@
   },
   {
    "ticker": "BOP",
-   "price": 28.2,
+   "price": 28.09,
    "shares": 3271569319,
-   "mcap_bn": 92.26
+   "mcap_bn": 91.9
   },
   {
    "ticker": "SAZEW",
-   "price": 1398.0,
+   "price": 1382.49,
    "shares": 60445961,
-   "mcap_bn": 84.5
+   "mcap_bn": 83.57
   },
   {
    "ticker": "IBFL",
-   "price": 238.1,
+   "price": 245.02,
    "shares": 310506995,
-   "mcap_bn": 73.93
+   "mcap_bn": 76.08
   },
   {
    "ticker": "PKGS",
-   "price": 624.0,
+   "price": 620.77,
    "shares": 89379504,
-   "mcap_bn": 55.77
+   "mcap_bn": 55.48
   },
   {
    "ticker": "PIOC",
-   "price": 239.5,
+   "price": 240.41,
    "shares": 227148793,
-   "mcap_bn": 54.4
+   "mcap_bn": 54.61
   },
   {
    "ticker": "PSEL",
@@ -326,27 +326,27 @@
   },
   {
    "ticker": "LOTCHEM",
-   "price": 23.7,
+   "price": 23.83,
    "shares": 1514207200,
-   "mcap_bn": 35.89
+   "mcap_bn": 36.08
   },
   {
    "ticker": "ISL",
-   "price": 79.23,
+   "price": 80.19,
    "shares": 435000000,
-   "mcap_bn": 34.47
+   "mcap_bn": 34.88
   },
   {
    "ticker": "HCAR",
-   "price": 195.39,
+   "price": 194.14,
    "shares": 142800000,
-   "mcap_bn": 27.9
+   "mcap_bn": 27.72
   },
   {
    "ticker": "INIL",
-   "price": 142.1,
+   "price": 143.0,
    "shares": 131881860,
-   "mcap_bn": 18.74
+   "mcap_bn": 18.86
   }
  ]
 }

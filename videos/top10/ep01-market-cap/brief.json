@@ -12,7 +12,7 @@
    "TOP 10 BY",
    "MARKET CAP"
   ],
-  "subtitle": "Rs billion · PSX, 3 Nov 2026 · 1:25 PM PKT",
+  "subtitle": "Rs billion · PSX close 3 Nov 2026",
   "value_format": {
    "pre": "Rs ",
    "post": " bn",
@@ -24,76 +24,76 @@
     "ticker": "OGDC",
     "name": "OIL & GAS DEVELOPMENT",
     "sector": "Oil & Gas Exploration",
-    "value": 1306.32
+    "value": 1305.89
    },
    {
     "rank": 2,
     "ticker": "UBL",
     "name": "UNITED BANK",
     "sector": "Commercial Bank",
-    "value": 1033.9
+    "value": 1033.43
    },
    {
     "rank": 3,
     "ticker": "MEBL",
     "name": "MEEZAN BANK",
     "sector": "Commercial Bank",
-    "value": 950.51
+    "value": 951.56
    },
    {
     "rank": 4,
     "ticker": "FFC",
     "name": "FAUJI FERTILIZER",
     "sector": "Fertilizer",
-    "value": 826.72
+    "value": 823.65
    },
    {
     "rank": 5,
     "ticker": "MARI",
     "name": "MARI ENERGIES",
     "sector": "Oil & Gas Exploration",
-    "value": 782.21
+    "value": 787.2
    },
    {
     "rank": 6,
     "ticker": "LUCK",
     "name": "LUCKY CEMENT",
     "sector": "Cement",
-    "value": 585.31
+    "value": 586.94
    },
    {
     "rank": 7,
     "ticker": "PPL",
     "name": "PAKISTAN PETROLEUM",
     "sector": "Oil & Gas Exploration",
-    "value": 578.21
+    "value": 579.32
    },
    {
     "rank": 8,
     "ticker": "MCB",
     "name": "MCB BANK",
     "sector": "Commercial Bank",
-    "value": 466.32
+    "value": 466.24
    },
    {
     "rank": 9,
     "ticker": "HBL",
     "name": "HABIB BANK",
     "sector": "Commercial Bank",
-    "value": 419.55
+    "value": 419.75
    },
    {
     "rank": 10,
     "ticker": "PAKT",
     "name": "PAKISTAN TOBACCO",
     "sector": "Tobacco",
-    "value": 381.91
+    "value": 383.04
    }
   ],
   "total": {
    "label": "TOP 10 TOTAL",
-   "value": "Rs 7.33 trillion"
+   "value": "Rs 7.34 trillion"
   },
-  "source": "Source: PSX Data Portal · market cap = share price × shares outstanding"
+  "source": "Source: PSX Data Portal · market cap = closing price × shares outstanding"
  }
 }
