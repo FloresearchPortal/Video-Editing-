@@ -30,7 +30,19 @@ const CAST = {
   rehan:  { hair: 1, beard: 12, body: 20, shirt: '#1B2A44' },   // suited institutional investor (navy suit, tie)
   anchor: { hair: 55, body: 13, shirt: '#2C9E00', glasses: 8 }, // TV news anchor (client pick: male, option A - side part, clear glasses, lapel blazer #2C9E00)
   abbu:   { hair: 5, beard: 10, body: 10, glasses: 3, shirt: '#F4F1E8', vest: G3, hairTint: '#8C9196', beardTint: '#8C9196' },  // Abbu (client pick A: grey hair + moustache, reading glasses, green waistcoat over cream kurta)
+  cousin: { hair: 3, body: 16, shirt: G3 },                     // cousin (client pick B: swept hair, deep-green blazer)
+  batsman:{ hair: 6, beard: 11, body: 14, shirt: '#0E6B2E', helmet: 1, pak: 1 },  // senior batsman: helmet + Pakistan-style kit; holds the bat via gesture "bat"
 };
+
+// cricket batsman extras (client-approved): helmet over the head (drawn above the brows), Pakistan-style kit print
+const HELMET = '<g class="helmet"><path d="M512,830 C478,470 700,318 900,316 C1090,314 1222,430 1232,628 L1262,668 Q1268,690 1244,694 L780,700 C700,702 668,760 676,860 Q560,880 512,830Z" fill="#0B3D1E" stroke="#0B0F14" stroke-width="16" stroke-linejoin="round"/>' +
+  '<path d="M600,500 C700,400 860,368 980,380" fill="none" stroke="#1F7A00" stroke-width="22" stroke-linecap="round" opacity=".9"/>' +
+  '<path d="M780,694 L1252,682" stroke="#0B0F14" stroke-width="18" stroke-linecap="round"/>' +
+  '<path d="M1170,700 C1190,800 1188,930 1150,1012 M720,1012 H1150 M720,860 V1012" fill="none" stroke="#C9CED3" stroke-width="16" stroke-linecap="round"/>' +
+  '<path d="M1170,700 C1190,800 1188,930 1150,1012 M720,1012 H1150 M720,860 V1012" fill="none" stroke="#0B0F14" stroke-width="4" stroke-linecap="round" opacity=".55"/></g>';
+const PAK = '<g class="kit"><path d="M520,1180 L840,1330 L1160,1180" fill="none" stroke="#7CDB4A" stroke-width="26" stroke-linejoin="round"/>' +
+  '<text x="840" y="1540" text-anchor="middle" font-family="Manrope, Inter, sans-serif" font-weight="800" font-size="104" letter-spacing="6" fill="#FFFFFF">PAKISTAN</text>' +
+  '<path d="M840,1590 l14,30 33,4 -24,22 6,33 -29,-16 -29,16 6,-33 -24,-22 33,-4z" fill="#FFFFFF"/></g>';
 
 // split the top-level layer groups inside <g mask=...>
 function layers(svg) {
@@ -88,16 +100,24 @@ for (const [name, c] of Object.entries(CAST)) {
   const groups = base.groups.slice();
   if (c.vest) groups[1] = recolor(groups[1], '#000', c.vest);          // waistcoat panels (body 10)
   groups[1] = recolor(groups[1], '#fff', c.shirt);
+  if (c.pak) groups[1] = groups[1] + PAK;
   if (c.hairTint) groups[2] = recolor(groups[2], '#000', c.hairTint);  // grey hair
   if (c.beardTint) groups[4] = recolor(groups[4], '#000', c.beardTint); // grey moustache / beard
   if (c.hatTint) groups[2] = recolor(groups[2], '#fff', c.hatTint);
   if (c.hijabTint) groups[2] = recolor(groups[2], '#000', c.hijabTint);
+  const expr = Object.fromEntries(Object.entries(alt.expr).map(([k, g]) => [k, exprIdx.map((i) => g[i])]));
+  if (c.helmet) {                       // no hair; the helmet rides on the brows layer so it sits above brows/eyes in every expression
+    groups[2] = '<g></g>';
+    const k8 = exprIdx.indexOf(8);
+    groups[8] = groups[8] + HELMET;
+    for (const e of Object.keys(expr)) expr[e][k8] = expr[e][k8] + HELMET;
+  }
   out[name] = {
     head: base.head.replace('<svg ', '<svg class="av" '),
     groups,
     exprIdx,
     gestIdx,
-    expr: Object.fromEntries(Object.entries(alt.expr).map(([k, g]) => [k, exprIdx.map((i) => g[i])])),
+    expr,
     gesture: alt.gesture,
   };
 }

@@ -1,76 +1,180 @@
-// FloStocks explainer — STARTER scenes. Replace with the real beat sheet for each video.
-// Rules + workflow: .claude/skills/60sec/SKILL.md. Full worked example (114 s, 20 scenes):
-// motion/projects/what-is-psx/scenes.js.
-//
-// Every cue time is a VO word time from videos/<slug>/edit/vo.words.json — never guess timings.
-// Scenes are plain layers; K.linkScenes() (bottom) wires ONE smooth wipe at every scene start.
+// "What are Blue Chips?" — 60 Seconds Investor EP 04. Cue times = word starts in videos/what-are-blue-chips/edit/vo.words.json
+// (VO = "Okay, so" cut, pause-tightened, studio-polished; see videos/what-are-blue-chips/prep_vo.py).
+// New cast (client picks): cousin (B, deep-green blazer), batsman (helmet + Pakistan-style kit, gesture "bat").
 (function () {
-  const { C, tl, el, scene, kin, charsIn, charsOut, roller, roll, who, react, life, candles, line, gauge,
-          swap, psxHook, ctaLogo, icon } = K;
+  const { C, tl, el, scene, kin, charsIn, who, react, life, talk, line, swap, ctaLogo } = K;
   const X = CAST.expr;
-  const M = window.MARKET || { stocks: [] };
+  const BLUE = "#1E6FD9", BLUE_D = "#124A99";
+  const card = (p, css) => el(p, Object.assign({ background: "#fff", borderRadius: 32, border: "2px solid #E3E9E5", boxShadow: "0 24px 50px rgba(20,40,20,.10)" }, css));
+  const txt = (p, css, html) => el(p, Object.assign({ font: "700 40px Manrope", color: C.text, whiteSpace: "nowrap" }, css), html);
+  const fadeUp = (e, t, d = 0.45, y = 40) => tl.fromTo(e, { y, opacity: 0 }, { y: 0, opacity: 1, duration: d, ease: "power3.out" }, t);
+  const out = (e, t, d = 0.25) => tl.to(e, { opacity: 0, duration: d, ease: "power2.in" }, t);
+  const chip = (p, css, html) => el(p, Object.assign({ padding: "12px 26px", borderRadius: 999, background: "#fff", border: `4px solid ${C.g}`,
+    font: "800 34px Manrope", color: C.text, whiteSpace: "nowrap" }, css), html);
+  const S = `stroke="#0B0F14" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"`;
+  const art = (p, css, w, h, inner) => el(p, css, `<svg viewBox="0 0 ${w} ${h}" width="${css.width}" height="${css.height}" style="overflow:visible">${inner}</svg>`);
+  const BCHIP = (r = 100) => `<circle cx="${r}" cy="${r}" r="${r - 6}" fill="${BLUE}" ${S}/>` +
+    Array.from({ length: 8 }, (_, i) => { const a = i / 8 * Math.PI * 2; return `<rect x="${r - 12}" y="10" width="24" height="${r * 0.26}" rx="6" fill="#fff" transform="rotate(${i * 45} ${r} ${r})"/>`; }).join("") +
+    `<circle cx="${r}" cy="${r}" r="${r * 0.6}" fill="${BLUE_D}" stroke="#fff" stroke-width="6" stroke-dasharray="10 8"/>`;
+  const OV = [];
 
-  // ── beat sheet (seconds, from vo.words.json) ────────────────────────────────
-  const BEAT = {
-    psx: 1.2, up: 3.3, down: 4.3,            // S1 hook: "...PSX ka naam...", "market upar", "market neeche"
-    s2: 5.4, s2why: 6.2,                      // S2 question
-    s3: 8.5, s3joy: 9.6,                      // S3 a character beat
-    s4: 11.5, s4buy: 12.4,                    // S4 app: buying shares
-    s5: 14.6, s5up: 15.2,                     // S5 price chart
-    s6: 17.0, s6disc: 18.6, end: 22,          // S6 CTA → logo → disclaimer
-  };
+  // ═══ S1 HOOK 0–7.94: cousin: "Main toh sirf blue chip companies mein invest karta hoon" → Aap: company blue kab se? ═══
+  const s1 = scene(0, 7.94, { push: 1.02 });
+  const bub = card(s1, { left: 60, top: 220, width: 960, height: 200, borderRadius: 30, border: `4px solid ${C.ink}` });
+  const bt = txt(bub, { left: 44, top: 36, width: 872, whiteSpace: "normal", font: "700 46px/1.3 Manrope" },
+    `“Main toh sirf <span class="bc" style="color:${C.text}">blue chip</span> companies mein invest karta hoon.”`);
+  el(bub, { left: 120, top: 192, width: 0, height: 0, borderLeft: "26px solid transparent", borderRight: "26px solid transparent", borderTop: `30px solid ${C.ink}` });
+  fadeUp(bub, 0.1, 0.4, 20);
+  tl.to(bt.querySelector(".bc"), { color: BLUE, duration: 0.25 }, 1.62);
+  const cz = who(s1, "cousin", 50, 470, 480, { expr: "smile", gesture: "hand" });
+  fadeUp(cz, 0.05, 0.45, 30); life(cz, 0.1, 7.9, "smile", 81);
+  talk(cz, [0.92, 1.18, 1.42, 1.62, 1.9, 2.06, 2.46, 2.58, 2.9, 3.24], "smile");
+  const aap = who(s1, "aap", 590, 1000, 430, { expr: "smile", gesture: "none" });
+  fadeUp(aap, 3.42, 0.45, 30); life(aap, 3.5, 7.9, "smile", 82);
+  X(tl, aap.av, "puzzled", 3.76); K.pose(aap, 3.76, { h: [9, -4, 4], b: [1, 1] }, 0.4);
+  // thought cloud: a company building that turns blue ("company ka rang blue kab se ho gaya?")
+  const th = art(s1, { left: 60, top: 1010, width: 480, height: 360 }, 480, 360,
+    `<path d="M70,250 C10,250 10,170 70,160 C60,90 150,60 190,100 C220,40 320,40 340,100 C400,80 460,130 430,190 C480,220 450,290 390,280 C370,330 290,330 260,300 C220,340 130,330 120,290 C100,300 70,290 70,250Z" fill="#fff" ${S}/>
+     <circle cx="430" cy="320" r="14" fill="#fff" ${S}/><circle cx="462" cy="352" r="8" fill="#fff" stroke="#0B0F14" stroke-width="6"/>
+     <g class="bld"><rect x="170" y="110" width="140" height="160" rx="8" fill="#fff" ${S}/>
+     ${[0, 1, 2].map((r) => [0, 1].map((c) => `<rect x="${196 + c * 56}" y="${132 + r * 40}" width="32" height="24" rx="4" fill="#E3F1F4" stroke="#0B0F14" stroke-width="5"/>`).join("")).join("")}</g>
+     <text class="q" x="350" y="160" font-family="Manrope" font-weight="800" font-size="76" fill="${BLUE}">?</text>`);
+  fadeUp(th, 4.66, 0.4, 20);
+  tl.set(th.querySelector(".q"), { opacity: 0 }, 0);
+  tl.to(th.querySelector(".bld rect"), { fill: BLUE, duration: 0.35 }, 5.3);
+  tl.to(th.querySelector(".q"), { opacity: 1, duration: 0.2 }, 5.5);
+  const q = kin(s1, "BLUE CHIP | AAKHIR HAIN *KIA?*", { y: 1530, size: 92 });
+  q.chars.slice(0, 4).forEach((c) => (c.style.color = BLUE));
+  charsIn.rise(q, 6.7, 0.02);
+  OV.push(bub, th);
 
-  // ═══ S1 HOOK: PSX logo alone on frame 0 → live KSE-100 card; candles follow the VO ═══
-  const s1 = scene(0, BEAT.s2, { push: 1.03 });
-  const hook = psxHook(s1, { tDock: BEAT.psx + 0.3, tUp: BEAT.up, tDown: BEAT.down });
-  const up = kin(s1, "MARKET *UPAR* ▲", { y: 1250, size: 96, accent: C.gt });
-  tl.fromTo(up.chars, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.02 }, BEAT.up);
-  tl.to(up, { opacity: 0, duration: 0.2 }, BEAT.down - 0.18);
-  const dn = kin(s1, "MARKET *NEECHE* ▼", { y: 1250, size: 96, accent: C.red });
-  tl.fromTo(dn.chars, { opacity: 0, y: -24 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out", stagger: 0.02 }, BEAT.down);
+  // ═══ S2 7.94–13.14: 60 Seconds Investor series card (approved stopwatch) ═══
+  const s2 = scene(7.94, 13.14);
+  const sc2 = K.seriesCard(s2, 8.0, { tSweep: 8.56, tTitle: 8.92, tSeries: 9.74, tTag: 10.64, tEp: 11.7, ep: "EP 04 · WHAT ARE BLUE CHIPS" });
+  OV.push(sc2.watch);
 
-  // ═══ S2 QUESTION: one question mark only (the title's) ═══
-  const s2 = scene(BEAT.s2, BEAT.s3);
-  const q1 = kin(s2, "LEKIN AKHIR", { y: 520, size: 80, color: C.mute });
-  const q2 = kin(s2, "YE SAB HAI *KIA?*", { y: 640, size: 150 });
-  charsIn.rise(q1, BEAT.s2 + 0.1); charsIn.slam(q2, BEAT.s2why, 0.03);
-
-  // ═══ S3 CHARACTER BEAT: characters only where the story needs them; one motion per reaction ═══
-  const s3 = scene(BEAT.s3, BEAT.s4);
-  const t3 = kin(s3, "AHMED KA *DHAABA*", { y: 260, size: 110 }); charsIn.rise(t3, BEAT.s3 + 0.1);
-  const ahmed = who(s3, "ahmed", 290, 560, 500, { expr: "smile" });
-  tl.fromTo(ahmed, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, BEAT.s3 + 0.1);
-  life(ahmed, BEAT.s3, BEAT.s4, "smile", 3);
-  react.joy(ahmed, BEAT.s3joy);
-
-  // ═══ S4 APP BEAT: the FloStocks app (user's design) for buying — readable pace, no counting ═══
-  const s4 = scene(BEAT.s4, BEAT.s5);
-  const A = K.app(s4, 330, 210, 0.8);
-  tl.fromTo(A.phone, { x: 160, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, BEAT.s4 + 0.05);
-  K.tap(A, 381, 472, BEAT.s4buy, A.actions.Buy);
-  tl.to(A.dim, { opacity: 1, duration: 0.2 }, BEAT.s4buy + 0.05).to(A.sheet, { yPercent: 0, duration: 0.35, ease: "expo.out" }, BEAT.s4buy + 0.05);
-  tl.set(A.qty, { textContent: "1" }, BEAT.s4buy).set(A.total, { textContent: "Rs 100" }, BEAT.s4buy);
-  [0.3, 0.56, 0.82, 1.08].forEach((dt, i) => {
-    K.tap(A, 538, 842, BEAT.s4buy + dt, A.plus);
-    tl.set(A.qty, { textContent: String(i + 2) }, BEAT.s4buy + dt + 0.05).set(A.total, { textContent: "Rs " + (i + 2) * 100 }, BEAT.s4buy + dt + 0.05);
+  // ═══ S3 13.14–23.30: the senior batsman — 30-40 runs every match; not always 100, but the team trusts him ═══
+  const s3 = scene(13.14, 23.3);
+  const h3 = kin(s3, "TEAM KA *SENIOR BATSMAN*", { y: 150, size: 80 }); charsIn.rise(h3, 14.4, 0.02);
+  const bat = who(s3, "batsman", 10, 560, 600, { expr: "smile", gesture: "bat" });
+  fadeUp(bat, 13.3, 0.5, 40); life(bat, 13.4, 23.2, "smile", 83);
+  const sc = [["MATCH 1", "35", 16.16], ["MATCH 2", "42", 16.66], ["MATCH 3", "31", 17.08], ["MATCH 4", "38", 17.58]].map(([m, r, t], i) => {
+    const b = card(s3, { left: 640, top: 400 + i * 120, width: 380, height: 100, borderRadius: 22 });
+    txt(b, { left: 28, top: 30, font: "800 30px Manrope", color: C.mute }, m);
+    txt(b, { left: 210, top: 18, font: "700 54px 'IBM Plex Mono'", color: C.gt }, r);
+    txt(b, { left: 290, top: 34, font: "600 24px Inter", color: C.mute }, "runs");
+    fadeUp(b, t, 0.35, 20); return b;
   });
+  const cent = chip(s3, { left: 640, top: 900, borderColor: C.mute, color: C.mute }, "HAR BAAR 100? NAHI");
+  fadeUp(cent, 19.28, 0.35, 16);
+  const tough = card(s3, { left: 60, top: 1210, width: 960, height: 150, borderRadius: 26, border: `4px solid ${C.red}` });
+  txt(tough, { left: 40, top: 46, font: "800 40px Manrope", color: C.red }, "MUSHKIL WAQT");
+  txt(tough, { left: 540, top: 34, font: "700 64px 'IBM Plex Mono'" }, "45/4");
+  fadeUp(tough, 20.56, 0.4, 24);
+  const trust = chip(s3, { left: 200, top: 1420, background: C.g, borderColor: C.g }, "POORI TEAM KA BHAROSA ✓");
+  fadeUp(trust, 22.36, 0.35, 20);
+  X(tl, bat.av, "grinOpen", 22.36); K.pose(bat, 22.36, { h: [-4, 0, -10], b: [1.03, 0.99] }, 0.3);
+  OV.push(...sc, cent, tough, trust);
 
-  // ═══ S5 PRICE CHART: proper line chart (grid, price axis, tracking dot), price swap ═══
-  const s5 = scene(BEAT.s5, BEAT.s6);
-  const pc = el(s5, { left: 60, top: 520, width: 960, height: 640, background: "#fff", border: "3px solid #E3E9E5", borderRadius: 36, boxShadow: "0 24px 50px rgba(20,40,20,.10)" });
-  el(pc, { left: 44, top: 36, font: "600 34px 'IBM Plex Mono'", color: C.mute }, "ACHAI · SHARE PRICE");
-  const price = el(pc, { left: 44, top: 84, font: "700 96px 'IBM Plex Mono'", color: C.text }, "Rs 100");
-  const pl = line(pc, [[0, 0.05], [0.3, 0.2], [0.55, 0.45], [0.8, 0.7], [1, 0.95]], { x: 44, y: 250, w: 830, h: 340, color: C.g2, grid: true, rows: 2, axis: ["200", "150", "100"] });
-  tl.fromTo(pc, { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, BEAT.s5 + 0.05);
-  pl.draw(BEAT.s5up, 1.2);
-  swap(price, "Rs 200", BEAT.s5up + 1.2);
+  // ═══ S4 23.30–26.48: "stock market mein aisi companies ko kehte hain blue chip" ═══
+  const s4 = scene(23.3, 26.48);
+  const h4 = kin(s4, "STOCK MARKET MEIN", { y: 300, size: 92 }); charsIn.rise(h4, 23.36, 0.02);
+  const big = art(s4, { left: 290, top: 520, width: 500, height: 500 }, 200, 200, BCHIP(100));
+  tl.fromTo(big, { scale: 0.6, rotation: -60, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 24.1);
+  const h4b = kin(s4, "*BLUE CHIP* COMPANIES", { y: 1110, size: 96, accent: BLUE }); charsIn.rise(h4b, 25.4, 0.02);
+  OV.push(big);
 
-  // ═══ S6 CTA: FloStocks icon → full logo, follow button, disclaimer underneath ═══
-  const s6 = scene(BEAT.s6, BEAT.end, { push: false });
-  const cta = ctaLogo(s6, BEAT.s6 + 0.1, { tDisc: BEAT.s6disc });
+  // ═══ S5 26.48–33.74: bari, mazboot, purani, stable business, regular dividend ═══
+  const s5 = scene(26.48, 33.74);
+  const h5 = kin(s5, "*BLUE CHIP* KAUN?", { y: 150, size: 96, accent: BLUE }); charsIn.rise(h5, 26.52, 0.02);
+  const TR = [
+    ["BARI", 27.32, `<rect x="40" y="20" width="80" height="120" rx="6" fill="#fff" ${S}/><rect x="10" y="60" width="40" height="80" rx="6" fill="#E3F1F4" ${S}/><rect x="110" y="50" width="40" height="90" rx="6" fill="#E3F1F4" ${S}/>${[0, 1, 2].map((r) => `<rect x="60" y="${38 + r * 30}" width="40" height="16" rx="3" fill="${BLUE}"/>`).join("")}`],
+    ["MAZBOOT", 27.9, `<path d="M80,12 L140,34 V80 C140,118 112,140 80,150 C48,140 20,118 20,80 V34Z" fill="${BLUE}" ${S}/><path d="M54,82 L74,102 L110,62" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`],
+    ["PURANI", 28.6, `<rect x="20" y="26" width="120" height="114" rx="14" fill="#fff" ${S}/><rect x="20" y="26" width="120" height="34" rx="10" fill="${BLUE}" ${S}/><text x="80" y="118" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="44" fill="#0B0F14">50+</text>`],
+    ["STABLE BUSINESS", 30.44, `<path d="M10,120 L45,104 L80,96 L115,80 L150,64" fill="none" stroke="${C.g2}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M10,140 H150" ${S}/><circle cx="150" cy="64" r="10" fill="${C.g}" stroke="#0B0F14" stroke-width="5"/>`],
+  ].map(([lab, t, a], i) => {
+    const b = card(s5, { left: 50 + (i % 2) * 510, top: 330 + Math.floor(i / 2) * 290, width: 470, height: 260, borderRadius: 28 });
+    art(b, { left: 34, top: 50, width: 160, height: 160 }, 160, 160, a);
+    txt(b, { left: 214, top: 106, font: "800 38px Manrope", whiteSpace: "normal", width: 230, lineHeight: "1.1" }, lab);
+    fadeUp(b, t, 0.4, 24); return b;
+  });
+  const dv = card(s5, { left: 50, top: 930, width: 980, height: 190, borderRadius: 28, border: `4px solid ${C.g}` });
+  art(dv, { left: 40, top: 40, width: 110, height: 110 }, 100, 100, `<circle cx="50" cy="50" r="44" fill="#FFD95A" ${S}/><circle cx="50" cy="50" r="30" fill="#F2B526"/><text x="50" y="62" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="32" fill="#5A3B00">Rs</text>`);
+  txt(dv, { left: 180, top: 46, font: "800 42px Manrope" }, "AKSAR REGULAR DIVIDEND");
+  txt(dv, { left: 180, top: 104, font: "500 28px Inter", color: C.mute }, "munafe mein se hissa, saal ba saal");
+  fadeUp(dv, 32.36, 0.4, 24);
+  OV.push(...TR, dv);
+
+  // ═══ S6 33.74–39.28: market cap zyada → KSE-100 par bara asar ═══
+  const s6 = scene(33.74, 39.28);
+  const h6 = kin(s6, "MARKET CAP *ZYADA*", { y: 150, size: 96 }); charsIn.rise(h6, 34.1, 0.02);
+  const mc = card(s6, { left: 60, top: 330, width: 960, height: 560 });
+  txt(mc, { left: 40, top: 30, font: "800 30px Manrope", color: C.mute, letterSpacing: ".06em" }, "COMPANY KI MARKET VALUE");
+  const bars = [[330, BLUE, "BLUE CHIP"], [120, "#C9D3CD", ""], [90, "#C9D3CD", ""], [150, "#C9D3CD", ""], [70, "#C9D3CD", ""], [110, "#C9D3CD", ""]].map(([h, c, lab], i) => {
+    const b = el(mc, { left: 60 + i * 150, top: 500 - h, width: 110, height: h, borderRadius: "14px 14px 0 0", background: c, border: `4px solid ${C.ink}`, transformOrigin: "50% 100%" });
+    tl.fromTo(b, { scaleY: 0 }, { scaleY: 1, duration: 0.5, ease: "power3.out", immediateRender: false }, 34.52 + i * 0.06);
+    tl.set(b, { scaleY: 0 }, 0);
+    if (lab) { const l = txt(mc, { left: 30 + i * 150, top: 500 - h - 52, width: 170, textAlign: "center", font: "800 26px Manrope", color: BLUE }, lab); fadeUp(l, 34.9, 0.3, 10); }
+    return b;
+  });
+  el(mc, { left: 40, top: 500, width: 880, height: 6, borderRadius: 3, background: C.ink });
+  fadeUp(mc, 34.1, 0.4, 30);
+  const kx = card(s6, { left: 60, top: 940, width: 960, height: 300 });
+  txt(kx, { left: 40, top: 30, font: "800 40px Manrope" }, "KSE-100 INDEX");
+  const seg = el(kx, { left: 40, top: 110, width: 880, height: 70, borderRadius: 16, overflow: "hidden", border: `4px solid ${C.ink}`, background: "#E3E9E5" });
+  const segB = el(seg, { left: 0, top: 0, width: 440, height: 70, background: BLUE, transformOrigin: "0% 50%" });
+  txt(seg, { left: 24, top: 14, font: "800 32px Manrope", color: "#fff" }, "BARI COMPANIES");
+  txt(kx, { left: 40, top: 210, font: "500 28px Inter", color: C.mute }, "index ki chaal mein in ka wazan zyada");
+  fadeUp(kx, 36.58, 0.4, 30);
+  tl.fromTo(segB, { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.out", immediateRender: false }, 37.0); tl.set(segB, { scaleX: 0 }, 0);
+  const asar = chip(s6, { left: 340, top: 1300, background: C.ink, borderColor: C.ink, color: "#fff" }, "BARA ASAR");
+  fadeUp(asar, 38.14, 0.35, 16);
+  OV.push(mc, kx, asar);
+
+  // ═══ S7 39.28–46.04: banks, oil, fertilizer, cement — many big companies in this category (examples only) ═══
+  const s7 = scene(39.28, 46.04);
+  const h7 = kin(s7, "PSX PAR *KAHAN?*", { y: 150, size: 96 }); charsIn.rise(h7, 39.4, 0.02);
+  const SECT = [
+    ["BANKS", "HBL · MCB · UBL", 40.56, `<path d="M20,70 L110,22 L200,70Z" fill="#fff" ${S}/>${[46, 88, 132, 174].map((x) => `<rect x="${x - 9}" y="80" width="18" height="70" fill="#fff" stroke="#0B0F14" stroke-width="6"/>`).join("")}<rect x="20" y="150" width="180" height="22" fill="${C.g}" ${S}/>`],
+    ["OIL", "OGDC · PPL · PSO", 41.2, `<rect x="56" y="40" width="108" height="132" rx="14" fill="#fff" ${S}/><path d="M56,80 h108 M56,132 h108" ${S}/><path d="M110,92 c-14,18 -14,30 0,30 c14,0 14,-12 0,-30Z" fill="${C.g}" stroke="#0B0F14" stroke-width="5"/>`],
+    ["FERTILIZER", "FFC · ENGRO", 41.64, `<path d="M110,150 V30" ${S}/><path d="M110,76 c-36,-2 -50,-28 -46,-50 c30,0 46,24 46,50Z M110,58 c32,-8 46,-32 40,-50 c-28,4 -42,26 -40,50Z" fill="${C.g}" stroke="#0B0F14" stroke-width="5" stroke-linejoin="round"/><path d="M60,112 h100 l-8,64 h-84Z" fill="#fff" ${S}/><path d="M74,138 h72" stroke="${C.g}" stroke-width="10" stroke-linecap="round"/>`],
+    ["CEMENT", "LUCK · DGKC", 42.52, `<path d="M44,52 q66,-22 132,0 l10,110 q-76,20 -152,0Z" fill="#fff" ${S}/><path d="M60,92 h100" ${S}/><rect x="80" y="104" width="60" height="30" rx="6" fill="${C.g}" stroke="#0B0F14" stroke-width="5"/>`],
+  ].map(([lab, eg, t, a], i) => {
+    const b = card(s7, { left: 50 + (i % 2) * 510, top: 330 + Math.floor(i / 2) * 400, width: 470, height: 370, borderRadius: 28 });
+    art(b, { left: 125, top: 26, width: 220, height: 190 }, 220, 190, a);
+    txt(b, { left: 0, top: 226, width: 470, textAlign: "center", font: "800 38px Manrope" }, lab);
+    txt(b, { left: 0, top: 282, width: 470, textAlign: "center", font: "600 28px 'IBM Plex Mono'", color: C.mute }, eg);
+    const tag = el(b, { left: 300, top: 22, padding: "6px 14px", borderRadius: 12, background: BLUE, color: "#fff", font: "800 22px Manrope", whiteSpace: "nowrap" }, "BLUE CHIP");
+    fadeUp(b, t - 0.1, 0.4, 24);
+    tl.fromTo(tag, { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power2.out", immediateRender: false }, 44.7 + i * 0.1); tl.set(tag, { opacity: 0 }, 0);
+    return b;
+  });
+  const note = el(s7, { left: 0, top: 1150, width: 1080, textAlign: "center", font: "500 28px Inter", color: C.mute }, "naam sirf misaal hain, recommendation nahi");
+  fadeUp(note, 43.2, 0.3, 10);
+  OV.push(...SECT);
+
+  // ═══ S8 46.04–51.64: blue chip ≠ guaranteed profit — prices still go up and down ═══
+  const s8 = scene(46.04, 51.64);
+  const h8 = kin(s8, "GUARANTEED | *FAIDA* NAHI", { y: 150, size: 96, accent: C.red }); charsIn.rise(h8, 46.36, 0.02);
+  const pc = card(s8, { left: 60, top: 450, width: 960, height: 560 });
+  txt(pc, { left: 40, top: 30, font: "800 32px Manrope", color: C.mute }, "BLUE CHIP · SHARE PRICE");
+  const pl = line(pc, [[0, 0.5], [0.08, 0.62], [0.16, 0.4], [0.25, 0.7], [0.34, 0.48], [0.43, 0.78], [0.52, 0.36], [0.61, 0.6], [0.7, 0.3], [0.8, 0.66], [0.9, 0.44], [1, 0.58]],
+    { x: 40, y: 100, w: 880, h: 420, color: BLUE, grid: true, rows: 3 });
+  fadeUp(pc, 48.94, 0.4, 30); pl.draw(49.2, 1.3);
+  const up = chip(s8, { left: 140, top: 1080, borderColor: C.g, color: C.gt }, "▲ UPAR");
+  const dn = chip(s8, { left: 600, top: 1080, borderColor: C.red, color: C.red }, "▼ NEECHE");
+  fadeUp(up, 50.22, 0.3, 16); fadeUp(dn, 50.54, 0.3, 16);
+  OV.push(pc, up, dn);
+
+  // ═══ S9 51.64–61: CTA → FloStocks icon → logo → disclaimer ═══
+  const s9 = scene(51.64, 61, { push: false });
+  const t1 = kin(s9, "MARKET KE TERMS", { y: 560, size: 100 }); const t2 = kin(s9, "*AASAAN* ZUBAAN MEIN", { y: 700, size: 86 });
+  charsIn.rise(t1, 52.7, 0.02); charsIn.rise(t2, 53.66, 0.02);
+  tl.to([t1, t2], { y: -40, opacity: 0, duration: 0.3, ease: "power2.in" }, 55.0);
+  const cta = ctaLogo(s9, 55.4, { tDisc: 57.0 });
+  OV.push(cta.fl);
 
   K.linkScenes();
-  // solid graphics the overlap audit must treat as boxes (tools/flostocks/overlap_audit.cjs)
-  [hook.logo, hook.card, A.phone, pc, cta.fl].forEach((e) => e && e.setAttribute("data-ov", ""));
+  OV.forEach((e) => e && e.setAttribute("data-ov", ""));
   tl.seek(0);
 })();

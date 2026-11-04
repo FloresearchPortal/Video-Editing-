@@ -75,6 +75,9 @@ Characters (Notionists, `cast.js` + `avatars.js`)
   (LIVE chip, 9:00 PM, BREAKING strip, rising chart wall; no real channel branding). Built in "What is KSE-100".
 - **Abbu** (`abbu`, client pick A: grey hair + grey moustache, reading glasses, green waistcoat over a cream kurta) - the
   family elder; at home he holds his **phone** (`gesture: "handPhone"`) and his **chai sits on a table**, not in his hand.
+- **Cousin** (`cousin`, client pick B: swept hair, deep-green blazer) and **Batsman** (`batsman`: cricket helmet + Pakistan-style
+  green kit with PAKISTAN + star, no official crest; always `gesture: "bat"` = fist gripping a full-size bat, never the open palm).
+  Animate the batsman with face swaps + `K.pose` head moves only (arm reactions would move the bat).
 - Kid / viewer reactions in hooks use the approved bigger faces: `grinOpen` (watching), `bigO` (big number), `puzzled`
   (the question) with one lean/tilt via `K.pose` - not the faint smile→think.
 - Analogy props can use client-supplied images (record them in edit/credits.txt), e.g. the biryani pot: lid slides right in one
