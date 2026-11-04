@@ -17,24 +17,29 @@
 
   // ═══ S1 HOOK 0–7.94: cousin: "Main toh sirf blue chip companies mein invest karta hoon" → Aap: company blue kab se? ═══
   const s1 = scene(0, 7.94, { push: 1.02 });
-  const bub = card(s1, { left: 60, top: 220, width: 960, height: 200, borderRadius: 30, border: `4px solid ${C.ink}` });
-  const bt = txt(bub, { left: 44, top: 36, width: 872, whiteSpace: "normal", font: "700 46px/1.3 Manrope" },
+  const bub = card(s1, { left: 50, top: 560, width: 620, height: 250, borderRadius: 30, border: `4px solid ${C.ink}` });
+  const bt = txt(bub, { left: 36, top: 30, width: 548, whiteSpace: "normal", font: "700 44px/1.3 Manrope" },
     `“Main toh sirf <span class="bc" style="color:${C.text}">blue chip</span> companies mein invest karta hoon.”`);
-  el(bub, { left: 120, top: 192, width: 0, height: 0, borderLeft: "26px solid transparent", borderRight: "26px solid transparent", borderTop: `30px solid ${C.ink}` });
+  el(bub, { left: 250, top: 242, width: 0, height: 0, borderLeft: "26px solid transparent", borderRight: "26px solid transparent", borderTop: `30px solid ${C.ink}` });
   fadeUp(bub, 0.1, 0.4, 20);
   tl.to(bt.querySelector(".bc"), { color: BLUE, duration: 0.25 }, 1.62);
   // the cousin and Aap sit together on the sofa (client note); cousin has nothing in his hands
   const lounge = el(s1, { left: 0, top: 0, width: 1080, height: 1920 }); lounge.setAttribute("data-ov-group", "");
-  const cz = who(lounge, "cousin", 120, 800, 460, { expr: "smile", gesture: "none" });
+  const SOFA_ARMS = `<rect x="0" y="120" width="130" height="230" rx="44" fill="#fff" ${S}/><rect x="810" y="120" width="130" height="230" rx="44" fill="#fff" ${S}/>`;
+  const sofaBack = art(lounge, { left: 70, top: 1080, width: 940, height: 360 }, 940, 360,
+    `<rect x="60" y="0" width="820" height="250" rx="54" fill="#DDF3D2" ${S}/><path d="M470,20 V240" stroke="#BFE5AE" stroke-width="8" stroke-linecap="round"/>${SOFA_ARMS}`);
+  const cz = who(lounge, "cousin", 140, 880, 440, { expr: "smile", gesture: "none" });
   fadeUp(cz, 0.05, 0.45, 30); life(cz, 0.1, 7.9, "smile", 81);
   talk(cz, [0.92, 1.18, 1.42, 1.62, 1.9, 2.06, 2.46, 2.58, 2.9, 3.24], "smile");
-  const aap = who(lounge, "aap", 520, 800, 460, { expr: "smile", gesture: "none" });
+  const aap = who(lounge, "aap", 540, 880, 440, { expr: "smile", gesture: "none" });
   fadeUp(aap, 0.12, 0.45, 30); life(aap, 0.2, 7.9, "smile", 82);
-  const sofa = K.icon(lounge, "sofa", 80, 1100, 920, 345);
-  fadeUp(sofa, 0.0, 0.45, 30);
+  const sofa = art(lounge, { left: 70, top: 1080, width: 940, height: 360 }, 940, 360,
+    `<rect x="100" y="210" width="740" height="110" rx="28" fill="#fff" ${S}/><path d="M470,214 V316" stroke="#E3E9E5" stroke-width="6"/>${SOFA_ARMS}
+     <path d="M160,320 v32 M780,320 v32" ${S}/>`);
+  tl.fromTo([sofaBack, sofa], { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 0);
   X(tl, aap.av, "puzzled", 3.76); K.pose(aap, 3.76, { h: [9, -4, 4], b: [1, 1] }, 0.4);
   // thought cloud: a company building that turns blue ("company ka rang blue kab se ho gaya?")
-  const th = art(s1, { left: 600, top: 450, width: 440, height: 330 }, 480, 360,
+  const th = art(s1, { left: 690, top: 540, width: 360, height: 270 }, 480, 360,
     `<path d="M70,250 C10,250 10,170 70,160 C60,90 150,60 190,100 C220,40 320,40 340,100 C400,80 460,130 430,190 C480,220 450,290 390,280 C370,330 290,330 260,300 C220,340 130,330 120,290 C100,300 70,290 70,250Z" fill="#fff" ${S}/>
      <circle cx="430" cy="320" r="14" fill="#fff" ${S}/><circle cx="462" cy="352" r="8" fill="#fff" stroke="#0B0F14" stroke-width="6"/>
      <g class="bld"><rect x="170" y="110" width="140" height="160" rx="8" fill="#fff" ${S}/>
@@ -90,9 +95,11 @@
     `<rect x="40" y="20" width="80" height="120" rx="6" fill="#fff" ${S}/><rect x="10" y="60" width="40" height="80" rx="6" fill="#E3F1F4" ${S}/><rect x="110" y="50" width="40" height="90" rx="6" fill="#E3F1F4" ${S}/>${[0, 1, 2].map((r) => `<rect x="60" y="${38 + r * 30}" width="40" height="16" rx="3" fill="${BLUE}"/>`).join("")}`);
   el(big, { left: 220, top: 70, padding: "8px 18px", borderRadius: 14, background: BLUE, color: "#fff", font: "800 30px Manrope", whiteSpace: "nowrap" }, "BLUE CHIP");
   txt(big, { left: 220, top: 128, font: "600 26px Inter", color: C.mute }, "company");
-  const bl = line(big, [[0, 0.18], [0.14, 0.26], [0.28, 0.3], [0.42, 0.38], [0.56, 0.44], [0.7, 0.5], [0.84, 0.6], [1, 0.68]], { x: 40, y: 230, w: 410, h: 240, color: BLUE, grid: true, rows: 2 });
+  const bl = K.candles(big, { x: 30, y: 220, w: 330, h: 210, n: 14, start: 0.12, grid: true, axis: ["520", "460", "400"],
+    trend: (p, r) => 0.055 + (r() - 0.5) * 0.14 });
+  ["JAN", "MAY", "SEP"].forEach((m, i) => txt(big, { left: 36 + i * 130, top: 446, font: "600 22px 'IBM Plex Mono'", color: C.mute }, m));
   tl.fromTo(big, { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 24.1);
-  bl.draw(24.5, 1.0);
+  bl.grow(24.4, 0.05);
   const h4b = kin(s4, "*BLUE* *CHIP* COMPANIES", { y: 1110, size: 96, accent: BLUE }); charsIn.rise(h4b, 25.4, 0.02);
   OV.push(big);
 
@@ -170,9 +177,10 @@
   const h8 = kin(s8, "GUARANTEED | *FAIDA* NAHI", { y: 150, size: 96, accent: C.red }); charsIn.rise(h8, 46.36, 0.02);
   const pc = card(s8, { left: 60, top: 450, width: 960, height: 560 });
   txt(pc, { left: 40, top: 30, font: "800 32px Manrope", color: C.mute }, "BLUE CHIP · SHARE PRICE");
-  const pl = line(pc, [[0, 0.5], [0.08, 0.62], [0.16, 0.4], [0.25, 0.7], [0.34, 0.48], [0.43, 0.78], [0.52, 0.36], [0.61, 0.6], [0.7, 0.3], [0.8, 0.66], [0.9, 0.44], [1, 0.58]],
-    { x: 40, y: 100, w: 880, h: 420, color: BLUE, grid: true, rows: 3 });
-  fadeUp(pc, 48.94, 0.4, 30); pl.draw(49.2, 1.3);
+  const pl = K.candles(pc, { x: 40, y: 100, w: 760, h: 360, n: 22, start: 0.28, grid: true, axis: ["Rs 420", "Rs 390", "Rs 360", "Rs 330"],
+    trend: (p, r) => Math.sin(p * 9.5) * 0.09 + (r() - 0.5) * 0.12 });
+  ["JUN", "JUL", "AUG", "SEP", "OCT", "NOV"].forEach((m, i) => txt(pc, { left: 46 + i * 128, top: 482, font: "600 22px 'IBM Plex Mono'", color: C.mute }, m));
+  fadeUp(pc, 48.94, 0.4, 30); pl.grow(49.2, 0.05);
   const up = chip(s8, { left: 140, top: 1080, borderColor: C.g, color: C.gt }, "▲ UPAR");
   const dn = chip(s8, { left: 600, top: 1080, borderColor: C.red, color: C.red }, "▼ NEECHE");
   fadeUp(up, 50.22, 0.3, 16); fadeUp(dn, 50.54, 0.3, 16);
