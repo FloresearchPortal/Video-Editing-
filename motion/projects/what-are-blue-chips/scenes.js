@@ -11,6 +11,10 @@
   const out = (e, t, d = 0.25) => tl.to(e, { opacity: 0, duration: d, ease: "power2.in" }, t);
   const chip = (p, css, html) => el(p, Object.assign({ padding: "12px 26px", borderRadius: 999, background: "#fff", border: `4px solid ${C.g}`,
     font: "800 34px Manrope", color: C.text, whiteSpace: "nowrap" }, css), html);
+  // big centred button-chip (client note): centred on cx via xPercent, larger type and padding
+  const bigChip = (p, top, html, css = {}, cx = 540) => {
+    const c = chip(p, Object.assign({ left: cx, top, padding: "18px 44px", font: "800 48px Manrope", borderWidth: 5 }, css), html);
+    gsap.set(c, { xPercent: -50 }); return c; };
   const S = `stroke="#0B0F14" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"`;
   const art = (p, css, w, h, inner) => el(p, css, `<svg viewBox="0 0 ${w} ${h}" width="${css.width}" height="${css.height}" style="overflow:visible">${inner}</svg>`);
   const OV = [];
@@ -77,7 +81,7 @@
   txt(tough, { left: 40, top: 46, font: "800 40px Manrope", color: C.red }, "MUSHKIL WAQT");
   txt(tough, { left: 540, top: 34, font: "700 64px 'IBM Plex Mono'" }, "45/4");
   fadeUp(tough, 20.56, 0.4, 24);
-  const trust = chip(s3, { left: 200, top: 1420, background: C.g, borderColor: C.g }, "POORI TEAM KA BHAROSA ✓");
+  const trust = bigChip(s3, 1410, "POORI TEAM KA BHAROSA ✓", { background: C.g, borderColor: C.g });
   fadeUp(trust, 22.36, 0.35, 20);
   X(tl, bat.av, "grinOpen", 22.36); K.pose(bat, 22.36, { h: [-4, 0, -10], b: [1.03, 0.99] }, 0.3);
   OV.push(...sc, cent, tough, trust);
@@ -146,7 +150,7 @@
   txt(kx, { left: 40, top: 210, font: "500 28px Inter", color: C.mute }, "index ki chaal mein in ka wazan zyada");
   fadeUp(kx, 36.58, 0.4, 30);
   tl.fromTo(segB, { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.out", immediateRender: false }, 37.0); tl.set(segB, { scaleX: 0 }, 0);
-  const asar = chip(s6, { left: 340, top: 1300, background: C.ink, borderColor: C.ink, color: "#fff" }, "BARA ASAR");
+  const asar = bigChip(s6, 1300, "BARA ASAR", { background: C.ink, borderColor: C.ink, color: "#fff" });
   fadeUp(asar, 38.14, 0.35, 16);
   OV.push(mc, kx, asar);
 
@@ -181,8 +185,8 @@
     { x: 40, y: 100, w: 760, h: 360, n: 90, noise: 0.05, color: C.g2, grid: true, rows: 3, axis: ["Rs 420", "Rs 390", "Rs 360", "Rs 330"] });
   ["JUN", "JUL", "AUG", "SEP", "OCT", "NOV"].forEach((m, i) => txt(pc, { left: 46 + i * 128, top: 482, font: "600 22px 'IBM Plex Mono'", color: C.mute }, m));
   fadeUp(pc, 48.94, 0.4, 30); pl.draw(49.2, 1.3);
-  const up = chip(s8, { left: 140, top: 1080, borderColor: C.g, color: C.gt }, "▲ UPAR");
-  const dn = chip(s8, { left: 600, top: 1080, borderColor: C.red, color: C.red }, "▼ NEECHE");
+  const up = bigChip(s8, 1080, "▲ UPAR", { borderColor: C.g, color: C.gt }, 330);
+  const dn = bigChip(s8, 1080, "▼ NEECHE", { borderColor: C.red, color: C.red }, 750);
   fadeUp(up, 50.22, 0.3, 16); fadeUp(dn, 50.54, 0.3, 16);
   OV.push(pc, up, dn);
 
