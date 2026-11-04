@@ -90,16 +90,16 @@
   fadeUp(bat4, 23.4, 0.45, 30); life(bat4, 23.5, 26.4, "smile", 84);
   const eq = el(s4, { left: 430, top: 660, width: 90, textAlign: "center", font: "800 110px/1 Manrope", color: C.mute }, "=");
   fadeUp(eq, 24.1, 0.3, 14);
-  const big = card(s4, { left: 540, top: 470, width: 490, height: 520, border: `5px solid ${BLUE}` });
+  const big = card(s4, { left: 540, top: 470, width: 490, height: 520, border: `5px solid ${C.g}` });
   art(big, { left: 40, top: 40, width: 150, height: 150 }, 160, 160,
-    `<rect x="40" y="20" width="80" height="120" rx="6" fill="#fff" ${S}/><rect x="10" y="60" width="40" height="80" rx="6" fill="#E3F1F4" ${S}/><rect x="110" y="50" width="40" height="90" rx="6" fill="#E3F1F4" ${S}/>${[0, 1, 2].map((r) => `<rect x="60" y="${38 + r * 30}" width="40" height="16" rx="3" fill="${BLUE}"/>`).join("")}`);
+    `<rect x="40" y="20" width="80" height="120" rx="6" fill="#fff" ${S}/><rect x="10" y="60" width="40" height="80" rx="6" fill="#E3F1F4" ${S}/><rect x="110" y="50" width="40" height="90" rx="6" fill="#E3F1F4" ${S}/>${[0, 1, 2].map((r) => `<rect x="60" y="${38 + r * 30}" width="40" height="16" rx="3" fill="${C.g}"/>`).join("")}`);
   el(big, { left: 220, top: 70, padding: "8px 18px", borderRadius: 14, background: BLUE, color: "#fff", font: "800 30px Manrope", whiteSpace: "nowrap" }, "BLUE CHIP");
   txt(big, { left: 220, top: 128, font: "600 26px Inter", color: C.mute }, "company");
-  const bl = K.candles(big, { x: 30, y: 220, w: 330, h: 210, n: 14, start: 0.12, grid: true, axis: ["520", "460", "400"],
-    trend: (p, r) => 0.055 + (r() - 0.5) * 0.14 });
+  const bl = line(big, [[0, 0.14], [0.1, 0.22], [0.2, 0.19], [0.3, 0.32], [0.4, 0.29], [0.5, 0.42], [0.6, 0.39], [0.7, 0.54], [0.8, 0.51], [0.9, 0.65], [1, 0.74]],
+    { x: 30, y: 220, w: 330, h: 210, n: 70, noise: 0.04, color: C.g2, grid: true, rows: 2, axis: ["520", "460", "400"] });
   ["JAN", "MAY", "SEP"].forEach((m, i) => txt(big, { left: 36 + i * 130, top: 446, font: "600 22px 'IBM Plex Mono'", color: C.mute }, m));
   tl.fromTo(big, { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 24.1);
-  bl.grow(24.4, 0.05);
+  bl.draw(24.4, 1.0);
   const h4b = kin(s4, "*BLUE* *CHIP* COMPANIES", { y: 1110, size: 96, accent: BLUE }); charsIn.rise(h4b, 25.4, 0.02);
   OV.push(big);
 
@@ -107,9 +107,9 @@
   const s5 = scene(26.48, 33.74);
   const h5 = kin(s5, "*BLUE* *CHIP* KAUN?", { y: 150, size: 96, accent: BLUE }); charsIn.rise(h5, 26.52, 0.02);
   const TR = [
-    ["BARI", 27.32, `<rect x="40" y="20" width="80" height="120" rx="6" fill="#fff" ${S}/><rect x="10" y="60" width="40" height="80" rx="6" fill="#E3F1F4" ${S}/><rect x="110" y="50" width="40" height="90" rx="6" fill="#E3F1F4" ${S}/>${[0, 1, 2].map((r) => `<rect x="60" y="${38 + r * 30}" width="40" height="16" rx="3" fill="${BLUE}"/>`).join("")}`],
-    ["MAZBOOT", 27.9, `<path d="M80,12 L140,34 V80 C140,118 112,140 80,150 C48,140 20,118 20,80 V34Z" fill="${BLUE}" ${S}/><path d="M54,82 L74,102 L110,62" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`],
-    ["PURANI", 28.6, `<rect x="20" y="26" width="120" height="114" rx="14" fill="#fff" ${S}/><rect x="20" y="26" width="120" height="34" rx="10" fill="${BLUE}" ${S}/><text x="80" y="118" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="44" fill="#0B0F14">50+</text>`],
+    ["BARI", 27.32, `<rect x="40" y="20" width="80" height="120" rx="6" fill="#fff" ${S}/><rect x="10" y="60" width="40" height="80" rx="6" fill="#E3F1F4" ${S}/><rect x="110" y="50" width="40" height="90" rx="6" fill="#E3F1F4" ${S}/>${[0, 1, 2].map((r) => `<rect x="60" y="${38 + r * 30}" width="40" height="16" rx="3" fill="${C.g}"/>`).join("")}`],
+    ["MAZBOOT", 27.9, `<path d="M80,12 L140,34 V80 C140,118 112,140 80,150 C48,140 20,118 20,80 V34Z" fill="${C.g}" ${S}/><path d="M54,82 L74,102 L110,62" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`],
+    ["PURANI", 28.6, `<rect x="20" y="26" width="120" height="114" rx="14" fill="#fff" ${S}/><rect x="20" y="26" width="120" height="34" rx="10" fill="${C.g}" ${S}/><text x="80" y="118" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="44" fill="#0B0F14">50+</text>`],
     ["STABLE BUSINESS", 30.44, `<path d="M10,120 L45,104 L80,96 L115,80 L150,64" fill="none" stroke="${C.g2}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M10,140 H150" ${S}/><circle cx="150" cy="64" r="10" fill="${C.g}" stroke="#0B0F14" stroke-width="5"/>`],
   ].map(([lab, t, a], i) => {
     const b = card(s5, { left: 50 + (i % 2) * 510, top: 330 + Math.floor(i / 2) * 290, width: 470, height: 260, borderRadius: 28 });
@@ -141,7 +141,7 @@
   const kx = card(s6, { left: 60, top: 940, width: 960, height: 300 });
   txt(kx, { left: 40, top: 30, font: "800 40px Manrope" }, "KSE-100 INDEX");
   const seg = el(kx, { left: 40, top: 110, width: 880, height: 70, borderRadius: 16, overflow: "hidden", border: `4px solid ${C.ink}`, background: "#E3E9E5" });
-  const segB = el(seg, { left: 0, top: 0, width: 440, height: 70, background: BLUE, transformOrigin: "0% 50%" });
+  const segB = el(seg, { left: 0, top: 0, width: 440, height: 70, background: C.g, transformOrigin: "0% 50%" });
   txt(seg, { left: 24, top: 14, font: "800 32px Manrope", color: "#fff" }, "BARI COMPANIES");
   txt(kx, { left: 40, top: 210, font: "500 28px Inter", color: C.mute }, "index ki chaal mein in ka wazan zyada");
   fadeUp(kx, 36.58, 0.4, 30);
@@ -177,10 +177,10 @@
   const h8 = kin(s8, "GUARANTEED | *FAIDA* NAHI", { y: 150, size: 96, accent: C.red }); charsIn.rise(h8, 46.36, 0.02);
   const pc = card(s8, { left: 60, top: 450, width: 960, height: 560 });
   txt(pc, { left: 40, top: 30, font: "800 32px Manrope", color: C.mute }, "BLUE CHIP · SHARE PRICE");
-  const pl = K.candles(pc, { x: 40, y: 100, w: 760, h: 360, n: 22, start: 0.28, grid: true, axis: ["Rs 420", "Rs 390", "Rs 360", "Rs 330"],
-    trend: (p, r) => Math.sin(p * 9.5) * 0.09 + (r() - 0.5) * 0.12 });
+  const pl = line(pc, [[0, 0.35], [0.1, 0.55], [0.18, 0.48], [0.28, 0.72], [0.38, 0.6], [0.48, 0.4], [0.58, 0.3], [0.66, 0.42], [0.76, 0.36], [0.86, 0.62], [0.94, 0.7], [1, 0.6]],
+    { x: 40, y: 100, w: 760, h: 360, n: 90, noise: 0.05, color: C.g2, grid: true, rows: 3, axis: ["Rs 420", "Rs 390", "Rs 360", "Rs 330"] });
   ["JUN", "JUL", "AUG", "SEP", "OCT", "NOV"].forEach((m, i) => txt(pc, { left: 46 + i * 128, top: 482, font: "600 22px 'IBM Plex Mono'", color: C.mute }, m));
-  fadeUp(pc, 48.94, 0.4, 30); pl.grow(49.2, 0.05);
+  fadeUp(pc, 48.94, 0.4, 30); pl.draw(49.2, 1.3);
   const up = chip(s8, { left: 140, top: 1080, borderColor: C.g, color: C.gt }, "▲ UPAR");
   const dn = chip(s8, { left: 600, top: 1080, borderColor: C.red, color: C.red }, "▼ NEECHE");
   fadeUp(up, 50.22, 0.3, 16); fadeUp(dn, 50.54, 0.3, 16);
