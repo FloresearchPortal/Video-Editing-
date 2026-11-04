@@ -13,9 +13,6 @@
     font: "800 34px Manrope", color: C.text, whiteSpace: "nowrap" }, css), html);
   const S = `stroke="#0B0F14" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"`;
   const art = (p, css, w, h, inner) => el(p, css, `<svg viewBox="0 0 ${w} ${h}" width="${css.width}" height="${css.height}" style="overflow:visible">${inner}</svg>`);
-  const BCHIP = (r = 100) => `<circle cx="${r}" cy="${r}" r="${r - 6}" fill="${BLUE}" ${S}/>` +
-    Array.from({ length: 8 }, (_, i) => { const a = i / 8 * Math.PI * 2; return `<rect x="${r - 12}" y="10" width="24" height="${r * 0.26}" rx="6" fill="#fff" transform="rotate(${i * 45} ${r} ${r})"/>`; }).join("") +
-    `<circle cx="${r}" cy="${r}" r="${r * 0.6}" fill="${BLUE_D}" stroke="#fff" stroke-width="6" stroke-dasharray="10 8"/>`;
   const OV = [];
 
   // ═══ S1 HOOK 0–7.94: cousin: "Main toh sirf blue chip companies mein invest karta hoon" → Aap: company blue kab se? ═══
@@ -26,14 +23,18 @@
   el(bub, { left: 120, top: 192, width: 0, height: 0, borderLeft: "26px solid transparent", borderRight: "26px solid transparent", borderTop: `30px solid ${C.ink}` });
   fadeUp(bub, 0.1, 0.4, 20);
   tl.to(bt.querySelector(".bc"), { color: BLUE, duration: 0.25 }, 1.62);
-  const cz = who(s1, "cousin", 50, 470, 480, { expr: "smile", gesture: "hand" });
+  // the cousin and Aap sit together on the sofa (client note); cousin has nothing in his hands
+  const lounge = el(s1, { left: 0, top: 0, width: 1080, height: 1920 }); lounge.setAttribute("data-ov-group", "");
+  const cz = who(lounge, "cousin", 120, 800, 460, { expr: "smile", gesture: "none" });
   fadeUp(cz, 0.05, 0.45, 30); life(cz, 0.1, 7.9, "smile", 81);
   talk(cz, [0.92, 1.18, 1.42, 1.62, 1.9, 2.06, 2.46, 2.58, 2.9, 3.24], "smile");
-  const aap = who(s1, "aap", 590, 1000, 430, { expr: "smile", gesture: "none" });
-  fadeUp(aap, 3.42, 0.45, 30); life(aap, 3.5, 7.9, "smile", 82);
+  const aap = who(lounge, "aap", 520, 800, 460, { expr: "smile", gesture: "none" });
+  fadeUp(aap, 0.12, 0.45, 30); life(aap, 0.2, 7.9, "smile", 82);
+  const sofa = K.icon(lounge, "sofa", 80, 1100, 920, 345);
+  fadeUp(sofa, 0.0, 0.45, 30);
   X(tl, aap.av, "puzzled", 3.76); K.pose(aap, 3.76, { h: [9, -4, 4], b: [1, 1] }, 0.4);
   // thought cloud: a company building that turns blue ("company ka rang blue kab se ho gaya?")
-  const th = art(s1, { left: 60, top: 1010, width: 480, height: 360 }, 480, 360,
+  const th = art(s1, { left: 600, top: 450, width: 440, height: 330 }, 480, 360,
     `<path d="M70,250 C10,250 10,170 70,160 C60,90 150,60 190,100 C220,40 320,40 340,100 C400,80 460,130 430,190 C480,220 450,290 390,280 C370,330 290,330 260,300 C220,340 130,330 120,290 C100,300 70,290 70,250Z" fill="#fff" ${S}/>
      <circle cx="430" cy="320" r="14" fill="#fff" ${S}/><circle cx="462" cy="352" r="8" fill="#fff" stroke="#0B0F14" stroke-width="6"/>
      <g class="bld"><rect x="170" y="110" width="140" height="160" rx="8" fill="#fff" ${S}/>
@@ -43,7 +44,7 @@
   tl.set(th.querySelector(".q"), { opacity: 0 }, 0);
   tl.to(th.querySelector(".bld rect"), { fill: BLUE, duration: 0.35 }, 5.3);
   tl.to(th.querySelector(".q"), { opacity: 1, duration: 0.2 }, 5.5);
-  const q = kin(s1, "BLUE CHIP | AAKHIR HAIN *KIA?*", { y: 1530, size: 92 });
+  const q = kin(s1, "BLUE CHIP | AAKHIR HAIN *KIA?*", { y: 1500, size: 92 });
   q.chars.slice(0, 4).forEach((c) => (c.style.color = BLUE));
   charsIn.rise(q, 6.7, 0.02);
   OV.push(bub, th);
@@ -79,14 +80,25 @@
   // ═══ S4 23.30–26.48: "stock market mein aisi companies ko kehte hain blue chip" ═══
   const s4 = scene(23.3, 26.48);
   const h4 = kin(s4, "STOCK MARKET MEIN", { y: 300, size: 92 }); charsIn.rise(h4, 23.36, 0.02);
-  const big = art(s4, { left: 290, top: 520, width: 500, height: 500 }, 200, 200, BCHIP(100));
-  tl.fromTo(big, { scale: 0.6, rotation: -60, opacity: 0 }, { scale: 1, rotation: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 24.1);
-  const h4b = kin(s4, "*BLUE CHIP* COMPANIES", { y: 1110, size: 96, accent: BLUE }); charsIn.rise(h4b, 25.4, 0.02);
+  // the analogy, no poker chip (client note): senior batsman = a steady, trusted company
+  const bat4 = who(s4, "batsman", 30, 520, 400, { expr: "smile", gesture: "bat" });
+  fadeUp(bat4, 23.4, 0.45, 30); life(bat4, 23.5, 26.4, "smile", 84);
+  const eq = el(s4, { left: 430, top: 660, width: 90, textAlign: "center", font: "800 110px/1 Manrope", color: C.mute }, "=");
+  fadeUp(eq, 24.1, 0.3, 14);
+  const big = card(s4, { left: 540, top: 470, width: 490, height: 520, border: `5px solid ${BLUE}` });
+  art(big, { left: 40, top: 40, width: 150, height: 150 }, 160, 160,
+    `<rect x="40" y="20" width="80" height="120" rx="6" fill="#fff" ${S}/><rect x="10" y="60" width="40" height="80" rx="6" fill="#E3F1F4" ${S}/><rect x="110" y="50" width="40" height="90" rx="6" fill="#E3F1F4" ${S}/>${[0, 1, 2].map((r) => `<rect x="60" y="${38 + r * 30}" width="40" height="16" rx="3" fill="${BLUE}"/>`).join("")}`);
+  el(big, { left: 220, top: 70, padding: "8px 18px", borderRadius: 14, background: BLUE, color: "#fff", font: "800 30px Manrope", whiteSpace: "nowrap" }, "BLUE CHIP");
+  txt(big, { left: 220, top: 128, font: "600 26px Inter", color: C.mute }, "company");
+  const bl = line(big, [[0, 0.18], [0.14, 0.26], [0.28, 0.3], [0.42, 0.38], [0.56, 0.44], [0.7, 0.5], [0.84, 0.6], [1, 0.68]], { x: 40, y: 230, w: 410, h: 240, color: BLUE, grid: true, rows: 2 });
+  tl.fromTo(big, { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, 24.1);
+  bl.draw(24.5, 1.0);
+  const h4b = kin(s4, "*BLUE* *CHIP* COMPANIES", { y: 1110, size: 96, accent: BLUE }); charsIn.rise(h4b, 25.4, 0.02);
   OV.push(big);
 
   // ═══ S5 26.48–33.74: bari, mazboot, purani, stable business, regular dividend ═══
   const s5 = scene(26.48, 33.74);
-  const h5 = kin(s5, "*BLUE CHIP* KAUN?", { y: 150, size: 96, accent: BLUE }); charsIn.rise(h5, 26.52, 0.02);
+  const h5 = kin(s5, "*BLUE* *CHIP* KAUN?", { y: 150, size: 96, accent: BLUE }); charsIn.rise(h5, 26.52, 0.02);
   const TR = [
     ["BARI", 27.32, `<rect x="40" y="20" width="80" height="120" rx="6" fill="#fff" ${S}/><rect x="10" y="60" width="40" height="80" rx="6" fill="#E3F1F4" ${S}/><rect x="110" y="50" width="40" height="90" rx="6" fill="#E3F1F4" ${S}/>${[0, 1, 2].map((r) => `<rect x="60" y="${38 + r * 30}" width="40" height="16" rx="3" fill="${BLUE}"/>`).join("")}`],
     ["MAZBOOT", 27.9, `<path d="M80,12 L140,34 V80 C140,118 112,140 80,150 C48,140 20,118 20,80 V34Z" fill="${BLUE}" ${S}/><path d="M54,82 L74,102 L110,62" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>`],
