@@ -46,8 +46,13 @@
   tl.fromTo([sofaBack, seat, bhai, aap], { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out", stagger: 0.03 }, 0);
   life(bhai, 0.2, 13.8, "smile", 91); life(aap, 0.2, 13.8, "smile", 92);
   talk(bhai, [0.52, 1.02, 1.32, 1.84, 2.12, 2.9, 3.32, 3.96, 4.18, 4.62, 4.82, 5.42, 5.9], "smile");
-  const b1 = bubble(s1, { left: 50, top: 520, width: 640, height: 300 }, `“Mujhe lagta hai ye share mahine baad <span style="color:${C.gt}">upar</span> jayega, maine abhi se paisa laga diya!”`, 250);
-  fadeUp(b1, 0.2, 0.4, 20); out(b1, 6.3, 0.2);
+  // client note: one line at a time, split where the comma is
+  const line1 = (html, t0, t1) => { const b = card(s1, { left: 40, top: 640, width: 1000, height: 120, borderRadius: 30, border: `4px solid ${C.ink}` });
+    txt(b, { left: 0, top: 34, width: 1000, textAlign: "center", font: "700 38px Manrope" }, html);
+    el(b, { left: 230, top: 112, width: 0, height: 0, borderLeft: "26px solid transparent", borderRight: "26px solid transparent", borderTop: `30px solid ${C.ink}` });
+    fadeUp(b, t0, 0.35, 16); out(b, t1, 0.2); return b; };
+  const b1 = line1(`“Mujhe lagta hai ye share mahine baad <span style="color:${C.gt}">upar</span> jayega,”`, 0.2, 3.7);
+  const b1b = line1(`“tou maine abhi se apna paisa invest kar diya hai.”`, 3.78, 6.3);
   const b2 = bubble(s1, { left: 470, top: 620, width: 560, height: 160 }, "“Share khareed liya?”", 260);
   fadeUp(b2, 6.8, 0.35, 16); out(b2, 8.9, 0.2);
   talk(aap, [7.16, 7.32, 7.68, 8.04], "smile");
@@ -57,12 +62,12 @@
   X(tl, aap.av, "puzzled", 11.74); K.pose(aap, 11.74, { h: [9, -4, 4], b: [1, 1] }, 0.4);
   const th = art(s1, { left: 690, top: 520, width: 360, height: 300 }, 480, 400,
     `<path d="M70,270 C10,270 10,190 70,180 C60,110 150,80 190,120 C220,60 320,60 340,120 C400,100 460,150 430,210 C480,240 450,310 390,300 C370,350 290,350 260,320 C220,360 130,350 120,310 C100,320 70,310 70,270Z" fill="#fff" ${S}/>
-     <circle cx="300" cy="370" r="14" fill="#fff" ${S}/><g transform="translate(150,100) scale(.95)">${DOC}</g>
-     <text x="360" y="190" font-family="Manrope" font-weight="800" font-size="76" fill="${C.gt}">?</text>`);
+     <circle cx="300" cy="370" r="14" fill="#fff" ${S}/><g transform="translate(169,124) scale(.95)">${DOC}</g>
+     <text x="338" y="200" font-family="Manrope" font-weight="800" font-size="76" fill="${C.gt}">?</text>`);
   fadeUp(th, 11.74, 0.4, 20);
   const q = kin(s1, "FUTURE CONTRACT | AAKHIR HAI *KIA?*", { y: 1500, size: 84 });
   charsIn.rise(q, 12.7, 0.02);
-  OV.push(b1, b2, b3, th);
+  OV.push(b1, b1b, b2, b3, th);
 
   // ═══ S2 13.88–19.12: 60 Seconds Investor series card (approved stopwatch) ═══
   const s2 = scene(13.88, 19.12);
@@ -146,9 +151,9 @@
   txt(mg, { left: 40, top: 40, font: "800 34px Manrope", color: C.mute }, "POORI RAQAM");
   const full = el(mg, { left: 40, top: 100, width: 880, height: 110, borderRadius: 18, border: `4px dashed #9AA8A0`, background: "#F1F4F2" });
   txt(full, { left: 30, top: 28, font: "700 44px 'IBM Plex Mono'", color: "#9AA8A0" }, "Rs 100");
-  txt(mg, { left: 40, top: 270, font: "800 34px Manrope", color: C.gt }, "AAP JAMA KARATE HAIN");
-  const part = el(mg, { left: 40, top: 330, width: 200, height: 110, borderRadius: 18, border: `4px solid ${C.ink}`, background: C.g, transformOrigin: "0% 50%" });
-  txt(part, { left: 24, top: 28, font: "800 40px Manrope", color: C.ink }, "MARGIN");
+  txt(mg, { left: 0, top: 270, width: 960, textAlign: "center", font: "800 34px Manrope", color: C.gt }, "AAP JAMA KARATE HAIN");
+  const part = el(mg, { left: 370, top: 330, width: 220, height: 110, borderRadius: 18, border: `4px solid ${C.ink}`, background: C.g, transformOrigin: "50% 50%" });
+  txt(part, { left: 0, top: 28, width: 212, textAlign: "center", font: "800 40px Manrope", color: C.ink }, "MARGIN");
   fadeUp(mg, 40.78, 0.4, 30);
   tl.set(part, { scaleX: 0 }, 0); tl.to(part, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 42.08);
   const small = bigChip(s6, 1000, "CHHOTA SA HISSA JAMA", { background: C.g, borderColor: C.g });
@@ -164,13 +169,13 @@
     [115, 110, 100, 90, 85].map((v) => `<line x1="0" x2="${W}" y1="${yv(v)}" y2="${yv(v)}" stroke="#D9E3DC" stroke-width="2" stroke-dasharray="${v === 85 ? 0 : "6 8"}"/><text x="${W + 14}" y="${yv(v) + 9}" font-family="IBM Plex Mono" font-weight="600" font-size="24" fill="#8A948F">Rs ${v}</text>`).join("") +
     `<path d="M0,${yv(100)} H${W * 0.45}" stroke="${C.ink}" stroke-width="5" stroke-dasharray="12 10"/>
      <circle cx="${W * 0.45}" cy="${yv(100)}" r="14" fill="${C.ink}"/>
-     <path class="upP" d="M${W * 0.45},${yv(100)} L${W * 0.55},${yv(103)} L${W * 0.65},${yv(101.5)} L${W * 0.77},${yv(106)} L${W * 0.88},${yv(105)} L${W},${yv(110)}" fill="none" stroke="${C.g2}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
-     <path class="dnP" d="M${W * 0.45},${yv(100)} L${W * 0.55},${yv(97.5)} L${W * 0.65},${yv(99)} L${W * 0.77},${yv(94)} L${W * 0.88},${yv(95)} L${W},${yv(90)}" fill="none" stroke="${C.red}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`);
+     <path class="upP" d="M${W * 0.45},${yv(100)} L${W * 0.55},${yv(103)} L${W * 0.65},${yv(101.5)} L${W * 0.77},${yv(106)} L${W * 0.88},${yv(105)} L${W},${yv(110)}" fill="none" stroke="${C.g2}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+     <path class="dnP" d="M${W * 0.45},${yv(100)} L${W * 0.55},${yv(97.5)} L${W * 0.65},${yv(99)} L${W * 0.77},${yv(94)} L${W * 0.88},${yv(95)} L${W},${yv(90)}" fill="none" stroke="${C.red}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>`);
   txt(oc, { left: 40, top: 26, font: "800 28px Manrope", color: C.mute }, "ENTRY Rs 100 · AAJ");
   txt(oc, { left: 40 + W * 0.45 - 40, top: 70 + yv(100) + 24, font: "700 24px 'IBM Plex Mono'", color: C.ink }, "ENTRY");
   fadeUp(oc, 44.9, 0.4, 30);
-  tl.to(ocs.querySelector(".upP"), { strokeDashoffset: 0, duration: 0.8, ease: "power1.inOut" }, 46.24);
-  tl.to(ocs.querySelector(".dnP"), { strokeDashoffset: 0, duration: 0.8, ease: "power1.inOut" }, 50.26);
+  tl.fromTo(ocs.querySelector(".upP"), { opacity: 0 }, { opacity: 1, duration: 0.7, ease: "power1.inOut", immediateRender: false }, 46.24);
+  tl.fromTo(ocs.querySelector(".dnP"), { opacity: 0 }, { opacity: 1, duration: 0.7, ease: "power1.inOut", immediateRender: false }, 50.26);
   const gain = bigChip(s7, 990, "110 → +Rs 10 FAIDA / share", { borderColor: C.g, color: C.gt });
   const loss = bigChip(s7, 1110, "90 → −Rs 10 NUQSAN / share", { borderColor: C.red, color: C.red });
   fadeUp(gain, 49.36, 0.35, 16); fadeUp(loss, 51.82, 0.35, 16);
@@ -180,9 +185,9 @@
   const s8 = scene(52.38, 59.26);
   const h8 = kin(s8, "YAAD *RAHE*", { y: 150, size: 110, accent: C.red }); charsIn.rise(h8, 52.76, 0.02);
   const mc = card(s8, { left: 60, top: 340, width: 960, height: 150 });
-  txt(mc, { left: 40, top: 46, font: "800 38px Manrope" }, "MARGIN JAMA:");
-  txt(mc, { left: 400, top: 38, font: "700 60px 'IBM Plex Mono'", color: C.gt }, "Rs 20");
-  txt(mc, { left: 620, top: 56, font: "500 26px Inter", color: C.mute }, "(misaal)");
+  txt(mc, { left: 40, top: 46, font: "800 38px Manrope" }, "MARGIN");
+  txt(mc, { left: 260, top: 38, font: "700 60px 'IBM Plex Mono'", color: C.gt }, "Rs 20");
+  txt(mc, { left: 480, top: 56, font: "500 26px Inter", color: C.mute }, "(misaal)");
   fadeUp(mc, 53.48, 0.4, 24);
   const up = card(s8, { left: 60, top: 540, width: 460, height: 400, border: `4px solid ${C.g}` });
   art(up, { left: 160, top: 30, width: 140, height: 140 }, 100, 100, `<path d="M50,8 L92,58 H66 V92 H34 V58 H8Z" fill="${C.g}" ${S}/>`);
@@ -195,7 +200,7 @@
   txt(dn, { left: 0, top: 250, width: 460, textAlign: "center", font: "800 56px Manrope", color: C.red }, "−50%");
   txt(dn, { left: 0, top: 330, width: 460, textAlign: "center", font: "600 26px Inter", color: C.mute }, "nuqsan bhi bara");
   fadeUp(up, 54.1, 0.4, 24); fadeUp(dn, 55.88, 0.4, 24);
-  const risk = bigChip(s8, 1010, `<svg viewBox="0 0 48 44" width="44" height="40" style="vertical-align:-6px;margin-right:14px"><path d="M24,3 L46,41 H2Z" fill="#FFD95A" stroke="#0B0F14" stroke-width="4" stroke-linejoin="round"/><path d="M24,16 V28 M24,34 V35" stroke="#0B0F14" stroke-width="5" stroke-linecap="round"/></svg>PEHLE RISK SAMJHEIN`, { background: C.ink, borderColor: C.ink, color: "#fff" });
+  const risk = bigChip(s8, 1010, `<svg viewBox="0 0 48 44" width="66" height="60" style="display:block"><path d="M24,3 L46,41 H2Z" fill="#FFD95A" stroke="#0B0F14" stroke-width="4" stroke-linejoin="round"/><path d="M24,16 V28 M24,34 V35" stroke="#0B0F14" stroke-width="5" stroke-linecap="round"/></svg>PEHLE RISK SAMJHEIN`, { background: C.ink, borderColor: C.ink, color: "#fff", display: "flex", alignItems: "center", gap: "18px", padding: "14px 44px" });
   fadeUp(risk, 57.72, 0.35, 16);
   OV.push(mc, up, dn, risk);
 

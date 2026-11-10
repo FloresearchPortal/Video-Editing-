@@ -37,13 +37,20 @@ def main():
     sel = "+".join(f"between(t,{a:.3f},{b:.3f})" for a, b in keep)
     chain = ",".join([
         f"aselect='{sel}'", "asetpts=N/SR/TB",
-        "highpass=f=80", "arnndn=m=tools/models/rnnoise/sh.rnnn:mix=0.9",        # broadband noise / room hiss
+        # studio treatment (client: "make the audio sound as if it's properly recorded in a recording studio")
+        "highpass=f=70",                                                            # rumble
+        "afftdn=nr=14:nf=-48:tn=1",                                                 # adaptive broadband denoise (tracks the noise)
+        "arnndn=m=tools/models/rnnoise/sh.rnnn:mix=1",                             # voice-trained denoise, full strength
+        "agate=threshold=0.02:ratio=2.5:attack=4:release=140:range=0.1:knee=4",    # downward expander: room tail between words down ~20 dB
         "dynaudnorm=f=120:g=7:p=0.85:m=14:r=0.5",                                   # lift trailing-off phrase ends
-        "equalizer=f=220:t=q:w=1.0:g=-2.5",                                        # phone-mic mud
-        "equalizer=f=3300:t=q:w=1.2:g=3",                                          # presence / clarity
-        "highshelf=f=9500:g=2.5",                                                  # air
-        "deesser=i=0.35",                                                          # tame the lifted sibilance
-        "acompressor=threshold=-21dB:ratio=3:attack=6:release=90:makeup=2",       # even, broadcast-like level
+        "bass=g=2:f=110:w=0.7",                                                     # warmth / proximity
+        "equalizer=f=300:t=q:w=1.2:g=-3",                                          # boxy phone-room resonance
+        "equalizer=f=3500:t=q:w=1.0:g=2.5",                                        # presence / clarity
+        "highshelf=f=10000:g=2",                                                   # air
+        "deesser=i=0.4",                                                           # sibilance
+        "acompressor=threshold=-24dB:ratio=2.5:attack=8:release=120:makeup=2",     # leveling
+        "acompressor=threshold=-14dB:ratio=4:attack=3:release=60:makeup=1",        # peak control
+        "alimiter=limit=0.89:attack=2:release=40",
         "afade=t=in:d=0.04", "loudnorm=I=-16:TP=-1.5:LRA=7", "aresample=48000",
     ])
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(SRC), "-af", chain, "-ac", "1", str(OUT)], check=True, cwd=ROOT)
