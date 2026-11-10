@@ -11,11 +11,12 @@ ROOT = HERE.parents[1]
 SRC = HERE / "raw/vo_original.wav"
 START = 1.78          # script starts at "Bhai ne kaha" (1.85 s); the breath before it is cut
 PAUSE = 0.10          # client: "skip the empty places" - every gap longer than this is cut down to this
+TAIL = 0.06           # extra breath kept after each phrase so soft endings ("liya hai") are never clipped
 OUT = HERE / "edit/vo_studio.wav"
 
 
 def silences(path):
-    r = subprocess.run(["ffmpeg", "-nostats", "-i", str(path), "-af", "silencedetect=n=-38dB:d=0.16", "-f", "null", "-"],
+    r = subprocess.run(["ffmpeg", "-nostats", "-i", str(path), "-af", "silencedetect=n=-42dB:d=0.16", "-f", "null", "-"],
                        capture_output=True, text=True).stderr
     st = [float(x) for x in re.findall(r"silence_start: ([0-9.]+)", r)]
     en = [float(x) for x in re.findall(r"silence_end: ([0-9.]+)", r)]
@@ -29,7 +30,7 @@ def main():
         if b <= START: continue
         a = max(a, START)
         if b - a <= PAUSE: continue
-        keep.append((t, a + PAUSE / 2)); t = b - PAUSE / 2
+        keep.append((t, min(a + PAUSE / 2 + TAIL, b - PAUSE / 2))); t = b - PAUSE / 2
     end = min(dur, t + 30)
     tail = [s for s in silences(SRC) if s[0] > t]
     keep.append((t, min(end, tail[0][0] + 0.15) if tail else end))
@@ -41,8 +42,7 @@ def main():
         "highpass=f=70",                                                            # rumble
         "afftdn=nr=14:nf=-48:tn=1",                                                 # adaptive broadband denoise (tracks the noise)
         "arnndn=m=tools/models/rnnoise/sh.rnnn:mix=1",                             # voice-trained denoise, full strength
-        "agate=threshold=0.02:ratio=2.5:attack=4:release=140:range=0.1:knee=4",    # downward expander: room tail between words down ~20 dB
-        "dynaudnorm=f=120:g=7:p=0.85:m=14:r=0.5",                                   # lift trailing-off phrase ends
+        "dynaudnorm=f=120:g=7:p=0.85:m=14:r=0.5",                                   # lift soft words / trailing-off phrase ends first
         "bass=g=2:f=110:w=0.7",                                                     # warmth / proximity
         "equalizer=f=300:t=q:w=1.2:g=-3",                                          # boxy phone-room resonance
         "equalizer=f=3500:t=q:w=1.0:g=2.5",                                        # presence / clarity

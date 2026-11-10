@@ -79,7 +79,7 @@ Characters (Notionists, `cast.js` + `avatars.js`)
   green kit with PAKISTAN + star, no official crest; always `gesture: "bat"` = fist gripping a full-size bat, never the open palm).
   Animate the batsman with face swaps + `K.pose` head moves only (arm reactions would move the bat).
 - **Bhai** (`bhai`, client pick B: curly hair, curled moustache, green jacket over a black tee) - the older brother who trades; holds his phone (`handPhone`).
-- Client prefers **tight VO**: when asked to "skip the empty places", cut pauses to ~0.10 s (PAUSE 0.10, silencedetect d=0.16). If cues were already timed, remap them with an old->new time map (see what-are-future-contracts/tmap.js) instead of re-timing by hand.
+- Client prefers **tight VO**, but never at the cost of words: PAUSE 0.10, silencedetect -42 dB / d=0.16, plus TAIL 0.06 s after each phrase (at -38 dB soft words like "aur aap soch mein…" and endings like "hai" got cut). No gate/expander in the studio chain - it swallowed soft speech; denoise (afftdn + arnndn) keeps gaps clean. Re-transcribe the cut VO to confirm every scripted word is there before rendering. If cues were already timed, remap them with an old->new time map (see what-are-future-contracts/tmap.js) instead of re-timing by hand.
 - Buttons/chips that carry a takeaway are **big and centred** (`bigChip`: 48px, centred via xPercent); pairs sit side by side, centred.
 - Kid / viewer reactions in hooks use the approved bigger faces: `grinOpen` (watching), `bigO` (big number), `puzzled`
   (the question) with one lean/tilt via `K.pose` - not the faint smile→think.
