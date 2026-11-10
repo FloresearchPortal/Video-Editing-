@@ -32,6 +32,7 @@ const CAST = {
   abbu:   { hair: 5, beard: 10, body: 10, glasses: 3, shirt: '#F4F1E8', vest: G3, hairTint: '#8C9196', beardTint: '#8C9196' },  // Abbu (client pick A: grey hair + moustache, reading glasses, green waistcoat over cream kurta)
   cousin: { hair: 3, body: 16, shirt: G3 },                     // cousin (client pick B: swept hair, deep-green blazer)
   batsman:{ hair: 6, beard: 11, body: 14, shirt: '#0E6B2E', helmet: 1, pak: 1 },  // senior batsman: helmet + Pakistan-style kit; holds the bat via gesture "bat"
+  bhai:   { hair: 40, beard: 5, body: 18, shirt: '#2C9E00' },  // Bhai (client pick B: curly hair, curled moustache, green jacket over a black tee)
 };
 
 // cricket batsman extras (client-approved): helmet over the head (drawn above the brows), Pakistan-style kit print
