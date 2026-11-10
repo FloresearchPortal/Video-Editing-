@@ -50,8 +50,8 @@
   const line1 = (html, t0, t1) => { const b = card(s1, { left: 40, top: 640, width: 1000, height: 120, borderRadius: 30, border: `4px solid ${C.ink}` });
     txt(b, { left: 0, top: 34, width: 1000, textAlign: "center", font: "700 38px Manrope" }, html);
     el(b, { left: 230, top: 112, width: 0, height: 0, borderLeft: "26px solid transparent", borderRight: "26px solid transparent", borderTop: `30px solid ${C.ink}` });
-    fadeUp(b, t0, 0.35, 16); out(b, t1, 0.2); return b; };
-  const b1 = line1(`“Mujhe lagta hai ye share mahine baad <span style="color:${C.gt}">upar</span> jayega,”`, 0.2, 3.7);
+    fadeUp(b, t0, 0.35, 16); out(b, t1, 0.15); return b; };
+  const b1 = line1(`“Mujhe lagta hai ye share mahine baad <span style="color:${C.gt}">upar</span> jayega,”`, 0.2, 3.5);
   const b1b = line1(`“tou maine abhi se apna paisa invest kar diya hai.”`, 3.78, 6.3);
   const b2 = bubble(s1, { left: 470, top: 620, width: 560, height: 160 }, "“Share khareed liya?”", 260);
   fadeUp(b2, 6.8, 0.35, 16); out(b2, 8.9, 0.2);
