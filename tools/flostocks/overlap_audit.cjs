@@ -55,7 +55,7 @@ const server = http.createServer((req, res) => {
       // text that doesn't fit the frame (margins 30px sides / 40px top-bottom)
       R.forEach(([e, r]) => { if (/kin|roller|chip|tag/.test(e.className) && (r.left < 30 || r.right > 1050 || r.top < 40 || r.bottom > 1880)) out.push([+t.toFixed(2), name(e), 'FRAME-EDGE', Math.round(Math.max(30 - r.left, r.right - 1050, 40 - r.top, r.bottom - 1880))]); });
       // Instagram Reels UI (client rule): nothing may sit under the top bar, the caption/username area or the right action column
-      const IG = [['IG-TOP', 0, 0, 1080, 220], ['IG-CAPTION', 0, 1500, 1080, 1920], ['IG-ACTIONS', 950, 960, 1080, 1500]];
+      const IG = [['IG-TOP', 0, 0, 1080, 220], ['IG-CAPTION', 0, 1500, 1080, 1920], ['IG-ACTIONS', 950, 960, 1080, 1500], ['IG-MIRROR-LEFT', 0, 960, 130, 1500]];   // mirror of the action column: keeps layouts centred, not shoved left
       const texts = [...document.querySelectorAll('div,span,text')].filter((e) => [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim()) && op(e) > 0.35 && !e.closest('.kc'))
         .map((e) => { const rg = document.createRange(); let L = 1e9, T = 1e9, Rr = -1e9, B = -1e9;   // the words themselves, not their (often full-width) box
           [...e.childNodes].filter((n) => n.nodeType === 3 && n.textContent.trim()).forEach((n) => { rg.selectNodeContents(n); for (const q of rg.getClientRects()) { L = Math.min(L, q.left); T = Math.min(T, q.top); Rr = Math.max(Rr, q.right); B = Math.max(B, q.bottom); } });

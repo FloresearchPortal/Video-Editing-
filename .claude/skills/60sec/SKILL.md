@@ -50,7 +50,7 @@ Motion & camera
   (old value lifts out, new settles in). Step-wise app inputs (quantity 1→5) go at a readable ~0.26 s/step.
 - **Instagram Reels safe area (client rule, every video):** nothing important under the top bar (y < 220), the caption/username
   area (y > 1500) or the right action column (x > 950 for y 960–1500). Scene titles sit at y ≈ 250, content between ~320 and
-  1460, right-edge content stops at x ≈ 940 below y 960. `overlap_audit.cjs` reports `IG-TOP / IG-CAPTION / IG-ACTIONS` hits —
+  1460, right-edge content stops at x ≈ 940 below y 960. **Centred, not shoved left (client: "content is towards the left"):** every layout is symmetric about x = 540 with the SAME margin both sides — in the y 960–1500 band keep content inside x 130–950 (mirror of the action column); rows/grids are computed from the centre (`540 + (i - (n-1)/2) * gap`), cards/panels `left 130, width 820`, chip pairs at 540 ± d, speech bubbles centred at 540 with only the tail leaning to the speaker. The audit's `IG-MIRROR-LEFT` zone (x < 130, y 960–1500) flags anything left-biased; check snapshots with a centre line drawn. `overlap_audit.cjs` reports `IG-TOP / IG-CAPTION / IG-ACTIONS` hits —
   they must be fixed (the scene push drifts edge content outward; use `push: 1.012` on scenes with edge-near content).
 - Hook speech bubbles: one line each (split long lines at the comma), text ~50px, box sized to the line, kept inside the frame.
 - Episode numbers: EP 01 IPO, EP 02 KSE-100, EP 03 Dividend, EP 04 Blue Chips, EP 05 REIT (Futures was skipped by the client).
