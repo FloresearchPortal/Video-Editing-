@@ -48,6 +48,12 @@ Motion & camera
   a thin green edge. The frame must visibly change; never a blank or double-exposed frame.
 - **Prices never roll or count** ("feels like buffering"): show the value; when it changes use `K.swap`
   (old value lifts out, new settles in). Step-wise app inputs (quantity 1→5) go at a readable ~0.26 s/step.
+- **Instagram Reels safe area (client rule, every video):** nothing important under the top bar (y < 220), the caption/username
+  area (y > 1500) or the right action column (x > 950 for y 960–1500). Scene titles sit at y ≈ 250, content between ~320 and
+  1460, right-edge content stops at x ≈ 940 below y 960. `overlap_audit.cjs` reports `IG-TOP / IG-CAPTION / IG-ACTIONS` hits —
+  they must be fixed (the scene push drifts edge content outward; use `push: 1.012` on scenes with edge-near content).
+- Hook speech bubbles: one line each (split long lines at the comma), text ~50px, box sized to the line, kept inside the frame.
+- Episode numbers: EP 01 IPO, EP 02 KSE-100, EP 03 Dividend, EP 04 Blue Chips, EP 05 REIT (Futures was skipped by the client).
 - **Nothing overlaps — ever.** No title, number, card, character or icon may touch another, and no text may
   leave the frame (30 px side / 40 px top-bottom margins). Run the audit (§5) — it must come back clean.
 - One question mark per question. No decorative clutter (no number clouds, sparkles, "!" marks, emoji badges).

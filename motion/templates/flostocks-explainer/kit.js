@@ -530,8 +530,8 @@
   // o = { tSweep, tTitle, tSeries, tTag, tEp, ep: "EP 01 · WHAT IS AN IPO", tag: "PSX ke terms, simple tareeqe se" }
   function seriesCard(sc, t, o = {}) {
     const T = (k, d) => o[k] ?? t + d;
-    const watch = el(sc, { left: 260, top: 190, width: 560, height: 616 },
-      `<svg viewBox="0 0 300 330" width="560" height="616" style="overflow:visible">
+    const watch = el(sc, { left: 290, top: 250, width: 500, height: 550 },          // below the Instagram top bar (y 220)
+      `<svg viewBox="0 0 300 330" width="500" height="550" style="overflow:visible">
         <rect x="128" y="0" width="44" height="26" rx="8" fill="#0B0F14"/><rect x="141" y="22" width="18" height="18" fill="#0B0F14"/>
         <rect x="236" y="40" width="30" height="16" rx="6" fill="#0B0F14" transform="rotate(42 251 48)"/>
         <circle cx="150" cy="185" r="138" fill="#fff" stroke="#0B0F14" stroke-width="10"/>
@@ -545,14 +545,14 @@
     tl.fromTo(watch.querySelector(".arc"), { attr: { "stroke-dashoffset": 100 } }, { attr: { "stroke-dashoffset": 0 }, duration: 1.4, ease: "power2.inOut", immediateRender: false }, ts)
       .fromTo(watch.querySelector(".hand"), { rotation: 0, svgOrigin: "150 185" }, { rotation: 360, svgOrigin: "150 185", duration: 1.4, ease: "power2.inOut", immediateRender: false }, ts);
     const up = (e, tt, y = 20) => tl.fromTo(e, { y, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, tt);
-    const t1 = el(sc, { left: 0, top: 860, width: 1080, textAlign: "center", font: "800 96px/1 Manrope", color: C.text, whiteSpace: "nowrap", letterSpacing: "-.02em" }, `SECONDS <span style="color:${C.gt}">INVESTOR</span>`);
+    const t1 = el(sc, { left: 0, top: 840, width: 1080, textAlign: "center", font: "800 86px/1 Manrope", color: C.text, whiteSpace: "nowrap", letterSpacing: "-.02em" }, `SECONDS <span style="color:${C.gt}">INVESTOR</span>`);
     up(t1, T("tTitle", 0.9), 26);
-    const t2 = el(sc, { left: 425, top: 990, width: 230, height: 66, borderRadius: 33, background: C.ink, color: "#fff", font: "800 30px/66px Manrope", textAlign: "center", letterSpacing: ".2em" }, "SERIES");
+    const t2 = el(sc, { left: 425, top: 960, width: 230, height: 66, borderRadius: 33, background: C.ink, color: "#fff", font: "800 30px/66px Manrope", textAlign: "center", letterSpacing: ".2em" }, "SERIES");
     up(t2, T("tSeries", 1.2));
-    const t3 = el(sc, { left: 0, top: 1110, width: 1080, textAlign: "center", font: "700 46px Manrope", color: C.mute, whiteSpace: "nowrap" }, o.tag || "PSX ke terms, simple tareeqe se");
+    const t3 = el(sc, { left: 0, top: 1070, width: 1080, textAlign: "center", font: "700 46px Manrope", color: C.mute, whiteSpace: "nowrap" }, o.tag || "PSX ke terms, simple tareeqe se");
     up(t3, T("tTag", 1.5));
     let ep = null;
-    if (o.ep) { ep = el(sc, { left: 0, top: 1196, width: 1080, textAlign: "center" },
+    if (o.ep) { ep = el(sc, { left: 0, top: 1160, width: 1080, textAlign: "center" },
       `<span style="display:inline-block;border:5px solid ${C.g};background:#fff;font:800 36px Manrope;padding:18px 40px;border-radius:999px;color:${C.text}">${o.ep}</span>`);
       up(ep, T("tEp", 1.8)); }
     return { watch, t1, t2, t3, ep };
