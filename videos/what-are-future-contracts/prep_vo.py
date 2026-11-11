@@ -11,6 +11,7 @@ ROOT = HERE.parents[1]
 SRC = HERE / "raw/vo_original.wav"
 START = 1.78          # script starts at "Bhai ne kaha" (1.85 s); the breath before it is cut
 PAUSE = 0.10          # client: "skip the empty places" - every gap longer than this is cut down to this
+HEAD = 0.0            # (onsets were not trimmed by the cut; the RNNoise stage was muting them)
 TAIL = 0.06           # extra breath kept after each phrase so soft endings ("liya hai") are never clipped
 OUT = HERE / "edit/vo_studio.wav"
 
@@ -30,19 +31,18 @@ def main():
         if b <= START: continue
         a = max(a, START)
         if b - a <= PAUSE: continue
-        keep.append((t, min(a + PAUSE / 2 + TAIL, b - PAUSE / 2))); t = b - PAUSE / 2
+        keep.append((t, min(a + PAUSE / 2 + TAIL, b - PAUSE / 2 - HEAD))); t = b - PAUSE / 2 - HEAD
     end = min(dur, t + 30)
     tail = [s for s in silences(SRC) if s[0] > t]
     keep.append((t, min(end, tail[0][0] + 0.15) if tail else end))
     json.dump({"start": START, "pause": PAUSE, "keep": [[round(a, 3), round(b, 3)] for a, b in keep]}, open(HERE / "edit/vo_cuts.json", "w"), indent=1)
     sel = "+".join(f"between(t,{a:.3f},{b:.3f})" for a, b in keep)
     chain = ",".join([
-        f"aselect='{sel}'", "asetpts=N/SR/TB",
         # studio treatment (client: "make the audio sound as if it's properly recorded in a recording studio")
         "highpass=f=70",                                                            # rumble
-        "afftdn=nr=14:nf=-48:tn=1",                                                 # adaptive broadband denoise (tracks the noise)
-        "arnndn=m=tools/models/rnnoise/sh.rnnn:mix=1",                             # voice-trained denoise, full strength
-        "dynaudnorm=f=120:g=7:p=0.85:m=14:r=0.5",                                   # lift soft words / trailing-off phrase ends first
+        "afftdn=nr=22:nf=-50:tn=1",                                                 # adaptive broadband denoise (tracks the noise); no RNNoise - it muted soft word onsets ("aur aap" at 0:11)
+        f"aselect='{sel}'", "asetpts=N/SR/TB",                                   # cut AFTER denoising: the denoisers hear full context, so word onsets after a cut ("aur aap") aren't treated as noise
+        "dynaudnorm=f=120:g=7:p=0.85:m=8:r=0.5",                                   # lift soft words / trailing-off phrase ends first
         "bass=g=2:f=110:w=0.7",                                                     # warmth / proximity
         "equalizer=f=300:t=q:w=1.2:g=-3",                                          # boxy phone-room resonance
         "equalizer=f=3500:t=q:w=1.0:g=2.5",                                        # presence / clarity

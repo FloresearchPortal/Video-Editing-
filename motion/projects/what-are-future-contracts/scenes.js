@@ -151,9 +151,12 @@
   txt(mg, { left: 40, top: 40, font: "800 34px Manrope", color: C.mute }, "POORI RAQAM");
   const full = el(mg, { left: 40, top: 100, width: 880, height: 110, borderRadius: 18, border: `4px dashed #9AA8A0`, background: "#F1F4F2" });
   txt(full, { left: 30, top: 28, font: "700 44px 'IBM Plex Mono'", color: "#9AA8A0" }, "Rs 100");
-  txt(mg, { left: 0, top: 270, width: 960, textAlign: "center", font: "800 34px Manrope", color: C.gt }, "AAP JAMA KARATE HAIN");
-  const part = el(mg, { left: 370, top: 330, width: 220, height: 110, borderRadius: 18, border: `4px solid ${C.ink}`, background: C.g, transformOrigin: "50% 50%" });
-  txt(part, { left: 0, top: 28, width: 212, textAlign: "center", font: "800 40px Manrope", color: C.ink }, "MARGIN");
+  txt(mg, { left: 40, top: 270, font: "800 34px Manrope", color: C.gt }, "AAP JAMA KARATE HAIN");
+  // margin drawn like the POORI RAQAM bar (client note): same full-width box, green fill for the paid part (20%, matches the Rs 20 example),
+  // with MARGIN centred in the box
+  const mbox = el(mg, { left: 40, top: 330, width: 880, height: 110, borderRadius: 18, border: `4px solid ${C.ink}`, background: "#fff", overflow: "hidden" });
+  const part = el(mbox, { left: 0, top: 0, width: 176, height: 102, background: C.g, transformOrigin: "0% 50%" });
+  txt(mbox, { left: 0, top: 28, width: 872, textAlign: "center", font: "800 40px Manrope", color: C.ink }, "MARGIN");
   fadeUp(mg, 40.78, 0.4, 30);
   tl.set(part, { scaleX: 0 }, 0); tl.to(part, { scaleX: 1, duration: 0.5, ease: "power2.out" }, 42.08);
   const small = bigChip(s6, 1000, "CHHOTA SA HISSA JAMA", { background: C.g, borderColor: C.g });
