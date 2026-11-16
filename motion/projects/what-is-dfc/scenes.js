@@ -5,6 +5,13 @@
 (function () {
   const { C, tl, el, scene, kin, charsIn, who, life, talk, line, ctaLogo } = K;
   const X = CAST.expr;
+  // cue times below are on the first VO cut, which still opened with "okay so"; the re-cut starts at "Broker" and cuts
+  // the silences (client notes). tmap.js maps old -> new VO time; every numeric timeline position is translated once, here.
+  const TMAP = window.TMAP || [[0, 0], [200, 200]];
+  const R = (t) => { if (typeof t !== "number") return t; let i = 0; while (i < TMAP.length - 2 && TMAP[i + 1][0] < t) i++;
+    const [x0, y0] = TMAP[i], [x1, y1] = TMAP[i + 1]; return Math.max(0, y0 + (y1 - y0) * ((t - x0) / ((x1 - x0) || 1))); };
+  ["to", "from", "fromTo", "set", "call", "add"].forEach((m) => { const f = tl[m].bind(tl);
+    tl[m] = (...a) => { const i = a.length - 1; if (i > 0 && typeof a[i] === "number") a[i] = R(a[i]); return f(...a); }; });
   const card = (p, css) => el(p, Object.assign({ background: "#fff", borderRadius: 32, border: "2px solid #E3E9E5", boxShadow: "0 24px 50px rgba(20,40,20,.10)" }, css));
   const txt = (p, css, html) => el(p, Object.assign({ font: "700 40px Manrope", color: C.text, whiteSpace: "nowrap" }, css), html);
   const fadeUp = (e, t, d = 0.45, y = 40) => tl.fromTo(e, { y, opacity: 0 }, { y: 0, opacity: 1, duration: d, ease: "power3.out", immediateRender: false }, t);
@@ -57,8 +64,8 @@
     el(b, { left: `calc(50% + ${Math.round((spk - 540) * 0.6)}px)`, bottom: -30, marginLeft: -26, width: 0, height: 0, borderLeft: "26px solid transparent", borderRight: "26px solid transparent", borderTop: `30px solid ${C.ink}` });
     show(b, t0, 0.3, 16); out(b, t1, 0.15); return b; };
   const b1 = say(`“Sauda maine <span style="color:${C.gt}">aaj</span> kiya hai,”`, 2.9, 4.22, 355);
-  const b2 = say("“lekin shares mujhe”", 4.3, 5.2, 355);
-  const b3 = say(`“<span style="color:${C.gt}">mahine ke end</span> mein milenge.”`, 5.28, 6.72, 355);
+  const b2 = say("“lekin shares mujhe”", 4.3, 5.1, 355);
+  const b3 = say(`“<span style="color:${C.gt}">mahine ke end</span> mein milenge.”`, 5.3, 6.72, 355);
   talk(bhai, [2.96, 3.34, 3.64, 3.96, 4.32, 4.66, 5.02, 5.3, 5.72, 6.14, 6.28], "smile");
   X(tl, aap.av, "puzzled", 6.9); K.pose(aap, 6.9, { h: [9, -4, 4], b: [1, 1] }, 0.4);
   out(screen, 7.6, 0.3);
@@ -241,6 +248,7 @@
   OV.push(cta.fl);
 
   K.linkScenes();
+  window.__sceneCuts = (window.__sceneCuts || []).map(R);
   OV.forEach((e) => e && e.setAttribute("data-ov", ""));
   tl.seek(0);
 })();

@@ -9,15 +9,15 @@ from pathlib import Path
 HERE = Path(__file__).parent
 ROOT = HERE.parents[1]
 SRC = HERE / "raw/vo_original.wav"
-START = 1.02          # speech starts at ~1.08 s; the room tone before it is cut
-PAUSE = 0.10          # client: "skip the empty places" - every gap longer than this is cut down to this
+START = 2.15          # script starts at "Broker" (2.20 s); the "okay so" and room tone before it are cut (skill rule)
+PAUSE = 0.08          # client: "cut the silences" - every gap (breaths + room tone, -36 dB) is cut down to this
 HEAD = 0.0            # (onsets were not trimmed by the cut; the RNNoise stage was muting them)
 TAIL = 0.06           # extra breath kept after each phrase so soft endings ("liya hai") are never clipped
 OUT = HERE / "edit/vo_studio.wav"
 
 
 def silences(path):
-    r = subprocess.run(["ffmpeg", "-nostats", "-i", str(path), "-af", "silencedetect=n=-42dB:d=0.16", "-f", "null", "-"],
+    r = subprocess.run(["ffmpeg", "-nostats", "-i", str(path), "-af", "silencedetect=n=-36dB:d=0.10", "-f", "null", "-"],
                        capture_output=True, text=True).stderr
     st = [float(x) for x in re.findall(r"silence_start: ([0-9.]+)", r)]
     en = [float(x) for x in re.findall(r"silence_end: ([0-9.]+)", r)]
