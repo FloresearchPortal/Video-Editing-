@@ -1,0 +1,12 @@
+Broker ke office mein ek trader ne kaha, 'Sauda maine aaj kiya hai, lekin shares mujhe mahine ke end mein milenge.'
+Aur aap soch mein par gaye, ye concept aakhir hai kia?
+Welcome to our 60 Seconds Investor Series, jahan hum PSX ke terms ko simple tareeqe se samjhate hain.
+Sochiye ek dukandaar hai jou 1 mahine baad ki delivery ke liye aaj kay rate par 100 phones ka order pakka karta hai.
+Uske paas poore paise nahi houtay, lekin supplier thora credit de kar usay bara order karnay deta hai.
+1 mahine baad market rate upar ho toh dukandaar ka faida, neeche ho toh nuqsan, kyunke usay rate aaj wala hi dena hai.
+PSX par DFC yani Deliverable Futures Contract bhe aaisay he kaam karta hai
+Maan lijiye ek share 100 rupay ka hai. Aap aaj hi 100 rupay ke hisab se 500 shares ka sauda pakka kar lete hain, kyunke PSX par ek contract 500 shares ka hota hai.
+Aur is ke liye poore 50,000 aap ke paas hona zaroori nahi. Broker margin ki sahulat deta hai, jis se aap apni raqam se zyada shares ka sauda kar sakte hain.
+Phir mahine ke aakhri Friday ko, agar aap ne contract rakha ho, toh poori raqam ada karke 500 shares aap ke account mein aa jate hain.
+Magar yaad rahay, margin se faida bhi bara ho sakta hai aur nuqsan bhi, isliye pehle risk samajhna zaroori hai.
+Agar aap aise hi market ke terms aasaan zubaan mein samajhna chahtay hain, toh FloStocks ko follow karein.
