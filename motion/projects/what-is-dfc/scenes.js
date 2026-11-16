@@ -208,18 +208,21 @@
   show(cal, 56.9, 0.4, 30);
   tl.to(cells[0], { background: C.g, scale: 1.12, duration: 0.35, ease: "power2.out" }, 57.78);
   const kp = bigChip(s8, 805, "CONTRACT RAKHA HO", { font: "800 40px Manrope", borderColor: C.ink }); show(kp, 58.98, 0.3, 16);
-  const pay = card(s8, { left: 130, top: 930, width: 320, height: 180, border: `4px solid ${C.ink}` });
-  txt(pay, { left: 0, top: 28, width: 320, textAlign: "center", font: "800 26px Manrope", color: C.mute }, "POORI RAQAM ADA");
-  txt(pay, { left: 0, top: 80, width: 320, textAlign: "center", font: "700 48px 'IBM Plex Mono'" }, "Rs 50,000");
-  show(pay, 60.36, 0.4, 24);
-  const arr = art(s8, { left: 470, top: 990, width: 140, height: 60 }, 140, 60, `<path d="M8,30 H120" ${S}/><path d="M102,12 L124,30 L102,48" fill="none" ${S}/>`);
-  hide(arr); tl.fromTo(arr, { opacity: 0, x: -16 }, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out", immediateRender: false }, 61.2);
-  const acc = card(s8, { left: 630, top: 930, width: 320, height: 180, border: `5px solid ${C.g}` });
-  txt(acc, { left: 0, top: 28, width: 320, textAlign: "center", font: "800 26px Manrope", color: C.mute }, "AAP KA ACCOUNT");
-  txt(acc, { left: 0, top: 84, width: 320, textAlign: "center", font: "800 40px Manrope", color: C.gt }, "+500 SHARES");
-  show(acc, 61.7, 0.4, 24);
-  const dl = bigChip(s8, 1180, "SHARES DELIVER ✓", { background: C.g, borderColor: C.g }); show(dl, 62.8, 0.3, 16);
-  OV.push(cal, kp, pay, acc, dl);
+  const pay = bigChip(s8, 925, "POORI RAQAM ADA · Rs 50,000", { font: "800 40px Manrope", background: C.ink, borderColor: C.ink, color: "#fff" }); show(pay, 60.36, 0.3, 16);
+  tl.to([cal, kp, pay], { opacity: 0, y: -30, duration: 0.3, ease: "power2.in" }, 61.2);
+  // the shares land in the FloStocks app (skill: the client's app UI for any buying/holding), centred on the frame
+  const A8 = K.app(s8, 290, 380, 0.8);
+  const hc = A8.card.children; hc[0].textContent = "DFC"; hc[1].textContent = "PSX SHARE"; hc[2].textContent = "DFC delivery · aakhri Friday";
+  A8.price.textContent = "100.00"; A8.cShares.textContent = "500"; A8.cCost.textContent = "100.00"; A8.cValue.textContent = "50,000";
+  hide(A8.phone); tl.fromTo(A8.phone, { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", immediateRender: false }, 61.4);
+  tl.set(A8.empty, { opacity: 1 }, 0); tl.to(A8.empty, { opacity: 0, duration: 0.2 }, 61.9);
+  tl.set(A8.value, { textContent: "0.00" }, 0); tl.set(A8.value, { textContent: "50,000.00" }, 61.9);
+  tl.fromTo(A8.card, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, 61.9);
+  tl.fromTo(A8.card, { boxShadow: "0 0 0 0 rgba(56,209,0,0)" }, { boxShadow: "0 0 0 8px rgba(56,209,0,.55)", duration: 0.3, immediateRender: false }, 62.3);
+  if (A8.finger) gsap.set(A8.finger, { opacity: 0 });   // no tap in this beat
+  A8.toast.textContent = "+500 shares delivered ✓";
+  tl.fromTo(A8.toast, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", immediateRender: false }, 62.8);
+  OV.push(cal, kp, pay, A8.phone);
 
   // ═══ S9 63.8–70.3: margin makes the gain bigger — and the loss too; understand the risk first ═══
   const s9 = scene(63.8, 70.3, { push: 1.012 });
