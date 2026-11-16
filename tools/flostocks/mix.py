@@ -22,7 +22,9 @@ def main():
     slug = sys.argv[1]
     V = ROOT / "videos" / slug
     video = ROOT / "motion/projects" / slug / "renders" / f"{slug}-video.mp4"
-    vo = next(V.glob("raw/vo.*")); bed = V / "music/bed.wav"
+    # the studio-cut VO (prep_vo.py -> edit/vo_studio.wav, copied to raw/vo.wav) wins over the client's original upload (raw/vo.mp4 etc.)
+    vo = next((p for p in [V / "edit/vo_studio.wav", V / "raw/vo.wav"] if p.exists()), None) or next(V.glob("raw/vo.*")); bed = V / "music/bed.wav"
+    print(f"VO: {vo.relative_to(ROOT)}")
     out = V / "output" / f"{slug}-final.mp4"; out.parent.mkdir(parents=True, exist_ok=True)
     cues = json.loads((V / "edit/cues.json").read_text()) if (V / "edit/cues.json").exists() else []
     lib = {p.stem: p for p in GEN.glob("*.wav")}

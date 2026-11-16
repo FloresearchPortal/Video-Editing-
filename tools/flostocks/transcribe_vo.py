@@ -20,7 +20,7 @@ def main():
     ap.add_argument("--script", help="script text used to prime Roman-Urdu spelling (default videos/<slug>/script.txt)")
     a = ap.parse_args()
     raw = ROOT / "videos" / a.slug / "raw"
-    vo = next((p for p in raw.glob("vo.*")), None)
+    vo = (raw / "vo.wav") if (raw / "vo.wav").exists() else next((p for p in raw.glob("vo.*")), None)   # the studio-cut VO first
     if not vo: sys.exit(f"no vo.* in {raw}")
     sp = Path(a.script) if a.script else ROOT / "videos" / a.slug / "script.txt"
     # priming with the Roman-Urdu script keeps Whisper in Latin script (unprimed it drifts to Devanagari/Urdu)
